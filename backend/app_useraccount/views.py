@@ -61,21 +61,13 @@ class LoginView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-
 class LogoutView(APIView):
-    permission_classes = (IsAuthenticated,)
-
     def post(self, request):
         try:
-            # Get the refresh token from the request data
-            refresh_token = request.data["refresh_token"]
+            refresh_token = request.data.get("refresh_token")
             token = RefreshToken(refresh_token)
-            
-            # Add the token to the blacklist
-            token.blacklist()
+            token.blacklist()  # Blacklist the refresh token
 
-            return Response({"msg": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
-        except TokenError:
-            return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
-        except KeyError:
-            return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"msg": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
