@@ -103,6 +103,32 @@ export const logoutUser = createAsyncThunk('auth/logoutUser', async (_, { reject
     }
 });
 
+// Async Thunk for Token Refresh:
+export const refreshAccessToken = createAsyncThunk(
+  'auth/refreshAccessToken',
+  async (_, { rejectWithValue }) => {
+    try {
+      const _refreshToken = localStorage.getItem('refreshToken');
+      if (!_refreshToken) throw new Error("No refresh token available");
+
+      // Make the request to refresh the token
+      const response = await axios.post('http://localhost:8000/api/auth/refresh/', { refresh_token: _refreshToken });
+
+      // Update tokens in localStorage
+
+      const { accessToken, refreshToken } = response.data;
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+
+
 // Create the authentication slice
 const authSlice = createSlice({
   name: 'auth',
