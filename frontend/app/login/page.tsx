@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { loginUser } from "../../lib/features/authSlice";
@@ -22,7 +24,7 @@ const LoginPage = () => {
     dispatch(loginUser(loginData));
 
     if (isAuthenticated) {
-      router.push("/dashboard");
+      router.push("/");
     }
   };
 
@@ -85,9 +87,9 @@ const LoginPage = () => {
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?{" "}
-          <a href="/register" className="text-indigo-600 hover:underline">
+          <Link href="/register" className="text-indigo-600 hover:underline">
             Register
-          </a>
+          </Link>
         </p>
       </div>
     </div>
