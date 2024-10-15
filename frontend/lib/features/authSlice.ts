@@ -61,12 +61,21 @@ export const loginUser = createAsyncThunk(
 
 // Async thunk for user logout
 export const logoutUser = createAsyncThunk('auth/logoutUser', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axios.post('http://localhost:8000/api/auth/logout/');
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(error.response.data);
-  }
+    try {
+      // Get the refresh token from localStorage or the Redux state
+      const refreshToken = localStorage.getItem('refreshToken');
+      
+      if (!refreshToken) throw new Error("No refresh token available");
+  
+      // Send the refresh token to the backend for blacklisting
+      const response = await axios.post('http://localhost:8000/api/auth/logout/', {
+        refresh_token: refreshToken,
+      });
+  
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
 });
 
 // Create the authentication slice
