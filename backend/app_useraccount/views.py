@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
-from .serializers import RegisterSerializer, OTPVerifySerializer
+from .serializers import RegisterSerializer, OTPVerifySerializer, LoginSerializer
 from .models import User
 
 
@@ -45,4 +45,17 @@ class OTPVerifyView(APIView):
                 'msg': 'User verification successful',
                 'token': token
             }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            token = get_tokens_for_user(user)
+            return Response({'token': token, 'msg': 'Logged in successfully'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
