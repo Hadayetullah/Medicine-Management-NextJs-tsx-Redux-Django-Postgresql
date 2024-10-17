@@ -22,11 +22,11 @@ const LoginPage = () => {
     e.preventDefault();
     const loginData = { email, password };
     dispatch(loginUser(loginData));
-
-    if (isAuthenticated) {
-      router.push("/");
-    }
   };
+
+  if (isAuthenticated) {
+    router.push("/");
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
