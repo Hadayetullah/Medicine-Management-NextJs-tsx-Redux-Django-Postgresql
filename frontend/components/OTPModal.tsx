@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { useAppDispatch } from "../lib/store";
+import { RootState, useAppDispatch } from "../lib/store";
 import { verifyOtp } from "../lib/features/authSlice";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 interface OtpModalProps {
   email: string;
@@ -8,6 +10,7 @@ interface OtpModalProps {
 }
 
 const OtpModal: React.FC<OtpModalProps> = ({ email, onClose }) => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [otp, setOtp] = useState("");
 
@@ -18,6 +21,14 @@ const OtpModal: React.FC<OtpModalProps> = ({ email, onClose }) => {
       onClose(); // Close the modal if OTP is verified
     }
   };
+
+  const { loading, error, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  if (isAuthenticated) {
+    router.push("/");
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

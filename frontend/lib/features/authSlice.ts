@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import Cookies from "js-cookie"
 
 // Define the initial state of the authentication slice
 interface AuthState {
@@ -24,12 +25,24 @@ const initialState: AuthState = {
   refreshToken: null,
 };
 
-// Helper function to retrieve tokens from localStorage
-const getTokensFromLocalStorage = () => {
+// Helper function to retrieve tokens from Cookies
+const getTokensFromCookies = () => {
   return {
-    accessToken: localStorage.getItem("accessToken"),
-    refreshToken: localStorage.getItem("refreshToken"),
+    accessToken: Cookies.get("accessToken"),
+    refreshToken: Cookies.get("refreshToken"),
   };
+};
+
+// Helper function to save tokens to Cookies
+const saveTokensToCookies = (accessToken: string, refreshToken: string) => {
+  Cookies.set("accessToken", accessToken, { secure: true, sameSite: "strict", path: "/" });
+  Cookies.set("refreshToken", refreshToken, { secure: true, sameSite: "strict", path: "/" });
+};
+
+// Helper function to remove tokens from Cookies
+const removeTokensFromCookies = () => {
+  Cookies.remove("accessToken", { path: "/" });
+  Cookies.remove("refreshToken", { path: "/" });
 };
 
 // Async thunk for user registration
@@ -45,10 +58,9 @@ export const registerUser = createAsyncThunk(
         formData
       );
 
-      // Save tokens to localStorage
-      const { accessToken, refreshToken } = response.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+      // Save tokens to Cookies
+      const { access, refresh } = response.data.token;
+      saveTokensToCookies(access, refresh);
 
       return { ...response.data, user: formData }; // Include user data in response
     } catch (error: any) {
@@ -67,10 +79,9 @@ export const verifyOtp = createAsyncThunk(
         otpData
       );
 
-      // Save tokens to localStorage
-      const { accessToken, refreshToken } = response.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+      // Save tokens to Cookies
+      const { access, refresh } = response.data.token;
+      saveTokensToCookies(access, refresh);
 
       return { ...response.data, user: { email: otpData.email } }; // Include user email
     } catch (error: any) {
@@ -92,10 +103,9 @@ export const loginUser = createAsyncThunk(
         credentials
       );
 
-      // Save tokens to localStorage
-      const { accessToken, refreshToken } = response.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+      // Save tokens to Cookies
+      const { access, refresh } = response.data.token;
+      saveTokensToCookies(access, refresh);
 
       return { ...response.data, user: { email: credentials.email } }; // Include user email
     } catch (error: any) {
@@ -109,7 +119,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
-      const { refreshToken } = getTokensFromLocalStorage();
+      const { refreshToken } = getTokensFromCookies();
 
       if (!refreshToken) throw new Error("No refresh token available");
 
@@ -121,9 +131,8 @@ export const logoutUser = createAsyncThunk(
         }
       );
 
-      // Clear tokens from localStorage
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      // Clear tokens from Cookies
+      removeTokensFromCookies();
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -135,7 +144,7 @@ export const refreshAccessToken = createAsyncThunk(
   "auth/refreshAccessToken",
   async (_, { rejectWithValue }) => {
     try {
-      const { refreshToken } = getTokensFromLocalStorage();
+      const { refreshToken } = getTokensFromCookies();
       if (!refreshToken) throw new Error("No refresh token available");
 
       // Make the request to refresh the token
@@ -144,10 +153,9 @@ export const refreshAccessToken = createAsyncThunk(
         { refresh_token: refreshToken }
       );
 
-      // Update tokens in localStorage
+      // Update tokens in Cookies
       const { accessToken, refreshToken: newRefreshToken } = response.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", newRefreshToken);
+      saveTokensToCookies(accessToken, newRefreshToken);
 
       return response.data;
     } catch (error: any) {
@@ -165,7 +173,7 @@ const authSlice = createSlice({
       state.error = null;
     },
     restoreAuthState: (state) => {
-      const { accessToken, refreshToken } = getTokensFromLocalStorage();
+      const { accessToken, refreshToken } = getTokensFromCookies();
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
       state.isAuthenticated = !!accessToken;
