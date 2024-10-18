@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie"
 
+import { getTokensFromCookies } from "@/actions";
+
 // Define the initial state of the authentication slice
 interface AuthState {
   user: {
@@ -26,12 +28,7 @@ const initialState: AuthState = {
 };
 
 // Helper function to retrieve tokens from Cookies
-const getTokensFromCookies = () => {
-  return {
-    accessToken: Cookies.get("accessToken"),
-    refreshToken: Cookies.get("refreshToken"),
-  };
-};
+
 
 // Helper function to save tokens to Cookies
 const saveTokensToCookies = (accessToken: string, refreshToken: string) => {
@@ -169,8 +166,14 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
     resetError: (state) => {
       state.error = null;
+    },
+    validateAuthentication: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload
     },
     restoreAuthState: (state) => {
       const { accessToken, refreshToken } = getTokensFromCookies();
@@ -256,5 +259,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetError, restoreAuthState } = authSlice.actions;
+export const { setLoading, resetError, restoreAuthState, validateAuthentication } = authSlice.actions;
 export default authSlice.reducer;
