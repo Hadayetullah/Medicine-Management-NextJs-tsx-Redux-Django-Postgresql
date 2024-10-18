@@ -4,10 +4,12 @@ import { useRouter } from "next/navigation";
 import { validateTokenLife } from "@/actions";
 import { RootState, useAppDispatch } from "@/lib/store";
 import { useSelector } from "react-redux";
-import { setLoading } from "@/lib/features/authSlice";
+import { setLoading, validateAuthentication } from "@/lib/features/authSlice";
 
 export default function Home() {
-  const { loading } = useSelector((state: RootState) => state.auth);
+  const { loading, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const [isPageLoading, setIsPageLoading] = useState(true); // Local loading state
   const dispatch = useAppDispatch();
@@ -15,17 +17,24 @@ export default function Home() {
 
   useEffect(() => {
     const checkAuth = async () => {
+      dispatch(setLoading(true));
       const isTokenValid = await validateTokenLife();
       if (!isTokenValid) {
         dispatch(setLoading(false));
         router.push("/login");
       } else {
+        dispatch(validateAuthentication(true));
         setIsPageLoading(false);
       }
     };
 
-    checkAuth();
-  }, [router, dispatch]);
+    if (!isAuthenticated) {
+      checkAuth();
+    } else {
+      dispatch(setLoading(false));
+      setIsPageLoading(false);
+    }
+  }, [router, dispatch, isAuthenticated]);
 
   if (loading || isPageLoading) {
     return (

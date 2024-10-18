@@ -21,7 +21,7 @@ interface AuthState {
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
-  loading: true,
+  loading: false,
   error: null,
   accessToken: null,
   refreshToken: null,
@@ -172,6 +172,9 @@ const authSlice = createSlice({
     resetError: (state) => {
       state.error = null;
     },
+    validateAuthentication: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload
+    },
     restoreAuthState: (state) => {
       const { accessToken, refreshToken } = getTokensFromCookies();
       state.accessToken = accessToken;
@@ -256,5 +259,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setLoading, resetError, restoreAuthState } = authSlice.actions;
+export const { setLoading, resetError, restoreAuthState, validateAuthentication } = authSlice.actions;
 export default authSlice.reducer;
