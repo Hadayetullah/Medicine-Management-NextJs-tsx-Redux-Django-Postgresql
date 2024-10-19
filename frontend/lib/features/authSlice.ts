@@ -27,8 +27,6 @@ const initialState: AuthState = {
   refreshToken: null,
 };
 
-// Helper function to retrieve tokens from Cookies
-
 
 // Helper function to save tokens to Cookies
 const saveTokensToCookies = (accessToken: string, refreshToken: string) => {
@@ -151,8 +149,8 @@ export const refreshAccessToken = createAsyncThunk(
       );
 
       // Update tokens in Cookies
-      const { accessToken, refreshToken: newRefreshToken } = response.data;
-      saveTokensToCookies(accessToken, newRefreshToken);
+      const { access, refresh } = response.data;
+      saveTokensToCookies(access, refresh);
 
       return response.data;
     } catch (error: any) {
@@ -192,8 +190,8 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = action.payload?.user || null;
-      state.accessToken = action.payload?.accessToken || null;
-      state.refreshToken = action.payload?.refreshToken || null;
+      state.accessToken = action.payload?.access || null;
+      state.refreshToken = action.payload?.refresh || null;
     });
     builder.addCase(
       registerUser.rejected,
@@ -212,8 +210,8 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = action.payload?.user || null;
-      state.accessToken = action.payload?.accessToken || null;
-      state.refreshToken = action.payload?.refreshToken || null;
+      state.accessToken = action.payload?.access || null;
+      state.refreshToken = action.payload?.refresh || null;
     });
     builder.addCase(verifyOtp.rejected, (state, action: PayloadAction<any>) => {
       state.loading = false;
@@ -229,13 +227,27 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = action.payload?.user || null;
-      state.accessToken = action.payload?.accessToken || null;
-      state.refreshToken = action.payload?.refreshToken || null;
+      state.accessToken = action.payload?.access || null;
+      state.refreshToken = action.payload?.refresh || null;
     });
     builder.addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
       state.loading = false;
       state.error = action.payload?.detail || "Login failed";
     });
+
+    // Handle token life
+    builder.addCase(refreshAccessToken.pending, (state) => {
+      state.error = null;
+    })
+    builder.addCase(refreshAccessToken.fulfilled, (state, action) => {
+      state.isAuthenticated = true;
+      state.user = action.payload?.user || null;
+      state.accessToken = action.payload?.access || null;
+      state.refreshToken = action.payload?.refresh || null;
+    })
+    builder.addCase(refreshAccessToken.rejected, (state, action: PayloadAction<any>) => {
+      state.error = action.payload?.detail || "Somthing went wrong"
+    })
 
     // Handle user logout
     builder.addCase(logoutUser.pending, (state) => {
