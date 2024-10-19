@@ -1,5 +1,5 @@
 // import type { Metadata } from "next";
-"use client";
+// "use client";
 import localFont from "next/font/local";
 import "./globals.css";
 import ClientProvider from "@/lib/ClientProvider";
