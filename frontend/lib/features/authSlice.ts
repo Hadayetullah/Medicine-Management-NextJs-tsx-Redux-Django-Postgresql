@@ -137,10 +137,10 @@ export const logoutUser = createAsyncThunk(
 // Async thunk for token refresh
 export const refreshAccessToken = createAsyncThunk(
   "auth/refreshAccessToken",
-  async (_, { rejectWithValue }) => {
+  async (refreshToken: string, { rejectWithValue }) => {
     try {
-      const { refreshToken } = getTokensFromCookies();
-      if (!refreshToken) throw new Error("No refresh token available");
+      
+      // if (!refreshToken) throw new Error("No refresh token available");
 
       // Make the request to refresh the token
       const response = await axios.post(
@@ -246,6 +246,7 @@ const authSlice = createSlice({
       state.refreshToken = action.payload?.refresh || null;
     })
     builder.addCase(refreshAccessToken.rejected, (state, action: PayloadAction<any>) => {
+      state.isAuthenticated = false;
       state.error = action.payload?.detail || "Somthing went wrong"
     })
 

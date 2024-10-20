@@ -42,7 +42,7 @@ export const validateAccessTokenLife = async() => {
 }
 
 export const validateRefreshTokenLife = async():Promise<isValidProps> => {
-    let isValid = {};
+    let isValid = <isValidProps>{};
     if (typeof window !== "undefined") {
         
         const { refreshToken} = getTokensFromCookies();
