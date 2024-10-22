@@ -77,16 +77,17 @@ class LogoutView(APIView):
 class TokenRefresh(APIView):
     permission_classes = [AllowAny]
 
-    def post(self, request):
+    def post(self, request):        
         try:
             refresh_token = request.data.get("refresh_token")
             
-            # Validate the refresh token
+            # Validate and parse the refresh token
             token = RefreshToken(refresh_token)
-            
-            # Get the user associated with the refresh token
-            user = token.user
-            
+
+            user_id = token["user_id"]
+
+            user = User.objects.get(id=user_id)
+
             # Blacklist the old refresh token
             token.blacklist()
 
@@ -98,9 +99,10 @@ class TokenRefresh(APIView):
                 'access': new_tokens['access'],
                 'msg': 'Token refreshed successfully'
             }, status=status.HTTP_200_OK)
-
-        except TokenError:
+        
+        except TokenError as e:
             return Response({"error": "Invalid refresh token or token has been blacklisted."}, status=status.HTTP_400_BAD_REQUEST)
+        
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
