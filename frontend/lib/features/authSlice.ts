@@ -54,8 +54,8 @@ export const registerUser = createAsyncThunk(
       );
 
       // Save tokens to Cookies
-      const { access, refresh } = response.data.token;
-      saveTokensToCookies(access, refresh);
+      const { accessToken, refreshToken } = response.data.token;
+      saveTokensToCookies(accessToken, refreshToken);
 
       return { ...response.data, user: formData }; // Include user data in response
     } catch (error: any) {
@@ -75,8 +75,8 @@ export const verifyOtp = createAsyncThunk(
       );
 
       // Save tokens to Cookies
-      const { access, refresh } = response.data.token;
-      saveTokensToCookies(access, refresh);
+      const { accessToken, refreshToken } = response.data.token;
+      saveTokensToCookies(accessToken, refreshToken);
 
       return { ...response.data, user: { email: otpData.email } }; // Include user email
     } catch (error: any) {
@@ -99,8 +99,8 @@ export const loginUser = createAsyncThunk(
       );
 
       // Save tokens to Cookies
-      const { access, refresh } = response.data.token;
-      saveTokensToCookies(access, refresh);
+      const { accessToken, refreshToken } = response.data.token;
+      saveTokensToCookies(accessToken, refreshToken);
 
       return { ...response.data, user: { email: credentials.email } }; // Include user email
     } catch (error: any) {
@@ -137,7 +137,7 @@ export const logoutUser = createAsyncThunk(
 // Async thunk for token refresh
 export const refreshAccessToken = createAsyncThunk(
   "auth/refreshAccessToken",
-  async (refreshToken: string, { rejectWithValue }) => {
+  async (refresh_token: string, { rejectWithValue }) => {
     try {
       
       // if (!refreshToken) throw new Error("No refresh token available");
@@ -145,12 +145,12 @@ export const refreshAccessToken = createAsyncThunk(
       // Make the request to refresh the token
       const response = await axios.post(
         "http://localhost:8000/api/auth/refresh/",
-        { refresh_token: refreshToken }
+        { refresh_token: refresh_token }
       );
 
       // Update tokens in Cookies
-      const { access, refresh } = response.data;
-      saveTokensToCookies(access, refresh);
+      const { accessToken, refreshToken } = response.data;
+      saveTokensToCookies(accessToken, refreshToken);
 
       return response.data;
     } catch (error: any) {
@@ -190,8 +190,8 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = action.payload?.user || null;
-      state.accessToken = action.payload?.access || null;
-      state.refreshToken = action.payload?.refresh || null;
+      state.accessToken = action.payload?.accessToken || null;
+      state.refreshToken = action.payload?.refreshToken || null;
     });
     builder.addCase(
       registerUser.rejected,
@@ -210,8 +210,8 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = action.payload?.user || null;
-      state.accessToken = action.payload?.access || null;
-      state.refreshToken = action.payload?.refresh || null;
+      state.accessToken = action.payload?.accessToken || null;
+      state.refreshToken = action.payload?.refreshToken || null;
     });
     builder.addCase(verifyOtp.rejected, (state, action: PayloadAction<any>) => {
       state.loading = false;
@@ -227,8 +227,8 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = action.payload?.user || null;
-      state.accessToken = action.payload?.access || null;
-      state.refreshToken = action.payload?.refresh || null;
+      state.accessToken = action.payload?.accessToken || null;
+      state.refreshToken = action.payload?.refreshToken || null;
     });
     builder.addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
       state.loading = false;
@@ -242,8 +242,8 @@ const authSlice = createSlice({
     builder.addCase(refreshAccessToken.fulfilled, (state, action) => {
       state.isAuthenticated = true;
       state.user = action.payload?.user || null;
-      state.accessToken = action.payload?.access || null;
-      state.refreshToken = action.payload?.refresh || null;
+      state.accessToken = action.payload?.accessToken || null;
+      state.refreshToken = action.payload?.refreshToken || null;
     })
     builder.addCase(refreshAccessToken.rejected, (state, action: PayloadAction<any>) => {
       state.isAuthenticated = false;
