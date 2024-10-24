@@ -17,8 +17,8 @@ from .models import User
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
     return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
+        'refreshToken': str(refresh),
+        'accessToken': str(refresh.access_token),
     }
 
 class RegisterView(APIView):
@@ -95,8 +95,8 @@ class TokenRefresh(APIView):
             new_tokens = get_tokens_for_user(user)
             
             return Response({
-                'refresh': new_tokens['refresh'],
-                'access': new_tokens['access'],
+                'refreshToken': new_tokens['refreshToken'],
+                'accessToken': new_tokens['accessToken'],
                 'msg': 'Token refreshed successfully'
             }, status=status.HTTP_200_OK)
         
