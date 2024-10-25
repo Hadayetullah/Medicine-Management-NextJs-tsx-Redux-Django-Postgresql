@@ -2,24 +2,36 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import { RootState } from "@/lib/store";
-import { usePathname } from "next/navigation";
+import { RootState, useAppDispatch } from "@/lib/store";
+import { usePathname, useRouter } from "next/navigation";
+import { logoutUser } from "@/lib/features/authSlice";
+import { tokenValidationToLogout } from "@/actions";
 
 const Navbar = () => {
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const path = usePathname();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   // const pathName = path.split("/");
   // console.log(pathName[0] == "");
 
   const [toggleMenu, setToggleMenu] = useState(false);
   const [toggleUser, setToggleUser] = useState(false);
 
+  console.log(isAuthenticated);
+
   useEffect(() => {
     setToggleMenu(false);
-  }, [path]);
+  }, [path, router, dispatch]);
 
-  const handleToggleUser = () => {
-    setToggleUser(!toggleUser);
+  const handleLogout = async () => {
+    const isTokenValid = tokenValidationToLogout();
+    if (isTokenValid) {
+      dispatch(logoutUser(isTokenValid));
+    } else {
+      router.push("/login");
+    }
+    // setToggleUser(!toggleUser);
   };
 
   const authenticated = (
@@ -98,7 +110,7 @@ const Navbar = () => {
           strokeWidth={1.5}
           stroke="currentColor"
           className="size-8 text-white ml-7 cursor-pointer"
-          onClick={() => handleToggleUser()}
+          onClick={() => setToggleUser(!toggleUser)}
         >
           <path
             strokeLinecap="round"
@@ -110,13 +122,13 @@ const Navbar = () => {
         {toggleUser && (
           <div className="flex flex-col w-full absolute right-0 top-10 bg-white min-w-[120px] max-w-[150px] border border-gray-200 bg-gray-100 rounded rounded-xs shadow-lg">
             <button
-              onClick={() => handleToggleUser()}
+              onClick={() => setToggleUser(!toggleUser)}
               className="transition bg-gray-100 rounded hover:border hover:border-white hover:text-white w-full h-full py-2 px-2 text-left font-normal hover:bg-indigo-700"
             >
               Settings
             </button>
             <button
-              onClick={() => handleToggleUser()}
+              onClick={() => handleLogout()}
               className="transition bg-gray-100 rounded hover:border hover:border-white hover:text-white w-full h-full py-2 px-2 text-left font-normal hover:bg-indigo-700"
             >
               Logout

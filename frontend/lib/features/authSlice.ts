@@ -112,22 +112,28 @@ export const loginUser = createAsyncThunk(
 // Async thunk for user logout
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
-  async (_, { rejectWithValue }) => {
+  async (tokens: {accessToken: string, refreshToken: string}, { rejectWithValue }) => {
     try {
-      const { refreshToken } = getTokensFromCookies();
-
-      if (!refreshToken) throw new Error("No refresh token available");
+      
+      // if (!refresh_token) throw new Error("No refresh token available");
 
       // Send the refresh token to the backend for blacklisting
-      await axios.post(
+      const response = await axios.post(
         "http://localhost:8000/api/auth/logout/",
         {
-          refresh_token: refreshToken,
+          refresh_token: tokens.refreshToken,
+        }, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${tokens.accessToken}`
+          }
         }
       );
 
       // Clear tokens from Cookies
       removeTokensFromCookies();
+      return response.data
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);
     }

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { loginUser } from "../../lib/features/authSlice";
 import { RootState, useAppDispatch } from "../../lib/store";
@@ -21,12 +21,18 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const loginData = { email, password };
-    dispatch(loginUser(loginData));
+    return dispatch(loginUser(loginData));
   };
 
-  if (isAuthenticated) {
-    router.push("/");
-  }
+  // if (isAuthenticated) {
+  //   router.push("/");
+  // }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

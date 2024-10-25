@@ -4,6 +4,11 @@ import Cookies from "js-cookie"
 export type isValidProps = {
     isTokenValid: boolean;
     refreshToken: string | null;
+}
+
+  export type isTokenValidProps = {
+    accessToken: string;
+    refreshToken: string;
   }
 
 export const getTokensFromCookies = () => {
@@ -64,6 +69,35 @@ export const validateRefreshTokenLife = async():Promise<isValidProps> => {
         }
     } else {
         isValid = {...isValid, isTokenValid: false}
+    }
+
+    return isValid
+}
+
+
+export const tokenValidationToLogout = () => {
+    let isValid = <isTokenValidProps>{};
+    if (typeof window !== "undefined") {
+        
+        const { accessToken, refreshToken } = getTokensFromCookies();
+  
+        if (accessToken) {
+            const decoded: { exp: number } = jwtDecode(accessToken);
+  
+            const currentTime = Math.floor(Date.now() / 1000);
+  
+            // Check if the token is expired
+            if (currentTime >= decoded.exp) {
+                isValid = isValid
+            } else {
+                isValid = {...isValid, accessToken: accessToken, refreshToken: refreshToken}
+            }
+           
+        } else {
+            isValid = isValid
+        }
+    } else {
+        isValid = isValid
     }
 
     return isValid
