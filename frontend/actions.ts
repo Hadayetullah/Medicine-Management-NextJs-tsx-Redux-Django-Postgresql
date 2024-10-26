@@ -18,7 +18,7 @@ export const getTokensFromCookies = () => {
     };
 };
 
-export const validateAccessTokenLife = async() => {
+export const validateAccessTokenLife = () => {
     let isValid;
     if (typeof window !== "undefined") {
         
@@ -46,7 +46,7 @@ export const validateAccessTokenLife = async() => {
     return isValid
 }
 
-export const validateRefreshTokenLife = async():Promise<isValidProps> => {
+export const validateRefreshTokenLife = () => {
     let isValid = <isValidProps>{};
     if (typeof window !== "undefined") {
         

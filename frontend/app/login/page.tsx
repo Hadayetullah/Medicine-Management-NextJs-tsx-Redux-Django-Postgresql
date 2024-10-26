@@ -21,7 +21,7 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const loginData = { email, password };
-    return dispatch(loginUser(loginData));
+    dispatch(loginUser(loginData));
   };
 
   // if (isAuthenticated) {
@@ -29,10 +29,13 @@ const LoginPage = () => {
   // }
 
   useEffect(() => {
+    console.log("Login: ", isAuthenticated);
     if (isAuthenticated) {
       router.push("/");
+    } else {
+      router.push("/login");
     }
-  }, [isAuthenticated]);
+  }, [router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
