@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { validateAccessTokenLife, validateRefreshTokenLife } from "@/actions";
 import { RootState, useAppDispatch } from "@/lib/store";
 import { useSelector } from "react-redux";
@@ -16,49 +16,54 @@ export default function Home() {
 
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const pathName = usePathname();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const isAccessTokenValid = await validateAccessTokenLife();
+  const checkAuth = () => {
+    const isAccessTokenValid = validateAccessTokenLife();
 
-      if (!isAccessTokenValid) {
-        const isRefreshTokenValid: isValidProps =
-          await validateRefreshTokenLife();
+    if (!isAccessTokenValid) {
+      const isRefreshTokenValid: isValidProps = validateRefreshTokenLife();
 
-        if (!isRefreshTokenValid.isTokenValid) {
+      if (!isRefreshTokenValid.isTokenValid) {
+        dispatch(validateAuthentication(false));
+        router.push("/login");
+      } else {
+        if (isRefreshTokenValid.refreshToken) {
+          dispatch(refreshAccessToken(isRefreshTokenValid.refreshToken));
+        } else {
           dispatch(validateAuthentication(false));
           router.push("/login");
-        } else {
-          if (isRefreshTokenValid.refreshToken) {
-            dispatch(refreshAccessToken(isRefreshTokenValid.refreshToken));
-          } else {
-            dispatch(validateAuthentication(false));
-            router.push("/login");
-          }
         }
-      } else {
-        dispatch(validateAuthentication(true));
       }
-    };
+    } else {
+      dispatch(validateAuthentication(true));
+    }
+  };
 
+  useEffect(() => {
+    console.log("Home Inside useEffect: ", isAuthenticated);
     checkAuth();
-  }, [dispatch, router]);
+  }, [dispatch, router, isAuthenticated]);
 
-  if (isAuthenticated) {
-    return (
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-          Hello
-        </main>
-      </div>
-    );
-  } else {
-    return (
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-          Loading...
-        </main>
-      </div>
-    );
-  }
+  console.log("Home Outside useEffect: ", isAuthenticated);
+
+  // if (isAuthenticated && pathName === "/") {
+  return (
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+        Hello
+      </main>
+    </div>
+  );
+  // }
+
+  // else {
+  //   return (
+  //     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+  //       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+  //         Loading...
+  //       </main>
+  //     </div>
+  //   );
+  // }
 }

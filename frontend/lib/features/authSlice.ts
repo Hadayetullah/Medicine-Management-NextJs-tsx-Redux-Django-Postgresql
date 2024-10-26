@@ -102,6 +102,8 @@ export const loginUser = createAsyncThunk(
       const { accessToken, refreshToken } = response.data.token;
       saveTokensToCookies(accessToken, refreshToken);
 
+      console.log(response)
+
       return { ...response.data, user: { email: credentials.email } }; // Include user email
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -133,6 +135,7 @@ export const logoutUser = createAsyncThunk(
 
       // Clear tokens from Cookies
       removeTokensFromCookies();
+      // console.log(response)
       return response.data
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);

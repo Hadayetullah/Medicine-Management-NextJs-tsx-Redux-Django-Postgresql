@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "@/lib/store";
 import { usePathname, useRouter } from "next/navigation";
-import { logoutUser } from "@/lib/features/authSlice";
+import { logoutUser, validateAuthentication } from "@/lib/features/authSlice";
 import { tokenValidationToLogout } from "@/actions";
 
 const Navbar = () => {
@@ -18,20 +18,27 @@ const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const [toggleUser, setToggleUser] = useState(false);
 
-  console.log(isAuthenticated);
+  // console.log(isAuthenticated);
 
-  useEffect(() => {
-    setToggleMenu(false);
-  }, [path, router, dispatch]);
+  // useEffect(() => {
+  //   setToggleMenu(false);
+  // }, [path, router, dispatch]);
 
   const handleLogout = async () => {
     const isTokenValid = tokenValidationToLogout();
     if (isTokenValid) {
-      dispatch(logoutUser(isTokenValid));
+      const a = dispatch(logoutUser(isTokenValid));
+      // a.then((b) => console.log(b));
+      // console.log(a);
     } else {
-      router.push("/login");
+      dispatch(validateAuthentication(false));
     }
     // setToggleUser(!toggleUser);
+  };
+
+  const handleSettings = () => {
+    setToggleUser(false);
+    router.push("/settings");
   };
 
   const authenticated = (
@@ -122,7 +129,7 @@ const Navbar = () => {
         {toggleUser && (
           <div className="flex flex-col w-full absolute right-0 top-10 bg-white min-w-[120px] max-w-[150px] border border-gray-200 bg-gray-100 rounded rounded-xs shadow-lg">
             <button
-              onClick={() => setToggleUser(!toggleUser)}
+              onClick={() => handleSettings()}
               className="transition bg-gray-100 rounded hover:border hover:border-white hover:text-white w-full h-full py-2 px-2 text-left font-normal hover:bg-indigo-700"
             >
               Settings
