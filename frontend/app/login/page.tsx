@@ -24,18 +24,13 @@ const LoginPage = () => {
     dispatch(loginUser(loginData));
   };
 
-  // if (isAuthenticated) {
-  //   router.push("/");
-  // }
-
   useEffect(() => {
-    console.log("Login: ", isAuthenticated);
-    if (isAuthenticated) {
+    if (isAuthenticated && !loading) {
       router.push("/");
     } else {
       router.push("/login");
     }
-  }, [router]);
+  }, [router, dispatch, isAuthenticated]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

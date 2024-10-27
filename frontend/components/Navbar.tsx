@@ -20,26 +20,20 @@ const Navbar = () => {
 
   // console.log(isAuthenticated);
 
-  // useEffect(() => {
-  //   setToggleMenu(false);
-  // }, [path, router, dispatch]);
-
-  const handleLogout = async () => {
-    const isTokenValid = tokenValidationToLogout();
-    if (isTokenValid) {
-      const a = dispatch(logoutUser(isTokenValid));
-      // a.then((b) => console.log(b));
-      // console.log(a);
-    } else {
-      dispatch(validateAuthentication(false));
-    }
-    // setToggleUser(!toggleUser);
+  const handleLogout = () => {
+    setToggleUser(false);
+    dispatch(logoutUser(tokenValidationToLogout()));
+    router.push("/login");
   };
 
   const handleSettings = () => {
     setToggleUser(false);
     router.push("/settings");
   };
+
+  // useEffect(() => {
+  //   setToggleMenu(false);
+  // }, [path, router, dispatch, handleLogout]);
 
   const authenticated = (
     <div className="container mx-auto flex items-center flex-row justify-between">
@@ -66,11 +60,11 @@ const Navbar = () => {
             />
           </svg>
 
-          <ul className="hidden flex-row w-full justify-start sm:justify-end sm:flex text-white">
+          <ul className="hidden flex-row w-full justify-start sm:justify-end sm:flex text-white space-x-2">
             <li className="flex items-center justify-center">
               <Link
                 href="/"
-                className={`hover:bg-indigo-700 py-1 px-3 rounded-md ${
+                className={`hover:bg-indigo-700 py-1 px-2 rounded-md ${
                   path === "/" ? "bg-indigo-700" : ""
                 }`}
               >
@@ -81,7 +75,7 @@ const Navbar = () => {
             <li className="flex items-center justify-center">
               <Link
                 href="/project-overview"
-                className="hover:bg-indigo-700 py-1 px-3 rounded-md"
+                className="hover:bg-indigo-700 py-1 px-2 rounded-md"
               >
                 Project Overview
               </Link>
@@ -172,11 +166,11 @@ const Navbar = () => {
           </svg>
         </div>
 
-        <ul className="hidden flex-row w-full justify-start sm:justify-end sm:flex text-white">
+        <ul className="hidden flex-row w-full justify-start sm:justify-end sm:flex text-white space-x-2">
           <li className="flex items-center justify-center">
             <Link
               href="/signup"
-              className={`hover:bg-indigo-700 py-1 px-3 rounded-md ${
+              className={`hover:bg-indigo-700 py-1 px-2 rounded-md ${
                 path === "/signup" ? "bg-indigo-700" : ""
               }`}
             >
@@ -187,7 +181,7 @@ const Navbar = () => {
           <li className="flex items-center justify-center">
             <Link
               href="/login"
-              className={`hover:bg-indigo-700 py-1 px-3 rounded-md ${
+              className={`hover:bg-indigo-700 py-1 px-2 rounded-md ${
                 path === "/login" ? "bg-indigo-700" : ""
               }`}
             >
