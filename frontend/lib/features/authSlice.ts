@@ -275,6 +275,10 @@ const authSlice = createSlice({
       logoutUser.rejected,
       (state, action: PayloadAction<any>) => {
         state.loading = false;
+      state.isAuthenticated = false;
+      state.user = null;
+      state.accessToken = null;
+      state.refreshToken = null;
         state.error = action.payload?.detail || "Logout failed";
       }
     );
