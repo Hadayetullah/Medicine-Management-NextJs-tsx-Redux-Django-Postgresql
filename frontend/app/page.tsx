@@ -24,22 +24,24 @@ export default function Home() {
     const isAccessTokenValid = validateAccessTokenLife();
 
     if (!isAccessTokenValid) {
-      const isRefreshTokenValid: isValidProps = validateRefreshTokenLife();
+      router.push("/login");
+      // const isRefreshTokenValid: isValidProps = validateRefreshTokenLife();
 
-      if (!isRefreshTokenValid.isTokenValid) {
-        dispatch(validateAuthentication(false));
-        router.push("/login");
-      } else {
-        if (isRefreshTokenValid.refreshToken) {
-          dispatch(refreshAccessToken(isRefreshTokenValid.refreshToken));
-        } else {
-          dispatch(validateAuthentication(false));
-          router.push("/login");
-        }
-      }
-    } else {
-      dispatch(validateAuthentication(true));
+      // if (!isRefreshTokenValid.isTokenValid) {
+      //   dispatch(validateAuthentication(false));
+      //   router.push("/login");
+      // } else {
+      //   if (isRefreshTokenValid.refreshToken) {
+      //     dispatch(refreshAccessToken(isRefreshTokenValid.refreshToken));
+      //   } else {
+      //     dispatch(validateAuthentication(false));
+      //     router.push("/login");
+      //   }
+      // }
     }
+    // else {
+    //   dispatch(validateAuthentication(true));
+    // }
   };
 
   useEffect(() => {
