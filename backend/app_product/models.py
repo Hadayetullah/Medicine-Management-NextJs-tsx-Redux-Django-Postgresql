@@ -43,6 +43,7 @@ class Medicine(models.Model):
     dosage_form = models.ForeignKey(DosageForm, on_delete=models.CASCADE)
     price = models.FloatField()
     power = models.FloatField()
+    shelf_no = models.IntegerField()
     image = models.ImageField(upload_to='uploads/image', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
