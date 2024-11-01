@@ -26,6 +26,9 @@ class AddMedicine(models.Model):
 
 class SellMedicine(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    customer_name = models.CharField(max_length=255)
+    customer_age = models.IntegerField()
+    customer_phone = models.CharField(max_length=20, null=True, blank=True)
     medicine_list = models.ManyToManyField(Medicine, related_name='sells')
     sold_by = models.ForeignKey(User, related_name='sells_employee')
     sold_at = models.DateTimeField(auto_now_add=True)
