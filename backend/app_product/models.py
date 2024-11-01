@@ -38,9 +38,9 @@ class DosageForm(models.Model):
 class Medicine(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     brand = models.CharField(max_length=255, unique=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    dosage_form = models.ForeignKey(DosageForm, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='companies')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categories')
+    dosage_form = models.ForeignKey(DosageForm, on_delete=models.CASCADE, related_name='dosages')
     price = models.FloatField()
     power = models.FloatField()
     shelf_no = models.IntegerField()
