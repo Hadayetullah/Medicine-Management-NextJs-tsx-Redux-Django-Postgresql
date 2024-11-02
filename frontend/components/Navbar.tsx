@@ -74,10 +74,12 @@ const Navbar = () => {
 
             <li className="flex items-center justify-center">
               <Link
-                href="/project-overview"
-                className="hover:bg-indigo-700 py-1 px-2 rounded-md"
+                href="/add-medicine"
+                className={`hover:bg-indigo-700 py-1 px-2 rounded-md ${
+                  path === "/add-medicine" ? "bg-indigo-700" : ""
+                }`}
               >
-                Project Overview
+                Add Medicine
               </Link>
             </li>
           </ul>
@@ -94,10 +96,12 @@ const Navbar = () => {
               </Link>
 
               <Link
-                href="/project-overview"
-                className="transition bg-gray-100 rounded hover:border hover:border-white hover:text-white w-full h-full py-1 px-2 font-normal hover:bg-indigo-700"
+                href="/add-medicine"
+                className={`transition bg-gray-100 rounded hover:text-white hover:text-white w-full h-full py-1 px-2 font-normal hover:bg-indigo-700 ${
+                  path === "/add-medicine" ? "bg-indigo-700 text-white" : ""
+                }`}
               >
-                Project Overview
+                Add Medicine
               </Link>
             </div>
           )}
