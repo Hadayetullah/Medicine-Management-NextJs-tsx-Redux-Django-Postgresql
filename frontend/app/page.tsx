@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { validateAccessTokenLife, validateRefreshTokenLife } from "@/actions";
 import { RootState, useAppDispatch } from "@/lib/store";
 import { useSelector } from "react-redux";
@@ -25,6 +25,7 @@ export default function Home() {
 
     if (!isAccessTokenValid) {
       router.push("/login");
+      dispatch(validateAuthentication(false));
       // const isRefreshTokenValid: isValidProps = validateRefreshTokenLife();
 
       // if (!isRefreshTokenValid.isTokenValid) {
