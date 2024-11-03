@@ -37,7 +37,6 @@ class DosageForm(models.Model):
 
 class Medicine(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    brand = models.CharField(max_length=255, unique=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='companies')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categories')
     dosage_form = models.ForeignKey(DosageForm, on_delete=models.CASCADE, related_name='dosages')
@@ -46,7 +45,6 @@ class Medicine(models.Model):
     shelf_no = models.IntegerField()
     image = models.ImageField(upload_to='uploads/image', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.brand
