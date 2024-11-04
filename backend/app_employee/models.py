@@ -21,7 +21,7 @@ class AddMedicine(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE, related_name='added_medicines')
     created_by = models.ForeignKey(CreatedBy, on_delete=models.CASCADE, related_name='created_medicines')
-    updated_by = models.ForeignKey(UpdatedBy, on_delete=models.CASCADE, related_name='updated_medicines')
+    updated_by = models.ForeignKey(UpdatedBy, on_delete=models.CASCADE, related_name='updated_medicines', null=True, blank=True)
 
 
 class SellMedicine(models.Model):
