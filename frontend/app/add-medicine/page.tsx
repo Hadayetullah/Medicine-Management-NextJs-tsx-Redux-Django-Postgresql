@@ -4,8 +4,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { validateAccessTokenLife, validateRefreshTokenLife } from "@/actions";
 import { RootState, useAppDispatch } from "@/lib/store";
 import { useSelector } from "react-redux";
+import { addMedicine } from "@/lib/features/employeeSlice";
 
 export default function AddMedicine() {
+  // const { loading, error, medicine } = useSelector(
+  //   (state: RootState) => state.employee
+  // );
+  // console.log("State Medicine : ", medicine);
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     company: "",
@@ -25,13 +30,14 @@ export default function AddMedicine() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Add medicine data: ", formData);
-    // const result = await dispatch(registerUser(formData));
-    // if (result.meta.requestStatus === "fulfilled") {
-    //   // Open OTP modal if registration is successful
-    //   setEmailForOtp(formData.email);
-    //   setShowOtpModal(true);
-    // }
+    // console.log("Add medicine data: ", formData);
+    const result = dispatch(addMedicine(formData));
+    // // if (result.meta.requestStatus === "fulfilled") {
+    // //   // Open OTP modal if registration is successful
+    // //   setEmailForOtp(formData.email);
+    // //   setShowOtpModal(true);
+    // // }
+    result.then((response) => console.log(response));
   };
 
   return (

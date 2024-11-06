@@ -8,7 +8,7 @@ import employeeReducer from './features/employeeSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
-    employee: employeeReducer
+    employee: employeeReducer,
   },
 });
 
