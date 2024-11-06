@@ -2,7 +2,9 @@ from rest_framework import serializers
 
 from .models import Medicine
 
-class MedicineListSerializer(serializers.Serializer):
+
+# Medicine Serializer
+class MedicineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medicine
-        exclude = ('image', 'created_at', 'modified_at')
+        fields = ['id', 'brand', 'company', 'category', 'dosage_form', 'price', 'power', 'shelf_no', 'image', 'created_at', 'modified_at']
