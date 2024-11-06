@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import APIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -25,9 +25,9 @@ class AddMedicineView(APIView):
         dosage_form, _ = DosageForm.objects.get_or_create(name=dosage_form_data)
 
         medicine_data = {
-            'company': company.id,
-            'category': category.id,
-            'dosage_form': dosage_form.id,
+            'company': company,
+            'category': category,
+            'dosage_form': dosage_form,
             'price': request.data.get('price'),
             'power': request.data.get('power'),
             'shelf_no': request.data.get('shelf_no'),
@@ -44,8 +44,10 @@ class AddMedicineView(APIView):
 
             created_by = CreatedBy.objects.create(user=request.user)
             add_medicine = AddMedicine.objects.create(medicine=medicine, created_by=created_by)
-            add_medicine_serializer = AddMedicineSerializer(add_medicine)
+
+            AddMedicineSerializer(add_medicine)
+
             # add_medicine = AddMedicine.objects.create(medicine=medicine, created_by=created_by)
-            return Response({'msg': 'Medicine added successfully', 'medicine': add_medicine_serializer.data}, status=status.HTTP_201_CREATED)
+            return Response({'msg': 'Medicine added successfully', 'medicine': medicine_serializer.data}, status=status.HTTP_201_CREATED)
         return Response(medicine_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
