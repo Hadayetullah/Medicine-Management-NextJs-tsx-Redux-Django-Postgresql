@@ -47,7 +47,7 @@ class Medicine(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.brand
+        return self.category.name
     
     def medicine_pic_url(self):
         if self.image:
