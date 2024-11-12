@@ -1,25 +1,26 @@
 
 import { getTokensFromCookies } from "@/actions";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-interface employeeState {
+
+interface medicineState {
     medicine: {
-        id: number;
+        id: string;
         company: {
-            id: number;
+            id: string;
             name: string;
             created_at: string;
             modified_at: string;
         };
         category: {
-            id: number;
+            id: string;
             name: string;
             created_at: string;
             modified_at: string;
         };
         dosage_form: {
-            id: number;
+            id: string;
             name: string;
             created_at: string;
             modified_at: string;
@@ -30,13 +31,16 @@ interface employeeState {
         image_url: string;
         created_at: Date;
     } | null;
+}
 
+interface employeeState {
+    medicineList: medicineState[];
     loading: boolean;
     error: string | null;
 }
 
 const initialState: employeeState = {
-    medicine: null,
+    medicineList: [],
     loading: false,
     error: null,
 }
@@ -57,7 +61,7 @@ export const addMedicine = createAsyncThunk(
                 }
             })
 
-            return response
+            return response.data
         } catch (error: any){
             return rejectWithValue(error.response?.data || error.message)
         }
@@ -70,6 +74,18 @@ const employeeSlice = createSlice({
     name: 'employee',
     initialState,
     reducers: {},
+    extraReducers: (builder) => {
+        builder.addCase(addMedicine.pending, (state) => {
+            state.loading = true
+        });
+        builder.addCase(addMedicine.fulfilled, (state, action) => {
+            state.loading = false,
+            state.medicineList = [...state.medicineList, action.payload.medicine]
+        })
+        builder.addCase(addMedicine.rejected, (state, action: PayloadAction<any>) => {
+            state.error = action.payload?.detail || "Something went wrong"
+        })
+    },
 })
 
 

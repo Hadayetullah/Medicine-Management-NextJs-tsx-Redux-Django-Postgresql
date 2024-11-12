@@ -6,13 +6,14 @@ import { RootState, useAppDispatch } from "@/lib/store";
 import { useSelector } from "react-redux";
 import { addMedicine } from "@/lib/features/employeeSlice";
 
-export default function AddMedicine() {
-  const { loading, error, medicineList } = useSelector(
-    (state: RootState) => state.employee
-  );
-
+export default function UpdateMedicine() {
+  // const { loading, error, medicine } = useSelector(
+  //   (state: RootState) => state.employee
+  // );
+  // console.log("State Medicine : ", medicine);
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
+    id: "",
     company: "",
     category: "",
     dosage_form: "",
@@ -30,13 +31,15 @@ export default function AddMedicine() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // console.log("Add medicine data: ", formData);
     const result = dispatch(addMedicine(formData));
-    // result.then((response) => console.log(response));
+    // // if (result.meta.requestStatus === "fulfilled") {
+    // //   // Open OTP modal if registration is successful
+    // //   setEmailForOtp(formData.email);
+    // //   setShowOtpModal(true);
+    // // }
+    result.then((response) => console.log(response));
   };
-
-  useEffect(() => {
-    console.log("State Medicine : ", medicineList);
-  }, [dispatch, medicineList]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -151,7 +154,7 @@ export default function AddMedicine() {
             type="submit"
             className="w-full px-4 py-2 font-semibold text-white bg-indigo-600 rounded hover:bg-indigo-700"
           >
-            Add
+            Update
           </button>
         </form>
       </div>
