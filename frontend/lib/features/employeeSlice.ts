@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 
-interface medicineState {
+export type medicineState = {
     medicine: {
         id: string;
         company: {

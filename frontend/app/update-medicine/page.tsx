@@ -6,13 +6,23 @@ import { RootState, useAppDispatch } from "@/lib/store";
 import { useSelector } from "react-redux";
 import { addMedicine } from "@/lib/features/employeeSlice";
 
+interface formDataType {
+  id: string;
+  company: string;
+  category: string;
+  dosage_form: string;
+  price: string;
+  power: string;
+  shelf_no: string;
+}
+
 export default function UpdateMedicine() {
-  // const { loading, error, medicine } = useSelector(
-  //   (state: RootState) => state.employee
-  // );
-  // console.log("State Medicine : ", medicine);
+  const { loading, error, medicineList } = useSelector(
+    (state: RootState) => state.employee
+  );
+
   const dispatch = useAppDispatch();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<formDataType>({
     id: "",
     company: "",
     category: "",
@@ -31,15 +41,30 @@ export default function UpdateMedicine() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // console.log("Add medicine data: ", formData);
     const result = dispatch(addMedicine(formData));
-    // // if (result.meta.requestStatus === "fulfilled") {
-    // //   // Open OTP modal if registration is successful
-    // //   setEmailForOtp(formData.email);
-    // //   setShowOtpModal(true);
-    // // }
     result.then((response) => console.log(response));
   };
+
+  const getMedicineData = () => {
+    const data = medicineList[0].medicine;
+
+    const formData = {
+      id: data?.id || "",
+      company: data?.company?.name || "",
+      category: data?.category?.name || "",
+      dosage_form: data?.dosage_form?.name || "",
+      price: data?.price.toString() || "",
+      power: data?.power.toString() || "",
+      shelf_no: data?.shelf_no.toString() || "",
+    };
+
+    setFormData(formData);
+  };
+
+  useEffect(() => {
+    getMedicineData();
+    // console.log("State Medicine : ", medicineList);
+  }, [dispatch]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
