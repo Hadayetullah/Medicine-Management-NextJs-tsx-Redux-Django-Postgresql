@@ -89,4 +89,5 @@ const employeeSlice = createSlice({
 })
 
 
+export const {} = employeeSlice.actions
 export default employeeSlice.reducer;
