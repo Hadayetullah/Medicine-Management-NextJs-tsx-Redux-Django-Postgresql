@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { validateAccessTokenLife, validateRefreshTokenLife } from "@/actions";
 import { RootState, useAppDispatch } from "@/lib/store";
@@ -17,8 +17,16 @@ export default function Home() {
     (state: RootState) => state.auth
   );
 
+  const {} = useSelector((state: RootState) => state.employee);
+
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [currentTitle, setCurrentTitle] = useState<string>("");
+  const [medicineData, setMedicineData] = useState();
+
+  const handleActiveTitleAndData = (title: string) => {
+    setCurrentTitle(title);
+  };
 
   const checkAuth = () => {
     const isAccessTokenValid = validateAccessTokenLife();
@@ -53,10 +61,24 @@ export default function Home() {
     return <Loader />;
   } else {
     return (
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-          Hello
-        </main>
+      <div className="min-w-[190px] max-w-[300px] flex flex-row items-center justify-center gap-3 mt-[70px] mb-2 mx-auto">
+        <button
+          onClick={() => handleActiveTitleAndData("all")}
+          className={`hover:bg-blue-900 text-white w-full py-1 px-2 rounded-md ${
+            currentTitle === "all" ? "bg-blue-900" : "bg-blue-500"
+          }`}
+        >
+          All
+        </button>
+
+        <button
+          onClick={() => handleActiveTitleAndData("searched")}
+          className={`hover:bg-blue-900 text-white w-full py-1 px-2 rounded-md ${
+            currentTitle === "searched" ? "bg-blue-900" : "bg-blue-500"
+          }`}
+        >
+          Searched
+        </button>
       </div>
     );
   }
