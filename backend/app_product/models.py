@@ -2,6 +2,8 @@ import uuid
 from django.conf import settings
 from django.db import models
 
+from app_useraccount.models import User
+
 # Create your models here.
 
 
@@ -35,6 +37,12 @@ class DosageForm(models.Model):
         return self.name
 
 
+class UpdatedBy(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='updates_by')
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+
 class Medicine(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='companies')
@@ -44,6 +52,8 @@ class Medicine(models.Model):
     power = models.FloatField()
     shelf_no = models.IntegerField()
     image = models.ImageField(upload_to='uploads/image', null=True, blank=True)
+    created_by = models.OneToOneField(User, on_delete=models.CASCADE, related_name='createdby')
+    updated_by = models.ManyToManyField(UpdatedBy, related_name='updatedby')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -54,3 +64,29 @@ class Medicine(models.Model):
             return f'{settings.WEBSITE_URL}{self.image.url}'
         else:
             return ''
+        
+
+
+class Customer(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    customer_name = models.CharField(max_length=255)
+    customer_age = models.IntegerField()
+    customer_phone = models.CharField(max_length=20, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class EditedBy(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='updates_by')
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+class SellRecord(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer')
+    medicine = models.ManyToManyField(Medicine, related_name='medicines')
+    sold_by = models.ForeignKey(User, related_name='soldby', on_delete=models.CASCADE)
+    edited_by = models.ManyToManyField(EditedBy, related_name='editedby')
+    sold_at = models.DateTimeField(auto_now_add=True)
+        
+
+
