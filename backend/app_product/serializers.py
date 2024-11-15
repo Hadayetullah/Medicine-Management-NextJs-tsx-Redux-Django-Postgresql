@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Company, Category, DosageForm, Medicine
+from .models import Company, Category, DosageForm, Medicine, UpdatedBy, Customer, EditedBy, SellRecord
 
 
 # Medicine Serializer 
@@ -18,6 +18,12 @@ class DosageFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = DosageForm
         fields = '__all__'
+
+class UpdatedBySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UpdatedBy
+        fields = '__all__'
+
 
 class MedicineSerializer(serializers.ModelSerializer):
     # Use nested serializers for GET responses
@@ -37,3 +43,17 @@ class MedicineSerializer(serializers.ModelSerializer):
             'company_id', 'category_id', 'dosage_form_id',
             'price', 'power', 'shelf_no', 'image', 'created_at'
         ]
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = '__all__'
+
+
+class EditedBySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EditedBy
+        fields = '__all__'
+
+
