@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from app_useraccount.models import User
 from .models import Company, Category, DosageForm, Medicine, UpdatedBy, Customer, EditedBy, SellRecord
 
 
@@ -41,7 +42,7 @@ class MedicineSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'company', 'category', 'dosage_form', 
             'company_id', 'category_id', 'dosage_form_id',
-            'price', 'power', 'shelf_no', 'image', 'created_at'
+            'price', 'power', 'shelf_no', 'image', 'created_by', 'created_at'
         ]
 
 

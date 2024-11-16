@@ -70,3 +70,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             return f'{settings.WEBSITE_URL}{self.avater.url}'
         else:
             return ''
+        
+    def __str__(self):
+        return self.name
