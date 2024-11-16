@@ -56,7 +56,7 @@ class Medicine(models.Model):
     shelf_no = models.IntegerField()
     image = models.ImageField(upload_to='uploads/image', null=True, blank=True)
     created_by = models.OneToOneField(User, on_delete=models.CASCADE, related_name='createdby')
-    updated_by = models.ManyToManyField(UpdatedBy, related_name='updatedby')
+    updated_by = models.ManyToManyField(UpdatedBy, related_name='updatedby', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
