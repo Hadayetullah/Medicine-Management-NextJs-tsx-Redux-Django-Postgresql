@@ -34,13 +34,14 @@ class AddMedicineView(APIView):
             'power': request.data.get('power'),
             'shelf_no': request.data.get('shelf_no'),
             'image': request.data.get('image'),
-            'created_by': request.user
+            'created_by': '',
+            'created_by': request.user.id
         }
 
         medicine_serializer = MedicineSerializer(data=medicine_data, context={'request': request})
 
         if medicine_serializer.is_valid():
-            medicine = medicine_serializer.save()
+            medicine_serializer.save()
 
-            return Response({'msg': 'Medicine added successfully', 'medicine': medicine.data}, status=status.HTTP_201_CREATED)
+            return Response({'msg': 'Medicine added successfully', 'medicine': medicine_serializer.data}, status=status.HTTP_201_CREATED)
         return Response(medicine_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
