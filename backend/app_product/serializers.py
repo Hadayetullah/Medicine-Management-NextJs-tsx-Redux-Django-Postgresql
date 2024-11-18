@@ -46,6 +46,21 @@ class MedicineSerializer(serializers.ModelSerializer):
         ]
 
 
+class MedicineListSerializer(serializers.ModelSerializer):
+    # Use nested serializers for GET responses
+    company = CompanySerializer(read_only=True)
+    category = CategorySerializer(read_only=True)
+    dosage_form = DosageFormSerializer(read_only=True)
+
+    class Meta:
+        model = Medicine
+        fields = [
+            'id', 'company', 'category', 'dosage_form', 'price', 'power', 'shelf_no', 'image_url', 
+            'created_by', 'updated_by', 'created_at'
+        ]
+
+
+
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer

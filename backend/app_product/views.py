@@ -5,14 +5,22 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Company, Category, DosageForm, UpdatedBy
+from .models import Company, Category, DosageForm, UpdatedBy, Medicine
 from app_useraccount.models import User
 
 from .serializers import MedicineSerializer
 
 ''' Create your views here. '''
-class AddMedicineView(APIView):
+class MedicineView(APIView):
     permission_classes = [IsAuthenticated]
+
+
+    def get(self, request):
+        medicines = Medicine.objects.all()
+        serializer = MedicineSerializer(medicines, many=True, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    
 
     def post(self, request):
         company_data = request.data.get('company')
