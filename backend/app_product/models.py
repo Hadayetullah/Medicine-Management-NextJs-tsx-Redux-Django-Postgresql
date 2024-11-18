@@ -62,7 +62,7 @@ class Medicine(models.Model):
     def __str__(self):
         return self.category.name
     
-    def medicine_pic_url(self):
+    def image_url(self):
         if self.image:
             return f'{settings.WEBSITE_URL}{self.image.url}'
         else:
