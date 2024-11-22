@@ -70,12 +70,6 @@ class MedicineConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             return {'error': str(e)}
 
-    async def get_medicines(self):
-        """Retrieves a list of medicines."""
-        medicines = await sync_to_async(list)(
-            Medicine.objects.values('id', 'category__name', 'price', 'power', 'shelf_no')
-        )
-        return {'medicines': medicines}
 
     async def medicine_update(self, event):
         """Handles broadcasting updates to all WebSocket connections."""
