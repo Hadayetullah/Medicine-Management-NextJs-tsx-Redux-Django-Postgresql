@@ -43,10 +43,12 @@ class MedicineConsumer(AsyncWebsocketConsumer):
     async def add_medicine(self, data):
         """Adds a new medicine to the database."""
         try:
-            company = await sync_to_async(Company.objects.get)(id=data['company_id'])
-            category = await sync_to_async(Category.objects.get)(id=data['category_id'])
-            dosage_form = await sync_to_async(DosageForm.objects.get)(id=data['dosage_form_id'])
+            # Fetch the related objects using their names
+            company = await sync_to_async(Company.objects.get)(name=data['company_name'])
+            category = await sync_to_async(Category.objects.get)(name=data['category_name'])
+            dosage_form = await sync_to_async(DosageForm.objects.get)(name=data['dosage_form_name'])
             
+            # Create the medicine object
             medicine = await sync_to_async(Medicine.objects.create)(
                 company=company,
                 category=category,
@@ -54,24 +56,47 @@ class MedicineConsumer(AsyncWebsocketConsumer):
                 price=data['price'],
                 power=data['power'],
                 shelf_no=data['shelf_no'],
-                created_by=self.scope['user']  # Assuming user is authenticated
+                created_by=self.scope['user']  # Assuming user is authenticated for now
             )
+
+
+            # Serialize the medicine object
+            medicine_data = {
+                'id': str(medicine.id),
+                'company': company.name,
+                'category': category.name,
+                'dosage_form': dosage_form.name,
+                'price': medicine.price,
+                'power': medicine.power,
+                'shelf_no': medicine.shelf_no,
+                'created_by': self.scope['user'].id,
+                'created_at': medicine.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            }
+            
 
             # Broadcast the new medicine to the group
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
-                    'type': 'medicine_update',
-                    'message': f"New medicine added: {medicine.category.name}"
+                    'type': 'handle_add_medicine',
+                    'message': f"New medicine added: {medicine.category.name}",
+                    'medicine': medicine_data  # Include the serialized medicine object
                 }
             )
 
-            return {'success': f"Medicine {medicine.category.name} added successfully!"}
+            # Return the medicine data to the client that triggered the creation
+            return {'success': "Medicine added successfully!", 'medicine': medicine_data}
+        
         except Exception as e:
             return {'error': str(e)}
 
 
-    async def medicine_update(self, event):
+    async def handle_add_medicine(self, event):
         """Handles broadcasting updates to all WebSocket connections."""
         message = event['message']
-        await self.send(text_data=json.dumps({'update': message}))
+        medicine = event['medicine']  # Get the serialized medicine object
+        
+        await self.send(text_data=json.dumps({
+            'msg': message,
+            'medicine': medicine
+        }))
