@@ -1,3 +1,5 @@
+from django.db import IntegrityError
+
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
@@ -95,11 +97,9 @@ class MedicineConsumer(AsyncWebsocketConsumer):
             return {'success': "Medicine added successfully!", 'medicine': medicine_data}
         
         except IntegrityError as e:
-            logger.error(f"Integrity error: {str(e)}")
             return {'error': f"Integrity error occurred: {str(e)}"}
 
         except Exception as e:
-            logger.error(f"Unexpected error: {str(e)}")
             return {'error': f"An unexpected error occurred: {str(e)}"}
 
 
@@ -112,3 +112,6 @@ class MedicineConsumer(AsyncWebsocketConsumer):
             'msg': message,
             'medicine': medicine
         }))
+
+
+
