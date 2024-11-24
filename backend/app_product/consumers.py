@@ -6,7 +6,7 @@ from .models import Medicine, Company, Category, DosageForm
 class MedicineConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # Allow connection
-        self.room_group_name = 'medicine_updates'
+        self.room_group_name = 'medicine'
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -43,10 +43,17 @@ class MedicineConsumer(AsyncWebsocketConsumer):
     async def add_medicine(self, data):
         """Adds a new medicine to the database."""
         try:
-            # Fetch the related objects using their names
-            company = await sync_to_async(Company.objects.get)(name=data['company_name'])
-            category = await sync_to_async(Category.objects.get)(name=data['category_name'])
-            dosage_form = await sync_to_async(DosageForm.objects.get)(name=data['dosage_form_name'])
+
+            # Ensure the user is authenticated
+            user = self.scope.get('user')
+            if not user or not user.is_authenticated:
+                return {'error': 'User is not authenticated'}
+        
+
+            # Fetch or create the related objects using their names
+            company, _ = await sync_to_async(Company.objects.get_or_create)(name=data['company_name'])
+            category, _ = await sync_to_async(Category.objects.get_or_create)(name=data['category_name'])
+            dosage_form, _ = await sync_to_async(DosageForm.objects.get_or_create)(name=data['dosage_form_name'])
             
             # Create the medicine object
             medicine = await sync_to_async(Medicine.objects.create)(
@@ -87,8 +94,13 @@ class MedicineConsumer(AsyncWebsocketConsumer):
             # Return the medicine data to the client that triggered the creation
             return {'success': "Medicine added successfully!", 'medicine': medicine_data}
         
+        except IntegrityError as e:
+            logger.error(f"Integrity error: {str(e)}")
+            return {'error': f"Integrity error occurred: {str(e)}"}
+
         except Exception as e:
-            return {'error': str(e)}
+            logger.error(f"Unexpected error: {str(e)}")
+            return {'error': f"An unexpected error occurred: {str(e)}"}
 
 
     async def handle_add_medicine(self, event):
