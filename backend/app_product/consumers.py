@@ -5,6 +5,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from .models import Medicine, Company, Category, DosageForm
 
+from .serializers import MedicineListSerializer
+
 class MedicineConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # Allow connection
@@ -70,17 +72,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
 
             # Serialize the medicine object
-            medicine_data = {
-                'id': str(medicine.id),
-                'company': company.name,
-                'category': category.name,
-                'dosage_form': dosage_form.name,
-                'price': medicine.price,
-                'power': medicine.power,
-                'shelf_no': medicine.shelf_no,
-                'created_by': self.scope['user'].id,
-                'created_at': medicine.created_at.strftime('%Y-%m-%d %H:%M:%S')
-            }
+            medicine_data = MedicineListSerializer(medicine).data
             
 
             # Broadcast the new medicine to the group
@@ -109,7 +101,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
         medicine = event['medicine']  # Get the serialized medicine object
         
         await self.send(text_data=json.dumps({
-            'msg': message,
+            'message': message,
             'medicine': medicine
         }))
 
