@@ -19,6 +19,15 @@ def get_user(token_key):
         return AnonymousUser
     
 
+def get_token_expiry(token_key):
+    try:
+        token = AccessToken(token_key)
+        expiry = datetime.fromtimestamp(token.payload['exp'])
+        return expiry
+    except Exception:
+        return None
+    
+
 class TokenAuthMiddleware(BaseMiddleware):
     def __init__(self, inner):
         self.inner = inner
@@ -29,15 +38,9 @@ class TokenAuthMiddleware(BaseMiddleware):
         user = await get_user(token_key)
 
         scope['user'] = user
-        scope['token_expiry'] = self.get_token_expiry(token_key)
+        scope['token_expiry'] = get_token_expiry(token_key)
 
         return await super().__call__(scope, receive, send)
     
 
-    def get_token_expiry(self, token_key):
-        try:
-            token = AccessToken(token_key)
-            expiry = datetime.fromtimestamp(token.payload['exp'])
-            return expiry
-        except Exception:
-            return None
+    
