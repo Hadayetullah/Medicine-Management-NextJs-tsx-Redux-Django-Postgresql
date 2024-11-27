@@ -43,6 +43,8 @@ class TokenAuthMiddleware(BaseMiddleware):
         scope['user'] = user
         scope['token_expiry'] = get_token_expiry(token_key)
 
+        asyncio.create_task(self.token_validation_loop(scope, send))
+
         return await super().__call__(scope, receive, send)
     
 
