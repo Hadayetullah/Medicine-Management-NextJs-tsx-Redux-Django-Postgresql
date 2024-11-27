@@ -1,5 +1,8 @@
+import json
+import asyncio
+
 from django.contrib.auth.models import AnonymousUser
-from datetime import datetime
+from datetime import datetime, timezone
 
 from channels.db import database_sync_to_async
 from channels.middleware import BaseMiddleware
@@ -43,4 +46,21 @@ class TokenAuthMiddleware(BaseMiddleware):
         return await super().__call__(scope, receive, send)
     
 
-    
+    async def token_validation_loop(self, scope, send):
+        while True:
+            token_expiry = scope.get('token_expiry')
+            if not token_expiry:
+                # Close the connection if the token is invalid
+                await send({'type': 'websocket.close'})
+                break
+
+            # Check if the token is about to expire
+            time_left = (token_expiry - datetime.now(timezone.utc)).total_seconds()
+            if time_left < 30:  # 30 seconds threshold for token renewal
+                # Request token renewal from the client
+                await send({
+                    'type': 'websocket.send',
+                    'text': json.dumps({'action': 'renew_token'})
+                })
+
+            await asyncio.sleep(10)  # Check token validity every 10 seconds
