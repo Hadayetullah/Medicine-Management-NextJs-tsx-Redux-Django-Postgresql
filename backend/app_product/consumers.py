@@ -27,7 +27,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         """
         Handles messages from the WebSocket. 
-        Expected actions: `add_medicine`, `get_medicines`
+        Expected actions: `add_medicine`, `update_token`
         """
         data = json.loads(text_data)
         action = data.get('action')
@@ -35,9 +35,9 @@ class MedicineConsumer(AsyncWebsocketConsumer):
         if action == 'add_medicine':
             # Add a new medicine
             response = await self.add_medicine(data)
-        elif action == 'get_medicines':
+        elif action == 'update_token':
             # Fetch medicines
-            response = await self.get_medicines()
+            response = await self.update_token()
         else:
             response = {'error': 'Invalid action'}
 
@@ -93,6 +93,20 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
         except Exception as e:
             return {'error': f"An unexpected error occurred: {str(e)}"}
+
+
+
+
+    async def update_token(self, data):
+        # new_token = data.get('token')
+        # user = await get_user(new_token)
+        user = self.scope.get('user')
+        if user.is_authenticated:
+            self.scope['user'] = user
+            self.scope['token_expiry'] = self.scope.get('token_expiry')
+            await self.send(json.dumps({'success': 'Token updated'}))
+        else:
+            await self.send(json.dumps({'error': 'Invalid token'}))
 
 
     async def handle_add_medicine(self, event):
