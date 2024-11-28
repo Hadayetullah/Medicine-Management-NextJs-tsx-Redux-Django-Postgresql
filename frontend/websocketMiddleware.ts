@@ -1,15 +1,10 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { connect, disconnect, addMessage, setError } from "./lib/features/websocketSlice";
 
-interface WebSocketAction {
-  type: string;
-  payload?: any;
-}
-
 export const createWebSocketMiddleware = (url: string): Middleware => {
   let socket: WebSocket | null = null;
 
-  return (storeAPI) => (next) => (action: WebSocketAction) => {
+  return (storeAPI) => (next) => (action: any) => {
     switch (action.type) {
       case "websocket/connect": {
         socket = new WebSocket(url);
