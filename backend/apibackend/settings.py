@@ -108,7 +108,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'apibackend.wsgi.application'
-ASGI_APPLICATION = 'apibackend.wsgi.application'
+ASGI_APPLICATION = 'apibackend.asgi.application'
 
 
 # Database settings

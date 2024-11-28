@@ -34,7 +34,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
         if action == 'add_medicine':
             # Add a new medicine
-            response = await self.add_medicine(data)
+            response = await self.add_medicine()
         elif action == 'update_token':
             # Fetch medicines
             response = await self.update_token()
@@ -97,7 +97,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
 
 
-    async def update_token(self, data):
+    async def update_token(self):
         # new_token = data.get('token')
         # user = await get_user(new_token)
         user = self.scope.get('user')
