@@ -1,12 +1,20 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { connect, disconnect, addMessage, setError } from "./lib/features/websocketSlice";
 
-export const createWebSocketMiddleware = (url: string): Middleware => {
+export const createWebSocketMiddleware = (): Middleware => {
   let socket: WebSocket | null = null;
 
   return (storeAPI) => (next) => (action: any) => {
     switch (action.type) {
       case "websocket/connect": {
+        const token = action.payload || '';
+
+        if (!token) {
+          console.error("Access token not found in action payload. Cannot establish WebSocket connection.");
+          return;
+        }
+
+        const url = `ws://127.0.0.1:8000/ws/product/medicine/?token=${token}`;
         socket = new WebSocket(url);
 
         socket.onopen = () => {
@@ -18,11 +26,12 @@ export const createWebSocketMiddleware = (url: string): Middleware => {
             const data = JSON.parse(event.data);
             storeAPI.dispatch(addMessage(data));
           } catch (error) {
-            console.error("Failed to parse WebSocket message", error);
+            console.error("Failed to parse WebSocket message: ", error);
           }
         };
 
         socket.onerror = (error) => {
+          console.error("WebSocket error occurred: ", error)
           storeAPI.dispatch(setError("WebSocket error occurred"));
         };
 
