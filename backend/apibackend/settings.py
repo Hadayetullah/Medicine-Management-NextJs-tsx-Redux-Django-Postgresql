@@ -25,6 +25,13 @@ AUTH_USER_MODEL = 'app_useraccount.User'
 # Website URL for media
 WEBSITE_URL = 'http://localhost:8000'
 
+# This CHANNEL_LAYERS configuration is only for development
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
+
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
