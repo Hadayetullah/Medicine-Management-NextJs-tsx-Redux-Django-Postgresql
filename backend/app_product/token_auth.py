@@ -25,7 +25,7 @@ def get_user(token_key):
 def get_token_expiry(token_key):
     try:
         token = AccessToken(token_key)
-        expiry = datetime.fromtimestamp(token.payload['exp'])
+        expiry = datetime.fromtimestamp(token.payload['exp'], tz=timezone.utc)
         return expiry
     except Exception:
         return None
