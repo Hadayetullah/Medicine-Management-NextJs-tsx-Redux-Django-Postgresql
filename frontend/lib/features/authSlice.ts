@@ -236,8 +236,8 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = action.payload?.user || null;
-      state.accessToken = action.payload?.accessToken || null;
-      state.refreshToken = action.payload?.refreshToken || null;
+      state.accessToken = action.payload.token?.accessToken || null;
+      state.refreshToken = action.payload.token?.refreshToken || null;
     });
     builder.addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
       state.loading = false;
