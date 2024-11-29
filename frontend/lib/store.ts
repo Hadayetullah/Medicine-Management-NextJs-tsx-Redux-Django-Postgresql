@@ -8,7 +8,7 @@ import websocketReducer from './features/websocketSlice';
 import { createWebSocketMiddleware } from '@/websocketMiddleware';
 
 
-const websocketMiddleware = createWebSocketMiddleware("ws://127.0.0.1:8000/ws/product/medicine/");
+const websocketMiddleware = createWebSocketMiddleware();
 
 
 const store = configureStore({
