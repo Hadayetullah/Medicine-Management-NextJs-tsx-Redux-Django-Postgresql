@@ -13,7 +13,7 @@ import { isValidProps } from "@/actions";
 import Loader from "@/components/Loader";
 
 export default function Home() {
-  const { loading, isAuthenticated } = useSelector(
+  const { loading, isAuthenticated, accessToken } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -55,6 +55,10 @@ export default function Home() {
 
   useEffect(() => {
     checkAuth();
+
+    if (accessToken && isAuthenticated) {
+      dispatch({ type: "websocket/connect", payload: accessToken }); // Pass token in payload
+    }
   }, [dispatch, router]);
 
   if (loading || !isAuthenticated) {
