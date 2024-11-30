@@ -1,18 +1,27 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { connect, disconnect, addMessage, setError } from "./lib/features/websocketSlice";
 
+let websocketInitialized = false;
+
 export const createWebSocketMiddleware = (): Middleware => {
   let socket: WebSocket | null = null;
 
   return (storeAPI) => (next) => (action: any) => {
     switch (action.type) {
       case "websocket/connect": {
-        const token = action.payload || '';
+        const token = action.payload;
+
+        if (websocketInitialized) {
+          console.log("WebSocket connection already initialized, skipping dispatch.");
+          return;
+        }
 
         if (!token) {
           console.error("Access token not found in action payload. Cannot establish WebSocket connection.");
           return;
         }
+
+        websocketInitialized = true;
 
         const url = `ws://127.0.0.1:8000/ws/product/medicine/?token=${token}`;
         socket = new WebSocket(url);
