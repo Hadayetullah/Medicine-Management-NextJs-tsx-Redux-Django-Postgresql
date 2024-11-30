@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { validateAccessTokenLife, validateRefreshTokenLife } from "@/actions";
 import { RootState, useAppDispatch } from "@/lib/store";
@@ -17,7 +17,7 @@ export default function Home() {
     (state: RootState) => state.auth
   );
 
-  const {} = useSelector((state: RootState) => state.employee);
+  // const {} = useSelector((state: RootState) => state.employee);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -53,12 +53,17 @@ export default function Home() {
     // }
   };
 
+  const hasRunEffect = useRef(false);
+
+  useEffect(() => {
+    if (isAuthenticated && accessToken && !hasRunEffect.current) {
+      hasRunEffect.current = true; // Mark effect as run
+      dispatch({ type: "websocket/connect", payload: accessToken });
+    }
+  }, [isAuthenticated, accessToken]);
+
   useEffect(() => {
     checkAuth();
-
-    if (accessToken && isAuthenticated) {
-      dispatch({ type: "websocket/connect", payload: accessToken }); // Pass token in payload
-    }
   }, [dispatch, router]);
 
   if (loading || !isAuthenticated) {
