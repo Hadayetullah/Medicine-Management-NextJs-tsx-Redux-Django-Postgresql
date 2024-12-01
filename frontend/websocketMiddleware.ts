@@ -6,7 +6,7 @@ import { connect, disconnect, addMessage, setError } from "./lib/features/websoc
 let websocketConnections: Map<string, WebSocket> = new Map();
 
 export const createWebSocketMiddleware = (): Middleware => {
-  let socket: WebSocket | null = null;
+  // let socket: WebSocket | null = null;
 
   return (storeAPI) => (next) => (action: any) => {
     switch (action.type) {
@@ -42,7 +42,7 @@ export const createWebSocketMiddleware = (): Middleware => {
 
         // const url = `ws://127.0.0.1:8000/ws/product/medicine/?token=${token}`;
         const connectionUrl = `${url}?token=${token}`;
-        socket = new WebSocket(connectionUrl);
+        const socket = new WebSocket(connectionUrl);
 
         // Add event listeners
         // socket.onopen = () => {
