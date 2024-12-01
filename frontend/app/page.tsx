@@ -57,10 +57,29 @@ export default function Home() {
 
   useEffect(() => {
     if (isAuthenticated && accessToken && !hasRunEffect.current) {
-      hasRunEffect.current = true; // Mark effect as run
-      dispatch({ type: "websocket/connect", payload: accessToken });
+      hasRunEffect.current = true;
+
+      // Dispatch WebSocket connection for medicine
+      dispatch({
+        type: "websocket/connect",
+        payload: {
+          connectionKey: "medicineConnection",
+          token: accessToken,
+          url: "ws://127.0.0.1:8000/ws/product/medicine/",
+        },
+      });
+
+      // Dispatch WebSocket connection for notification
+      // dispatch({
+      //   type: "websocket/connect",
+      //   payload: {
+      //     connectionKey: "notificationConnection",
+      //     token: accessToken,
+      //     url: "ws://127.0.0.1:8000/ws/product/notification/",
+      //   },
+      // });
     }
-  }, [isAuthenticated, accessToken]);
+  }, [isAuthenticated, accessToken, dispatch]);
 
   useEffect(() => {
     checkAuth();
