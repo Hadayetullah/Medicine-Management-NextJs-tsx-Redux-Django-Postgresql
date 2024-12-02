@@ -118,7 +118,11 @@ export default function Home() {
           >
             <div className="min-w-[900px] max-w-full">
               <div className="h-[40px] w-full bg-gray-100 font-bold text-xs md:text-sm text-gray-500 flex flex-row pl-1 sm:pl-2.5 pr-4">
-                <div className="w-[12%] h-full flex items-center pl-2">
+                <div className="w-[15%] h-full flex items-center pl-2">
+                  <h4>Name</h4>
+                </div>
+
+                <div className="w-[15%] h-full flex items-center pl-1">
                   <h4>Company</h4>
                 </div>
 
@@ -127,27 +131,23 @@ export default function Home() {
                 </div>
 
                 <div className="w-[14%] h-full flex items-center pl-1">
-                  <h4>Medicine Name</h4>
-                </div>
-
-                <div className="w-[7%] h-full flex items-center justify-center pl-1">
-                  <h4>Price</h4>
+                  <h4>Dosage Form</h4>
                 </div>
 
                 <div className="w-[12%] h-full flex items-center justify-center pl-1">
                   <h4>Power/Strenght</h4>
                 </div>
 
-                <div className="w-[14%] h-full flex items-center pl-1">
-                  <h4>Created Time</h4>
+                <div className="w-[7%] h-full flex items-center justify-center pl-1">
+                  <h4>Price</h4>
                 </div>
 
-                <div className="w-[14%] h-full flex items-center pl-1">
-                  <h4>Modified Time</h4>
+                <div className="w-[10%] h-full flex items-center pl-1">
+                  <h4>Available</h4>
                 </div>
 
                 <div className="w-[13%] h-full flex items-center justify-center pl-1">
-                  <h4>Edit/Delete</h4>
+                  <h4>View Detail</h4>
                 </div>
               </div>
 
@@ -160,7 +160,11 @@ export default function Home() {
                     <div
                       className={`w-full h-full flex flex-row text-gray-500`}
                     >
-                      <div className="w-[12%] h-full flex my-1 items-center pl-2">
+                      <div className="w-[15%] h-full flex my-1 items-center pl-2">
+                        <h4>{"medicine name"}</h4>
+                      </div>
+
+                      <div className="w-[15%] h-full flex my-1 items-center pl-1">
                         <h4>{"Company name"}</h4>
                       </div>
 
@@ -169,25 +173,19 @@ export default function Home() {
                       </div>
 
                       <div className="w-[14%] h-full flex my-1 items-center pl-1">
-                        <h4>{"medicine name"}</h4>
-                      </div>
-
-                      <div className="w-[7%] h-full flex my-1 pl-1 justify-center">
-                        <h4>{"medicine price"}</h4>
+                        <h4>{"dosage form"}</h4>
                       </div>
 
                       <div className="w-[12%] h-full flex my-1 items-center justify-center pl-1">
                         <h4>{"medicine power"}</h4>
                       </div>
 
-                      <div className="w-[14%] h-full flex my-1 flex-col pl-1">
-                        <h4>{"createdWholeDate"}</h4>
-                        <h4>{"createdWholeTime"}</h4>
+                      <div className="w-[7%] h-full flex my-1 pl-1 justify-center">
+                        <h4>{"medicine price"}</h4>
                       </div>
 
-                      <div className="w-[14%] h-full flex my-1 flex-col pl-1">
-                        <h4>{"modifiedWholeDate"}</h4>
-                        <h4>{"modifiedWholeTime"}</h4>
+                      <div className="w-[10%] h-full flex my-1 flex-col pl-1">
+                        <h4>{"Available"}</h4>
                       </div>
 
                       <div className="w-[13%] h-full flex my-1 flex-col pl-1 items-center gap-[3px]">
