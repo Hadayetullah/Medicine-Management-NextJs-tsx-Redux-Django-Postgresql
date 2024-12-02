@@ -61,6 +61,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
             
             # Create the medicine object
             medicine = await sync_to_async(Medicine.objects.create)(
+                name=data['name'],
                 company=company,
                 category=category,
                 dosage_form=dosage_form,

@@ -48,6 +48,7 @@ class UpdatedBy(models.Model):
 
 class Medicine(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255, blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='companies')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categories')
     dosage_form = models.ForeignKey(DosageForm, on_delete=models.CASCADE, related_name='dosages')
