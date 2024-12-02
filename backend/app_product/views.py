@@ -35,6 +35,7 @@ class MedicineView(APIView):
 
         # Prepare data for MedicineSerializer with IDs
         medicine_data = {
+            'name': request.data.get('name'),
             'company_id': company.id,
             'category_id': category.id,
             'dosage_form_id': dosage_form.id,
