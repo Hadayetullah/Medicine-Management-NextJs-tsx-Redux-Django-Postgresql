@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getTokensFromCookies } from "@/actions";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
 // interface WebSocketState {
 //   connected: boolean;
@@ -12,19 +14,112 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 //   error: null,
 // };
 
-interface WebSocketState {
-  connections: {
-    [connectionKey: string]: {
-      connected: boolean;
-      error?: string;
-      messages: any[];
+interface MedicineFormData {
+  company: string;
+  category: string;
+  dosage_form: string;
+  price: string;
+  power: string;
+  shelf_no: string;
+};
+
+export type AddMedicineRequest = {
+  formData: MedicineFormData;
+  token: string;
+};
+
+interface MedicineType {
+  medicine: {
+    id: string;
+    name: string;
+    company: {
+        id: string;
+        name: string;
+        created_at: string;
+        modified_at: string;
     };
+    category: {
+        id: string;
+        name: string;
+        created_at: string;
+        modified_at: string;
+    };
+    dosage_form: {
+        id: string;
+        name: string;
+        created_at: string;
+        modified_at: string;
+    };
+    price: number;
+    power: number;
+    shelf_no: number;
+    image_url: string;
+    created_at: Date;
+} | null;
+}
+
+interface WebSocketState {
+  [connectionKey: string]: {
+    connected: boolean;
+    error?: string;
+    messages: any[];
   };
 }
 
-const initialState: WebSocketState = {
+interface MainStateType {
+  loading: boolean;
+  connections: WebSocketState;
+  medicineList: MedicineType[];
+}
+
+const initialState: MainStateType = {
+  loading: false,
   connections: {},
+  medicineList: [],
 };
+
+
+
+// Async thunk to fetch all medicines
+// export const fetchMedicines = createAsyncThunk(
+//   "employee/addMedicine",
+//   async(data: AddMedicineRequest, {rejectWithValue}) => {
+//       try {
+//           const response = await axios.post('http://localhost:8000/api/employee/add-medicine/', data.formData, {
+//               headers: {
+//                   'accept': 'application/json',
+//                   "Content-Type": 'application/json',
+//                   'Authorization': `Bearer ${data.token}`
+//               }
+//           })
+
+//           return response
+//       } catch (error: any){
+//           return rejectWithValue(error.response?.data || error.message)
+//       }
+//   }
+// )
+
+
+export const fetchMedicines = createAsyncThunk(
+  "employee/addMedicine",
+  async(token: string, {rejectWithValue}) => {
+      try {
+          const response = await axios.get('http://localhost:8000/api/product/medicine/', {
+              headers: {
+                  'accept': 'application/json',
+                  "Content-Type": 'application/json',
+                  'Authorization': `Bearer ${token}`
+              }
+          })
+
+          return response
+      } catch (error: any){
+        return error
+          // return rejectWithValue(error.response?.data || error.message)
+      }
+  }
+)
 
 
 const websocketSlice = createSlice({
