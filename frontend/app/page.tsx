@@ -11,6 +11,7 @@ import {
 
 import { isValidProps } from "@/actions";
 import Loader from "@/components/Loader";
+import { dispatchFetchMedicines } from "./utils/fetchMedicinesUtil";
 
 export default function Home() {
   const {
@@ -62,6 +63,8 @@ export default function Home() {
   useEffect(() => {
     if (isAuthenticated && accessToken && !hasRunEffect.current) {
       hasRunEffect.current = true;
+
+      dispatchFetchMedicines(dispatch, accessToken);
 
       // Dispatch WebSocket connection for medicine
       dispatch({
