@@ -18,7 +18,7 @@ class MedicineView(APIView):
     def get(self, request):
         medicines = Medicine.objects.all()
         serializer = MedicineSerializer(medicines, many=True, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'message': 'Medicine added successfully', 'data': serializer.data}, status=status.HTTP_200_OK)
 
     
 
