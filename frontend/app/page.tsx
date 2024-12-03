@@ -16,13 +16,18 @@ import { dispatchFetchMedicines } from "./utils/fetchMedicinesUtil";
 export default function Home() {
   const {
     loading: authLoading,
+    error: authError,
     isAuthenticated,
     accessToken,
   } = useSelector((state: RootState) => state.auth);
 
-  const { loading: websocketLoading, connections } = useSelector(
-    (state: RootState) => state.websocket
-  );
+  const {
+    loading: websocketLoading,
+    message,
+    error: websocketError,
+    connections,
+    medicineList,
+  } = useSelector((state: RootState) => state.websocket);
 
   const dispatch = useAppDispatch();
   const router = useRouter();

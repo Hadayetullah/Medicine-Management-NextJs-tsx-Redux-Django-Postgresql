@@ -14,19 +14,19 @@ import axios from "axios";
 //   error: null,
 // };
 
-interface MedicineFormData {
-  company: string;
-  category: string;
-  dosage_form: string;
-  price: string;
-  power: string;
-  shelf_no: string;
-};
+// interface MedicineFormData {
+//   company: string;
+//   category: string;
+//   dosage_form: string;
+//   price: string;
+//   power: string;
+//   shelf_no: string;
+// };
 
-export type AddMedicineRequest = {
-  formData: MedicineFormData;
-  token: string;
-};
+// export type AddMedicineRequest = {
+//   formData: MedicineFormData;
+//   token: string;
+// };
 
 interface MedicineType {
   medicine: {
@@ -67,12 +67,16 @@ interface WebSocketState {
 }
 
 interface MainStateType {
+  message: string | null;
   loading: boolean;
+  error: any;
   connections: WebSocketState;
   medicineList: MedicineType[];
 }
 
 const initialState: MainStateType = {
+  message: null,
+  error: null,
   loading: false,
   connections: {},
   medicineList: [],
@@ -113,10 +117,9 @@ export const fetchMedicines = createAsyncThunk(
               }
           })
 
-          return response
+          return response.data
       } catch (error: any){
-        return error
-          // return rejectWithValue(error.response?.data || error.message)
+          return rejectWithValue(error.response?.data || error.message)
       }
   }
 )
@@ -160,6 +163,20 @@ const websocketSlice = createSlice({
       }
     },
   },
+
+  extraReducers: (builder) => {
+    builder.addCase(fetchMedicines.pending, (state) => {
+        state.loading = true
+    });
+    builder.addCase(fetchMedicines.fulfilled, (state, action) => {
+        state.loading = false,
+        state.message = action.payload.message,
+        state.medicineList = [...state.medicineList, action.payload.data]
+    })
+    builder.addCase(fetchMedicines.rejected, (state, action: PayloadAction<any>) => {
+        state.error = action.payload?.detail || "Something went wrong"
+    })
+},
 });
 
 export const { connect, disconnect, addMessage, setError } = websocketSlice.actions;
