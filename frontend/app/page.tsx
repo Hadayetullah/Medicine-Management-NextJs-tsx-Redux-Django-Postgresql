@@ -6,18 +6,22 @@ import { RootState, useAppDispatch } from "@/lib/store";
 import { useSelector } from "react-redux";
 import {
   refreshAccessToken,
-  validateAuthentication,
+  resetLodingAndAuthStatus,
 } from "@/lib/features/authSlice";
 
 import { isValidProps } from "@/actions";
 import Loader from "@/components/Loader";
 
 export default function Home() {
-  const { loading, isAuthenticated, accessToken } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const {
+    loading: authLoading,
+    isAuthenticated,
+    accessToken,
+  } = useSelector((state: RootState) => state.auth);
 
-  // const {} = useSelector((state: RootState) => state.employee);
+  const { loading: websocketLoading, connections } = useSelector(
+    (state: RootState) => state.websocket
+  );
 
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -32,24 +36,24 @@ export default function Home() {
     const isAccessTokenValid = validateAccessTokenLife();
 
     if (!isAccessTokenValid) {
+      dispatch(resetLodingAndAuthStatus(false));
       router.push("/login");
-      dispatch(validateAuthentication(false));
       // const isRefreshTokenValid: isValidProps = validateRefreshTokenLife();
 
       // if (!isRefreshTokenValid.isTokenValid) {
-      //   dispatch(validateAuthentication(false));
+      //   dispatch(resetLodingAndAuthStatus(false));
       //   router.push("/login");
       // } else {
       //   if (isRefreshTokenValid.refreshToken) {
       //     dispatch(refreshAccessToken(isRefreshTokenValid.refreshToken));
       //   } else {
-      //     dispatch(validateAuthentication(false));
+      //     dispatch(resetLodingAndAuthStatus(false));
       //     router.push("/login");
       //   }
       // }
     }
     // else {
-    //   dispatch(validateAuthentication(true));
+    //   dispatch(resetLodingAndAuthStatus(true));
     // }
   };
 
@@ -83,9 +87,9 @@ export default function Home() {
 
   useEffect(() => {
     checkAuth();
-  }, [dispatch, router]);
+  }, [authLoading, isAuthenticated, dispatch, router]);
 
-  if (loading || !isAuthenticated) {
+  if (authLoading || !isAuthenticated) {
     return <Loader />;
   } else {
     return (

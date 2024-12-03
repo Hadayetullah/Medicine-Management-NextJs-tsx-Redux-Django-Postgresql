@@ -12,18 +12,54 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 //   error: null,
 // };
 
-interface WebSocketState {
-  connections: {
-    [connectionKey: string]: {
-      connected: boolean;
-      error?: string;
-      messages: any[];
+interface MedicineType {
+  medicine: {
+    id: string;
+    name: string;
+    company: {
+        id: string;
+        name: string;
+        created_at: string;
+        modified_at: string;
     };
+    category: {
+        id: string;
+        name: string;
+        created_at: string;
+        modified_at: string;
+    };
+    dosage_form: {
+        id: string;
+        name: string;
+        created_at: string;
+        modified_at: string;
+    };
+    price: number;
+    power: number;
+    shelf_no: number;
+    image_url: string;
+    created_at: Date;
+} | null;
+}
+
+interface WebSocketState {
+  [connectionKey: string]: {
+    connected: boolean;
+    error?: string;
+    messages: any[];
   };
 }
 
-const initialState: WebSocketState = {
+interface MainStateType {
+  loading: boolean;
+  connections: WebSocketState;
+  medicineList: MedicineType[];
+}
+
+const initialState: MainStateType = {
+  loading: false,
   connections: {},
+  medicineList: [],
 };
 
 
