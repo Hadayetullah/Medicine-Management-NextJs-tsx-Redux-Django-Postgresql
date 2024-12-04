@@ -18,11 +18,11 @@ export const getTokensFromCookies = () => {
     };
 };
 
-export const validateAccessTokenLife = () => {
+export const validateAccessTokenLife = (accessToken: string|null) => {
     let isValid;
     if (typeof window !== "undefined") {
         
-        const { accessToken } = getTokensFromCookies();
+        // const { accessToken } = getTokensFromCookies();
   
         if (accessToken) {
             const decoded: { exp: number } = jwtDecode(accessToken);

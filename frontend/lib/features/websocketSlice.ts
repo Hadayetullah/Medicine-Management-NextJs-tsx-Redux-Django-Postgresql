@@ -28,8 +28,7 @@ import axios from "axios";
 //   token: string;
 // };
 
-interface MedicineType {
-  medicine: {
+export type MedicineType = {
     id: string;
     name: string;
     company: {
@@ -39,23 +38,22 @@ interface MedicineType {
         modified_at: string;
     };
     category: {
-        id: string;
-        name: string;
-        created_at: string;
-        modified_at: string;
-    };
+        id: string | null;
+        name: string | null;
+        created_at: string | null;
+        modified_at: string | null;
+    } | null;
     dosage_form: {
-        id: string;
-        name: string;
-        created_at: string;
-        modified_at: string;
-    };
+        id: string | null;
+        name: string | null;
+        created_at: string | null;
+        modified_at: string | null;
+    } | null;
     price: number;
     power: number;
     shelf_no: number;
-    image_url: string;
+    image_url: string | null;
     created_at: Date;
-} | null;
 }
 
 interface WebSocketState {
@@ -171,7 +169,7 @@ const websocketSlice = createSlice({
     builder.addCase(fetchMedicines.fulfilled, (state, action) => {
         state.loading = false,
         state.message = action.payload.message,
-        state.medicineList = [...state.medicineList, action.payload.data]
+        state.medicineList = action.payload.data
     })
     builder.addCase(fetchMedicines.rejected, (state, action: PayloadAction<any>) => {
         state.error = action.payload?.detail || "Something went wrong"

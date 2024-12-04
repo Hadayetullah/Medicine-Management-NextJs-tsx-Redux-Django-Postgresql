@@ -2,7 +2,7 @@ import { fetchMedicines } from "@/lib/features/websocketSlice";
 
 let IsInitialized = false;
 
-export const dispatchFetchMedicines = (dispatch: Function, token: string) => {
+export const dispatchFetchMedicines = (dispatch: Function, token: string|null) => {
   if (!token) {
     console.error("Access token is missing. Cannot dispatch websocket/connect.");
     return;
