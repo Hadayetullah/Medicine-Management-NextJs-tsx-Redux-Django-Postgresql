@@ -22,7 +22,7 @@ const LoginPage = () => {
     e.preventDefault();
     const loginData = { email, password };
     dispatch(loginUser(loginData));
-    dispatch(setLoading(false));
+    dispatch(setLoading(true));
   };
 
   useEffect(() => {

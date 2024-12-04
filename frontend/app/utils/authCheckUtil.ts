@@ -19,17 +19,13 @@ export const authCheck = (dispatch: Function, push: Function, accessToken:string
     push("/login");
     dispatch(
       restoreAuthState({
-        payload: {
-          isAuthenticated: false,
-        },
+        isAuthenticated: false,
       })
     );
   } else {
     dispatch(
       restoreAuthState({
-        payload: {
-          isAuthenticated: true,
-        },
+        isAuthenticated: true,
       })
     );
   }
