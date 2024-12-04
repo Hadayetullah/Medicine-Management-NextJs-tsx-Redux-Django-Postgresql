@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { loginUser } from "../../lib/features/authSlice";
+import { loginUser, setLoading } from "../../lib/features/authSlice";
 import { RootState, useAppDispatch } from "../../lib/store";
 import { useRouter } from "next/navigation";
 
@@ -22,10 +22,11 @@ const LoginPage = () => {
     e.preventDefault();
     const loginData = { email, password };
     dispatch(loginUser(loginData));
+    dispatch(setLoading(false));
   };
 
   useEffect(() => {
-    if (isAuthenticated && !loading) {
+    if (isAuthenticated) {
       router.push("/");
     } else {
       router.push("/login");

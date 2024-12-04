@@ -1,4 +1,4 @@
-// import type { Metadata } from "next";
+import type { Metadata } from "next";
 // "use client";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -16,10 +16,10 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-// export const metadata: Metadata = {
-//   title: "Manage Medicine",
-//   description: "Medicine Management Store",
-// };
+export const metadata: Metadata = {
+  title: "Manage Medicine",
+  description: "Medicine Management Store",
+};
 
 export default function RootLayout({
   children,
@@ -27,15 +27,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <ClientProvider>
+    <ClientProvider>
+      <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Navbar />
           {children}
         </body>
-      </ClientProvider>
-    </html>
+      </html>
+    </ClientProvider>
   );
 }

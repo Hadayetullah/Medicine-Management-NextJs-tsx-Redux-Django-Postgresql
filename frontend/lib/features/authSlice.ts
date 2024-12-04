@@ -183,11 +183,9 @@ const authSlice = createSlice({
       state.isAuthenticated = action.payload;
       state.loading = false;
     },
-    restoreAuthState: (state) => {
-      const { accessToken, refreshToken } = getTokensFromCookies();
-      state.accessToken = accessToken;
-      state.refreshToken = refreshToken;
-      state.isAuthenticated = !!accessToken;
+    restoreAuthState: (state, action) => {
+      state.isAuthenticated = action.payload.isAuthenticated;
+      state.loading = false;
     },
   },
   extraReducers: (builder) => {
@@ -239,6 +237,7 @@ const authSlice = createSlice({
       state.user = action.payload?.user || null;
       state.accessToken = action.payload.token?.accessToken || null;
       state.refreshToken = action.payload.token?.refreshToken || null;
+      saveTokensToCookies(action.payload.token?.accessToken || null, action.payload.token?.refreshToken || null)
     });
     builder.addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
       state.loading = false;
