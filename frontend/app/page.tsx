@@ -124,13 +124,25 @@ export default function Home() {
   // }, [isAuthenticated, accessToken, dispatch]);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (accessToken && accessToken !== null && accessToken !== "undefined") {
       authCheck(dispatch, router.push, accessToken);
+    } else {
+      router.push("/login");
+      dispatch(
+        restoreAuthState({
+          payload: {
+            isAuthenticated: false,
+          },
+        })
+      );
     }
-    // router.push("/login");
-    // dispatch(setLoading(false));
 
-    if (isAuthenticated && accessToken && !hasRunEffect.current) {
+    if (
+      accessToken &&
+      accessToken !== null &&
+      accessToken !== "undefined" &&
+      !hasRunEffect.current
+    ) {
       hasRunEffect.current = true;
 
       dispatchFetchMedicines(dispatch, accessToken);
@@ -145,7 +157,7 @@ export default function Home() {
         },
       });
     }
-  }, [isAuthenticated, dispatch, router]);
+  }, [dispatch, router]);
 
   // if (authLoading || !isAuthenticated) {
   //   return <Loader />;

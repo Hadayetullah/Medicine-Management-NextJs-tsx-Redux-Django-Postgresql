@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "@/lib/store";
 import { usePathname, useRouter } from "next/navigation";
-import { logoutUser, validateAuthentication } from "@/lib/features/authSlice";
+import { logoutUser } from "@/lib/features/authSlice";
 import { tokenValidationToLogout } from "@/actions";
 
 const Navbar = () => {
@@ -22,8 +22,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setToggleUser(false);
+    // router.push("/login");
     dispatch(logoutUser(tokenValidationToLogout()));
-    router.push("/login");
   };
 
   const handleSettings = () => {
@@ -31,9 +31,12 @@ const Navbar = () => {
     router.push("/settings");
   };
 
-  // useEffect(() => {
-  //   setToggleMenu(false);
-  // }, [path, router, dispatch, handleLogout]);
+  useEffect(() => {
+    // setToggleMenu(false);
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, dispatch, router]);
 
   const authenticated = (
     <div className="container mx-auto flex items-center flex-row justify-between">
