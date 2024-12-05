@@ -55,7 +55,7 @@ export default function Home() {
     setCurrentTitle(title);
   };
 
-  console.log("accessToken: ", accessToken);
+  // console.log("accessToken: ", accessToken);
 
   // const checkAuth = () => {
   //   const validatedTokens: {
@@ -93,7 +93,7 @@ export default function Home() {
 
   const hasRunEffect = useRef(false);
 
-  console.log("isAuthenticated: ", isAuthenticated);
+  // console.log("isAuthenticated: ", isAuthenticated);
 
   // useEffect(() => {
   //   if (isAuthenticated && accessToken && !hasRunEffect.current) {
@@ -124,15 +124,14 @@ export default function Home() {
   // }, [isAuthenticated, accessToken, dispatch]);
 
   useEffect(() => {
+    console.log("Auth");
     if (accessToken && accessToken !== null && accessToken !== "undefined") {
       authCheck(dispatch, router.push, accessToken);
     } else {
       router.push("/login");
       dispatch(
         restoreAuthState({
-          payload: {
-            isAuthenticated: false,
-          },
+          isAuthenticated: false,
         })
       );
     }
@@ -144,6 +143,8 @@ export default function Home() {
       !hasRunEffect.current
     ) {
       hasRunEffect.current = true;
+
+      console.log("Data");
 
       dispatchFetchMedicines(dispatch, accessToken);
 
