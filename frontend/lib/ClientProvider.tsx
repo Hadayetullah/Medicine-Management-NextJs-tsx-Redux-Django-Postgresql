@@ -20,10 +20,10 @@ import { createStore } from "./store";
 
 export default function ClientProvider({
   children,
-  initialState = {},
+  initialState,
 }: {
   children: React.ReactNode;
-  initialState?: any;
+  initialState?: Partial<any>; // Allow optional initial state
 }) {
   const store = React.useMemo(() => createStore(initialState), [initialState]);
   return <Provider store={store}>{children}</Provider>;

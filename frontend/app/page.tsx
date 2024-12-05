@@ -158,7 +158,7 @@ export default function Home() {
         },
       });
     }
-  }, [dispatch, router]);
+  }, [authLoading, isAuthenticated, dispatch, router]);
 
   // if (authLoading || !isAuthenticated) {
   //   return <Loader />;

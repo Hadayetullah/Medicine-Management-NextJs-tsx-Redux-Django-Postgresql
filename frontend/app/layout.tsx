@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-// "use client";
 import localFont from "next/font/local";
 import "./globals.css";
 import ClientProvider from "@/lib/ClientProvider";
 import Navbar from "@/components/Navbar";
+import { createStore } from "@/lib/store";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,8 +26,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const store = createStore();
   return (
-    <ClientProvider>
+    <ClientProvider initialState={store.getState()}>
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
