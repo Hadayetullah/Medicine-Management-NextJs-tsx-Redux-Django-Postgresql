@@ -1,6 +1,3 @@
-// "use client";
-// import { useEffect, useState, useRef } from "react";
-// import { usePathname, useRouter } from "next/navigation";
 // import { validateAccessTokenLife } from "@/actions";
 // import { RootState, useAppDispatch } from "@/lib/store";
 // import { useSelector } from "react-redux";
@@ -18,57 +15,11 @@ import Loader from "@/components/Loader";
 // import { authCheck } from "./utils/authCheckUtil";
 
 export default function Home() {
-  // if (medicineList.length > 0) {
-  //   medicineList.map((medicine:MedicineType) => {
-  //     console.log(medicine.company.name);
-  //   });
-  // }
-
-  // const dispatch = useAppDispatch();
-  // const router = useRouter();
-  // const currentPath = usePathname();
-  // console.log(currentPath);
   // const [currentTitle, setCurrentTitle] = useState<string>("");
   // const [medicineData, setMedicineData] = useState();
 
   // const handleActiveTitleAndData = (title: string) => {
   //   setCurrentTitle(title);
-  // };
-
-  // console.log("accessToken: ", accessToken);
-
-  // const checkAuth = () => {
-  //   const validatedTokens: {
-  //     isValid: boolean;
-  //     accessToken: string | null;
-  //     refreshToken: string | null;
-  //   } = validateAccessTokenLife();
-
-  //   // console.log("isAccessTokenValid : ", isAccessTokenValid);
-
-  //   if (!validatedTokens.isValid) {
-  //     router.push("/login");
-  //     dispatch(
-  //       restoreAuthState({
-  //         payload: {
-  //           accessToken: validatedTokens.accessToken,
-  //           refreshToken: validatedTokens.refreshToken,
-  //           isAuthenticated: false,
-  //         },
-  //       })
-  //     );
-  //   } else {
-  //     dispatchFetchMedicines(dispatch, accessToken);
-  //     dispatch(
-  //       restoreAuthState({
-  //         payload: {
-  //           accessToken: validatedTokens.accessToken,
-  //           refreshToken: validatedTokens.refreshToken,
-  //           isAuthenticated: true,
-  //         },
-  //       })
-  //     );
-  //   }
   // };
 
   // const hasRunEffect = useRef(false);

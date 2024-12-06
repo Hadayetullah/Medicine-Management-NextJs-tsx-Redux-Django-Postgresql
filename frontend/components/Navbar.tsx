@@ -20,10 +20,10 @@ const Navbar = () => {
 
   // console.log(isAuthenticated);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setToggleUser(false);
     // router.push("/login");
-    dispatch(logoutUser(tokenValidationToLogout()));
+    dispatch(logoutUser(await tokenValidationToLogout()));
   };
 
   const handleSettings = () => {

@@ -1,8 +1,15 @@
-import { RootState } from "@/lib/store";
+import { validateAccessTokenLife } from "@/actions";
+import { dispatchFetchMedicines } from "@/app/utils/fetchMedicinesUtil";
+import { restoreAuthState } from "@/lib/features/authSlice";
+import { RootState, useAppDispatch } from "@/lib/store";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
 
 const DataTable = () => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const {
     loading: authLoading,
     error: authError,
@@ -18,6 +25,30 @@ const DataTable = () => {
     connections,
     medicineList,
   } = useSelector((state: RootState) => state.websocket);
+
+  const checkAuth = async () => {
+    const validatedTokens: boolean = await validateAccessTokenLife(accessToken);
+
+    if (!validatedTokens) {
+      router.push("/login");
+      dispatch(
+        restoreAuthState({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          isAuthenticated: false,
+        })
+      );
+    } else {
+      dispatchFetchMedicines(dispatch, accessToken);
+      dispatch(
+        restoreAuthState({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          isAuthenticated: true,
+        })
+      );
+    }
+  };
 
   return (
     <div className="w-full mb-5">

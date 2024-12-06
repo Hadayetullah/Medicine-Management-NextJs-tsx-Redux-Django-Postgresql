@@ -11,14 +11,14 @@ export type isValidProps = {
     refreshToken: string;
   }
 
-export const getTokensFromCookies = () => {
+export const getTokensFromCookies = async() => {
     return {
       accessToken: Cookies.get("accessToken"),
       refreshToken: Cookies.get("refreshToken"),
     };
 };
 
-export const validateAccessTokenLife = (accessToken: string|null) => {
+export const validateAccessTokenLife = async(accessToken: string|null) => {
     let isValid;
     if (typeof window !== "undefined") {
         
@@ -46,11 +46,11 @@ export const validateAccessTokenLife = (accessToken: string|null) => {
     return isValid
 }
 
-export const validateRefreshTokenLife = () => {
+export const validateRefreshTokenLife = async() => {
     let isValid = <isValidProps>{};
     if (typeof window !== "undefined") {
         
-        const { refreshToken} = getTokensFromCookies();
+        const { refreshToken} = await getTokensFromCookies();
   
         if (refreshToken) {
             const decoded: { exp: number } = jwtDecode(refreshToken);
@@ -75,11 +75,11 @@ export const validateRefreshTokenLife = () => {
 }
 
 
-export const tokenValidationToLogout = () => {
+export const tokenValidationToLogout = async() => {
     let isValid = <isTokenValidProps>{};
     if (typeof window !== "undefined") {
         
-        const { accessToken, refreshToken } = getTokensFromCookies();
+        const { accessToken, refreshToken } = await getTokensFromCookies();
   
         if (accessToken) {
             const decoded: { exp: number } = jwtDecode(accessToken);
