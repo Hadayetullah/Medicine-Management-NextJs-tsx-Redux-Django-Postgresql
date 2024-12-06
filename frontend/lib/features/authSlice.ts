@@ -185,6 +185,8 @@ const authSlice = createSlice({
     },
     restoreAuthState: (state, action) => {
       state.isAuthenticated = action.payload.isAuthenticated;
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
       state.loading = false;
     },
   },

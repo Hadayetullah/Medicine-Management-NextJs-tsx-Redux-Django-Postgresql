@@ -20,10 +20,10 @@ const Navbar = () => {
 
   // console.log(isAuthenticated);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setToggleUser(false);
     // router.push("/login");
-    dispatch(logoutUser(tokenValidationToLogout()));
+    dispatch(logoutUser(await tokenValidationToLogout()));
   };
 
   const handleSettings = () => {
@@ -31,12 +31,12 @@ const Navbar = () => {
     router.push("/settings");
   };
 
-  useEffect(() => {
-    // setToggleMenu(false);
-    if (!isAuthenticated) {
-      router.push("/login");
-    }
-  }, [isAuthenticated, dispatch, router]);
+  // useEffect(() => {
+  //   // setToggleMenu(false);
+  //   if (!isAuthenticated) {
+  //     router.push("/login");
+  //   }
+  // }, [isAuthenticated, dispatch, router]);
 
   const authenticated = (
     <div className="container mx-auto flex items-center flex-row justify-between">
