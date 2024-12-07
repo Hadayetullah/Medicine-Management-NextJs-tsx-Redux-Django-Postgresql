@@ -1,10 +1,14 @@
-import { validateAccessTokenLife } from "@/actions";
+"use client";
+
+import { getTokensFromCookies, validateAccessTokenLife } from "@/actions";
+import { authCheck } from "@/app/utils/authCheckUtil";
 import { dispatchFetchMedicines } from "@/app/utils/fetchMedicinesUtil";
 import { restoreAuthState } from "@/lib/features/authSlice";
 import { RootState, useAppDispatch } from "@/lib/store";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import Loader from "../Loader";
 
 const DataTable = () => {
   const dispatch = useAppDispatch();
@@ -26,29 +30,84 @@ const DataTable = () => {
     medicineList,
   } = useSelector((state: RootState) => state.websocket);
 
-  const checkAuth = async () => {
-    const validatedTokens: boolean = await validateAccessTokenLife(accessToken);
+  // const fetchMedicines = async () => {
+  //   const validatedTokens: boolean = await validateAccessTokenLife(accessToken);
 
-    if (!validatedTokens) {
+  //   if (!validatedTokens) {
+  //     router.push("/login");
+  //   } else {
+  //     dispatchFetchMedicines(dispatch, accessToken);
+  //   }
+  // };
+
+  const [loading, setLoading] = useState(true);
+
+  const handleLoading = async () => {
+    console.log("HandleLoading called");
+    if (authLoading || websocketLoading || !accessToken) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const auth = async (access: string | null, refresh: string | null) => {
+    const isTokenValid = await validateAccessTokenLife(access);
+
+    console.log("isTokenValid: ", isTokenValid);
+
+    if (!isTokenValid) {
       router.push("/login");
       dispatch(
         restoreAuthState({
-          accessToken: accessToken,
-          refreshToken: refreshToken,
+          accessToken: access,
+          refreshToken: refresh,
           isAuthenticated: false,
         })
       );
     } else {
-      dispatchFetchMedicines(dispatch, accessToken);
       dispatch(
         restoreAuthState({
-          accessToken: accessToken,
-          refreshToken: refreshToken,
+          accessToken: access,
+          refreshToken: refresh,
           isAuthenticated: true,
         })
       );
     }
   };
+
+  const handleAuthCheck = async () => {
+    console.log("handleAuthCheck called");
+    const tokens: any = await getTokensFromCookies();
+
+    if (tokens && tokens.accessToken) {
+      auth(tokens.accessToken, tokens.refreshToken);
+    } else {
+      // console.log("Forth: ", tokens.accessToken);
+      auth(null, null);
+    }
+  };
+
+  console.log("accessToken Outside useEffect: ", accessToken);
+  console.log("IsAuthenticated Outside useEffect: ", isAuthenticated);
+
+  useEffect(() => {
+    console.log("Inside useEffect");
+    // handleLoading();
+    handleAuthCheck();
+
+    // console.log("Outside Lenght: ", medicineList.length);
+    // if (medicineList.length === 0) {
+    //   console.log("Inside Lenght: ", medicineList.length);
+    //   if (accessToken) {
+    //     dispatchFetchMedicines(dispatch, accessToken);
+    //   }
+    // }
+  }, [dispatch, router]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="w-full mb-5">
