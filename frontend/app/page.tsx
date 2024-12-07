@@ -1,18 +1,9 @@
-// import { validateAccessTokenLife } from "@/actions";
-// import { RootState, useAppDispatch } from "@/lib/store";
-// import { useSelector } from "react-redux";
-// import {
-//   refreshAccessToken,
-//   resetLodingAndAuthStatus,
-//   setLoading,
-//   restoreAuthState,
-// } from "@/lib/features/authSlice";
-
-// import { isValidProps } from "@/actions";
-import Loader from "@/components/Loader";
+// import Loader from "@/components/Loader";
 // import { dispatchFetchMedicines } from "./utils/fetchMedicinesUtil";
 // import { MedicineType } from "@/lib/features/websocketSlice";
 // import { authCheck } from "./utils/authCheckUtil";
+
+import DataTable from "@/components/home/DataTable";
 
 export default function Home() {
   // const [currentTitle, setCurrentTitle] = useState<string>("");
@@ -23,10 +14,6 @@ export default function Home() {
   // };
 
   // const hasRunEffect = useRef(false);
-
-  // useEffect(() => {
-  //   console.log("Auth");
-  // }, []);
 
   // console.log("isAuthenticated: ", isAuthenticated);
 
@@ -116,7 +103,7 @@ export default function Home() {
               Searched
             </button>
           </div> */}
-      <h3>Home page</h3>
+      <DataTable />
     </>
   );
 }

@@ -1,18 +1,10 @@
 import { fetchMedicines } from "@/lib/features/websocketSlice";
 
-let IsInitialized = false;
-
-export const dispatchFetchMedicines = (dispatch: Function, token: string|null) => {
+export const dispatchFetchMedicines = async(dispatch: Function, token: string|null) => {
   if (!token) {
-    console.error("Access token is missing. Cannot dispatch websocket/connect.");
+    console.error("Access token is missing. Cannot dispatch.");
     return;
   }
 
-  if (IsInitialized) {
-    console.log("Api call already initialized, skipping dispatch.");
-    return;
-  }
-
-  IsInitialized = true;
   dispatch(fetchMedicines(token));
 };
