@@ -114,7 +114,7 @@ export const loginUser = createAsyncThunk(
 // Async thunk for user logout
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
-  async (tokens: {accessToken: string, refreshToken: string}, { rejectWithValue }) => {
+  async (tokens: {accessToken: string|null, refreshToken: string|null}, { rejectWithValue }) => {
     try {
       
       // if (!refresh_token) throw new Error("No refresh token available");

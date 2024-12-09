@@ -29,32 +29,62 @@
 // export const useAppDispatch = () => useDispatch<AppDispatch>();
 
 
-import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
+// import { configureStore } from '@reduxjs/toolkit';
+// import { useDispatch } from 'react-redux';
 
-import authReducer from './features/authSlice';
-import employeeReducer from './features/employeeSlice';
-import websocketReducer from './features/websocketSlice';
+// import authReducer from './features/authSlice';
+// import employeeReducer from './features/employeeSlice';
+// import websocketReducer from './features/websocketSlice';
 
-import { createWebSocketMiddleware } from '@/websocketMiddleware';
-
-
-const websocketMiddleware = createWebSocketMiddleware();
+// import { createWebSocketMiddleware } from '@/websocketMiddleware';
 
 
-const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    websocket: websocketReducer,
-    employee: employeeReducer,
+// const websocketMiddleware = createWebSocketMiddleware();
+
+
+// const store = configureStore({
+//   reducer: {
+//     auth: authReducer,
+//     websocket: websocketReducer,
+//     employee: employeeReducer,
+//   },
+//   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(websocketMiddleware),
+// });
+
+
+// export type RootState = ReturnType<typeof store.getState>;
+// export type AppDispatch = typeof store.dispatch;
+
+// export const useAppDispatch: () => AppDispatch = useDispatch;
+
+// export default store;
+
+import testReducer from './features/testSlice'
+
+
+import { configureStore } from '@reduxjs/toolkit'
+
+export const makeStore = () => {
+  return configureStore({
+      reducer: {
+        test: testReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(websocketMiddleware),
-});
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(websocketMiddleware)
+  })
+}
+
+// export const store = configureStore({
+//   reducer: {
+//     test: testReducer,
+//   }
+// });
 
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+// Infer the type of makeStore
+export type AppStore = ReturnType<typeof makeStore>
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<AppStore['getState']>
+// export type AppDispatch = AppStore['dispatch']
 
-export const useAppDispatch: () => AppDispatch = useDispatch;
-
-export default store;
+// export type RootState = ReturnType<typeof store.getState>;
+// export type AppDispatch = typeof store.dispatch;

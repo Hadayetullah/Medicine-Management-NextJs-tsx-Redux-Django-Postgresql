@@ -1,34 +1,37 @@
 "use client";
 
-import { getTokensFromCookies, validateAccessTokenLife } from "@/actions";
-import { authCheck } from "@/app/utils/authCheckUtil";
-import { dispatchFetchMedicines } from "@/app/utils/fetchMedicinesUtil";
-import { restoreAuthState } from "@/lib/features/authSlice";
-import { RootState, useAppDispatch } from "@/lib/store";
-import { useRouter } from "next/navigation";
+// import { getTokensFromCookies, validateAccessTokenLife } from "@/actions";
+// import { authCheck } from "@/app/utils/authCheckUtil";
+// import { dispatchFetchMedicines } from "@/app/utils/fetchMedicinesUtil";
+// import { restoreAuthState } from "@/lib/features/authSlice";
+// import { RootState, useAppDispatch } from "@/lib/store";
+// import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Loader from "../Loader";
+import { RootState } from "@/lib/store";
 
 const DataTable = () => {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
+  // const dispatch = useAppDispatch();
+  // const router = useRouter();
 
-  const {
-    loading: authLoading,
-    error: authError,
-    isAuthenticated,
-    accessToken,
-    refreshToken,
-  } = useSelector((state: RootState) => state.auth);
+  const { testValue } = useSelector((state: RootState) => state.test);
 
-  const {
-    loading: websocketLoading,
-    message,
-    error: websocketError,
-    connections,
-    medicineList,
-  } = useSelector((state: RootState) => state.websocket);
+  // const {
+  //   loading: authLoading,
+  //   error: authError,
+  //   isAuthenticated,
+  //   accessToken,
+  //   refreshToken,
+  // } = useSelector((state: RootState) => state.auth);
+
+  // const {
+  //   loading: websocketLoading,
+  //   message,
+  //   error: websocketError,
+  //   connections,
+  //   medicineList,
+  // } = useSelector((state: RootState) => state.websocket);
 
   // const fetchMedicines = async () => {
   //   const validatedTokens: boolean = await validateAccessTokenLife(accessToken);
@@ -41,60 +44,64 @@ const DataTable = () => {
   // };
 
   const [loading, setLoading] = useState(true);
+  console.log("Slice value out :", testValue);
 
-  const handleLoading = async () => {
-    console.log("HandleLoading called");
-    if (authLoading || websocketLoading || !accessToken) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  };
+  // const handleLoading = async () => {
+  //   console.log("HandleLoading called");
+  //   if (authLoading || websocketLoading || !accessToken) {
+  //     setLoading(true);
+  //   } else {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const auth = async (access: string | null, refresh: string | null) => {
-    const isTokenValid = await validateAccessTokenLife(access);
+  // const auth = async (access: string | null, refresh: string | null) => {
+  //   const isTokenValid = await validateAccessTokenLife(access);
 
-    console.log("isTokenValid: ", isTokenValid);
+  //   console.log("isTokenValid: ", isTokenValid);
 
-    if (!isTokenValid) {
-      router.push("/login");
-      dispatch(
-        restoreAuthState({
-          accessToken: access,
-          refreshToken: refresh,
-          isAuthenticated: false,
-        })
-      );
-    } else {
-      dispatch(
-        restoreAuthState({
-          accessToken: access,
-          refreshToken: refresh,
-          isAuthenticated: true,
-        })
-      );
-    }
-  };
+  //   if (!isTokenValid) {
+  //     router.push("/login");
+  //     dispatch(
+  //       restoreAuthState({
+  //         accessToken: access,
+  //         refreshToken: refresh,
+  //         isAuthenticated: false,
+  //       })
+  //     );
+  //   } else {
+  //     dispatch(
+  //       restoreAuthState({
+  //         accessToken: access,
+  //         refreshToken: refresh,
+  //         isAuthenticated: true,
+  //       })
+  //     );
+  //   }
+  // };
 
-  const handleAuthCheck = async () => {
-    console.log("handleAuthCheck called");
-    const tokens: any = await getTokensFromCookies();
+  // const handleAuthCheck = async () => {
+  //   console.log("handleAuthCheck called");
+  //   const tokens: any = await getTokensFromCookies();
 
-    if (tokens && tokens.accessToken) {
-      auth(tokens.accessToken, tokens.refreshToken);
-    } else {
-      // console.log("Forth: ", tokens.accessToken);
-      auth(null, null);
-    }
-  };
+  //   if (tokens && tokens.accessToken) {
+  //     auth(tokens.accessToken, tokens.refreshToken);
+  //   } else {
+  //     // console.log("Forth: ", tokens.accessToken);
+  //     auth(null, null);
+  //   }
+  // };
 
-  console.log("accessToken Outside useEffect: ", accessToken);
-  console.log("IsAuthenticated Outside useEffect: ", isAuthenticated);
+  // console.log("accessToken Outside useEffect: ", accessToken);
+  // console.log("IsAuthenticated Outside useEffect: ", isAuthenticated);
 
   useEffect(() => {
-    console.log("Inside useEffect");
+    console.log("Slice value in :", testValue);
+    console.log(
+      "This does not print in the browser console until i reload the page again."
+    );
     // handleLoading();
-    handleAuthCheck();
+    // handleAuthCheck();
 
     // console.log("Outside Lenght: ", medicineList.length);
     // if (medicineList.length === 0) {
@@ -103,15 +110,15 @@ const DataTable = () => {
     //     dispatchFetchMedicines(dispatch, accessToken);
     //   }
     // }
-  }, [dispatch, router]);
+  }, []);
 
-  if (loading) {
-    return <Loader />;
-  }
+  // if (loading) {
+  //   return <Loader />;
+  // }
 
   return (
     <div className="w-full mb-5">
-      <div
+      {/* <div
         className="overflow-x-auto overflow-y-hidden w-full h-full"
         style={{ scrollbarWidth: "thin", zIndex: "-1" }}
       >
@@ -220,7 +227,8 @@ const DataTable = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+      Hello
     </div>
   );
 };
