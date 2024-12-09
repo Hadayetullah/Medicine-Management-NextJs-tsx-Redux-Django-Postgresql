@@ -48,25 +48,25 @@ const initialState: employeeState = {
 
 
 // Async thunk for Adding Medicine
-export const addMedicine = createAsyncThunk(
-    "employee/addMedicine",
-    async(formData: {company: string, category: string, dosage_form: string, price: string, power: string, shelf_no: string}, {rejectWithValue}) => {
-        try {
-            const {accessToken} = getTokensFromCookies()
-            const response = await axios.post('http://localhost:8000/api/employee/add-medicine/', formData, {
-                headers: {
-                    'accept': 'application/json',
-                    "Content-Type": 'application/json',
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
+// export const addMedicine = createAsyncThunk(
+//     "employee/addMedicine",
+//     async(formData: {company: string, category: string, dosage_form: string, price: string, power: string, shelf_no: string}, {rejectWithValue}) => {
+//         try {
+//             const {accessToken} = getTokensFromCookies()
+//             const response = await axios.post('http://localhost:8000/api/employee/add-medicine/', formData, {
+//                 headers: {
+//                     'accept': 'application/json',
+//                     "Content-Type": 'application/json',
+//                     'Authorization': `Bearer ${accessToken}`
+//                 }
+//             })
 
-            return response.data
-        } catch (error: any){
-            return rejectWithValue(error.response?.data || error.message)
-        }
-    }
-)
+//             return response.data
+//         } catch (error: any){
+//             return rejectWithValue(error.response?.data || error.message)
+//         }
+//     }
+// )
 
 
 
@@ -74,18 +74,18 @@ const employeeSlice = createSlice({
     name: 'employee',
     initialState,
     reducers: {},
-    extraReducers: (builder) => {
-        builder.addCase(addMedicine.pending, (state) => {
-            state.loading = true
-        });
-        builder.addCase(addMedicine.fulfilled, (state, action) => {
-            state.loading = false,
-            state.medicineList = [...state.medicineList, action.payload.medicine]
-        })
-        builder.addCase(addMedicine.rejected, (state, action: PayloadAction<any>) => {
-            state.error = action.payload?.detail || "Something went wrong"
-        })
-    },
+    // extraReducers: (builder) => {
+    //     builder.addCase(addMedicine.pending, (state) => {
+    //         state.loading = true
+    //     });
+    //     builder.addCase(addMedicine.fulfilled, (state, action) => {
+    //         state.loading = false,
+    //         state.medicineList = [...state.medicineList, action.payload.medicine]
+    //     })
+    //     builder.addCase(addMedicine.rejected, (state, action: PayloadAction<any>) => {
+    //         state.error = action.payload?.detail || "Something went wrong"
+    //     })
+    // },
 })
 
 

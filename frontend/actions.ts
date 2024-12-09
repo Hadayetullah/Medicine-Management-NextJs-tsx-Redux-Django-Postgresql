@@ -7,8 +7,8 @@ export type isValidProps = {
 }
 
   export type isTokenValidProps = {
-    accessToken: string;
-    refreshToken: string;
+    accessToken: string|null;
+    refreshToken: string|null;
   }
 
 export const getTokensFromCookies = async() => {
@@ -90,7 +90,12 @@ export const tokenValidationToLogout = async() => {
             if (currentTime >= decoded.exp) {
                 isValid = isValid
             } else {
-                isValid = {...isValid, accessToken: accessToken, refreshToken: refreshToken}
+                if(accessToken && refreshToken) {
+                    isValid = {...isValid, accessToken: accessToken, refreshToken: refreshToken}
+                } else {
+                    isValid = {...isValid, accessToken: null, refreshToken: null}
+                }
+                
             }
            
         } else {
