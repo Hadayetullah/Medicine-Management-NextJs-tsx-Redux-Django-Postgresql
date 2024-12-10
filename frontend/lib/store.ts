@@ -59,19 +59,31 @@
 
 // export default store;
 
-import testReducer from './features/testSlice'
 
 
 import { configureStore } from '@reduxjs/toolkit'
 
-export const makeStore = () => {
-  return configureStore({
-      reducer: {
-        test: testReducer,
-  },
-  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(websocketMiddleware)
-  })
-}
+import { rootReducer } from "./reducers";
+import { createWebSocketMiddleware } from '@/websocketMiddleware';
+
+
+const websocketMiddleware = createWebSocketMiddleware();
+
+// export const makeStore = () => {
+//   return configureStore({
+//       reducer: {
+//         test: testReducer,
+//   },
+//   // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(websocketMiddleware)
+//   })
+// }
+
+export const makeStore = () =>
+  configureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(websocketMiddleware)
+  });
 
 // export const store = configureStore({
 //   reducer: {
@@ -84,7 +96,7 @@ export const makeStore = () => {
 export type AppStore = ReturnType<typeof makeStore>
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<AppStore['getState']>
-// export type AppDispatch = AppStore['dispatch']
+export type AppDispatch = AppStore['dispatch']
 
 // export type RootState = ReturnType<typeof store.getState>;
 // export type AppDispatch = typeof store.dispatch;

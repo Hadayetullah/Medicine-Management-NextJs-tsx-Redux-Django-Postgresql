@@ -15,8 +15,6 @@ const DataTable = () => {
   // const dispatch = useAppDispatch();
   // const router = useRouter();
 
-  const { testValue } = useSelector((state: RootState) => state.test);
-
   // const {
   //   loading: authLoading,
   //   error: authError,
@@ -44,7 +42,6 @@ const DataTable = () => {
   // };
 
   const [loading, setLoading] = useState(true);
-  console.log("Slice value out :", testValue);
 
   // const handleLoading = async () => {
   //   console.log("HandleLoading called");
@@ -96,7 +93,6 @@ const DataTable = () => {
   // console.log("IsAuthenticated Outside useEffect: ", isAuthenticated);
 
   useEffect(() => {
-    console.log("Slice value in :", testValue);
     console.log(
       "This does not print in the browser console until i reload the page again."
     );
