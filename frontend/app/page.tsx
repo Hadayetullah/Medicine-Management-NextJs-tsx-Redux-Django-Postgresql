@@ -2,6 +2,7 @@
 // import { dispatchFetchMedicines } from "./utils/fetchMedicinesUtil";
 // import { MedicineType } from "@/lib/features/websocketSlice";
 // import { authCheck } from "./utils/authCheckUtil";
+// export const dynamic = "force-dynamic";
 
 import DataTable from "@/components/home/DataTable";
 
