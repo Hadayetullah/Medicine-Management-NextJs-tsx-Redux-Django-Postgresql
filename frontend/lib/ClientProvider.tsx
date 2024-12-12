@@ -27,6 +27,7 @@ export default function ClientProvider({
 }: {
   children: React.ReactNode;
 }) {
+  console.log("Provider");
   const storeRef = useRef<AppStore>();
   // Create the store instance the first time this renders
   storeRef.current = makeStore();
