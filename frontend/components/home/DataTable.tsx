@@ -224,7 +224,7 @@ const DataTable = () => {
           </div>
         </div>
       </div> */}
-      Hello
+      Data Table
     </div>
   );
 };
