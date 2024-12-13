@@ -14,24 +14,19 @@ const LoginPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { loading, error, isAuthenticated } = useAppSelector(
-    (state) => state.auth
-  );
+  const { loading, error } = useAppSelector((state) => state.auth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    dispatch(setLoading(true));
+
     const loginData = { email, password };
     dispatch(loginUser(loginData));
-    dispatch(setLoading(true));
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/");
-    } else {
-      router.push("/login");
-    }
-  }, [router, dispatch, isAuthenticated]);
+    dispatch(setLoading(false));
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
