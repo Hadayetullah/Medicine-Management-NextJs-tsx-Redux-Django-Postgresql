@@ -78,12 +78,13 @@ const websocketMiddleware = createWebSocketMiddleware();
 //   })
 // }
 
-export const makeStore = () =>
-  configureStore({
+export const makeStore = () => {
+  return configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(websocketMiddleware)
   });
+}
 
 // export const store = configureStore({
 //   reducer: {

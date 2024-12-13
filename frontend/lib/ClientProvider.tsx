@@ -5,35 +5,35 @@ import { useRef } from "react";
 import { Provider } from "react-redux";
 import { makeStore, AppStore } from "./store";
 
-/* Approach - 1 (Recommended by Redux, most times work but less than approach - 2) */
+/* Approach - 1 (Recommended by Redux, most times work) */
 
-// export default function ClientProvider({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) {
-//   const storeRef = useRef<AppStore>();
-//   if (!storeRef.current) {
-//     // Create the store instance the first time this renders
-//     storeRef.current = makeStore();
-//   }
-
-//   return <Provider store={storeRef.current}>{children}</Provider>;
-// }
-
-/* Approach - 2 (Most times work) */
 export default function ClientProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  console.log("Provider");
-  const storeRef = useRef<AppStore>();
-  // Create the store instance the first time this renders
-  storeRef.current = makeStore();
+  const storeRef = useRef<AppStore | undefined>(undefined);
+  if (!storeRef.current) {
+    // Create the store instance the first time this renders
+    storeRef.current = makeStore();
+  }
 
   return <Provider store={storeRef.current}>{children}</Provider>;
 }
+
+/* Approach - 2 (Most times work) */
+// export default function ClientProvider({
+//   children,
+// }: {
+//   children: React.ReactNode;
+// }) {
+//   console.log("Provider");
+//   const storeRef = useRef<AppStore>();
+//   // Create the store instance the first time this renders
+//   storeRef.current = makeStore();
+
+//   return <Provider store={storeRef.current}>{children}</Provider>;
+// }
 
 /* Approach - 3 (Less efficient) */
 // const store = makeStore();
