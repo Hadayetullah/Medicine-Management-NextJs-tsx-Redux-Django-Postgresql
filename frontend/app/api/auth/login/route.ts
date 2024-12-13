@@ -3,8 +3,6 @@ import { serialize } from "cookie";
 
 export async function POST(request: Request) {
   const apiBaseUrl = process.env.BACKEND_API_BASE_URL;
-  const accessTokenName = process.env.ACCESS_TOKEN_NAME || "accessToken";
-  const refreshTokenName = process.env.REFRESH_TOKEN_NAME || "refreshToken";
 
   try {
     const { email, password } = await request.json();
@@ -38,7 +36,7 @@ export async function POST(request: Request) {
       redirectResponse.headers.set("Set-Cookie", accessCookie);
       redirectResponse.headers.append("Set-Cookie", refreshCookie);
       return redirectResponse;
-      
+
     } else {
       const errorData = await response.json();
       const redirectUrl = new URL("/login", request.url);
