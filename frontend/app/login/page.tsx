@@ -11,17 +11,36 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const { loading } = useAppSelector((state) => state.auth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(setLoading(true));
 
-    const loginData = { email, password };
-    dispatch(loginUser(loginData));
+    // const loginData = { email, password };
+    // dispatch(loginUser(loginData));
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.redirected) {
+        const result = await response.json();
+        setError(result.message || "Login failed");
+      }
+    } catch {
+      setError("An unexpected error occurred.");
+    }
   };
 
   useEffect(() => {
