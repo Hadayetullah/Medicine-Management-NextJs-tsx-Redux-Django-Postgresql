@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { loginUser, setLoading } from "../../lib/features/authSlice";
+import { setLoading } from "../../lib/features/authSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
 const LoginPage = () => {
@@ -18,28 +18,41 @@ const LoginPage = () => {
 
   const { loading } = useAppSelector((state) => state.auth);
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   dispatch(setLoading(true));
+
+  //   try {
+  //     const response = await fetch("/api/auth/login/", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ email, password }),
+  //     });
+
+  //     if (!response.redirected) {
+  //       const result = await response.json();
+  //       setError(result.message || "Login failed");
+  //     }
+  //   } catch {
+  //     setError("An unexpected error occurred.");
+  //   }
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(setLoading(true));
+    const res = await fetch("/api/auth/login/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-    // const loginData = { email, password };
-    // dispatch(loginUser(loginData));
-
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.redirected) {
-        const result = await response.json();
-        setError(result.message || "Login failed");
-      }
-    } catch {
-      setError("An unexpected error occurred.");
+    const result = await res.json();
+    if (result.success) {
+      router.push(result.redirectTo); // Redirect to the root URL
+    } else {
+      console.error("Error logging in");
     }
   };
 
@@ -56,7 +69,7 @@ const LoginPage = () => {
             {error}
           </div>
         )}
-        <form onSubmit={handleSubmit}>
+        <form>
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -94,7 +107,7 @@ const LoginPage = () => {
           </div>
 
           <button
-            type="submit"
+            onClick={handleSubmit}
             className={`w-full px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
