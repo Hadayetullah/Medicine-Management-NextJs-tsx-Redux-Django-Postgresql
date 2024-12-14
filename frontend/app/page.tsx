@@ -2,7 +2,7 @@
 // // import { dispatchFetchMedicines } from "./utils/fetchMedicinesUtil";
 // // import { MedicineType } from "@/lib/features/websocketSlice";
 // // import { authCheck } from "./utils/authCheckUtil";
-// // export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 // import { authServerSideProps } from "../server/authServerSideProps";
 // export { authServerSideProps as getServerSideProps };
@@ -127,19 +127,13 @@ import DataTable from "@/components/home/DataTable";
 
 import { cookies } from "next/headers";
 
-export default async function ProtectedPage({
-  accessToken,
-  refreshToken,
-}: {
-  accessToken: string;
-  refreshToken: string;
-}) {
-  // const cookieStore = cookies();
+export default async function HomePage() {
+  const cookieStore = cookies();
 
-  // const accessToken = cookieStore.get("accessToken")?.value;
-  // const refreshToken = cookieStore.get("refreshToken")?.value;
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
 
-  console.log("Access : ", accessToken);
+  console.log("Access token in ProtectedPage:", accessToken);
 
   if (!accessToken) {
     throw new Error("Access token is missing"); // Alternatively, redirect to login
