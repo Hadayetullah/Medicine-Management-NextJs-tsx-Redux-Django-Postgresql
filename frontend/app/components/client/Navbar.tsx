@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/features/authSlice";
-import { tokenValidationToLogout } from "@/actions";
+import { tokenValidationToLogout } from "@/lib/actions";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
 const Navbar = () => {
