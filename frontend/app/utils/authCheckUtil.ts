@@ -1,4 +1,4 @@
-import { validateAccessTokenLife } from "@/actions";
+import { validateAccessTokenLife } from "@/lib/actions";
 import { restoreAuthState } from "@/lib/features/authSlice";
 import { dispatchFetchMedicines } from "./fetchMedicinesUtil";
 

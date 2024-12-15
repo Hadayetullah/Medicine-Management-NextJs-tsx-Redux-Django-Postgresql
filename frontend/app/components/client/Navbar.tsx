@@ -1,17 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSelector } from "react-redux";
-import { RootState, useAppDispatch } from "@/lib/store";
 import { usePathname, useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/features/authSlice";
-import { tokenValidationToLogout } from "@/actions";
+import { tokenValidationToLogout } from "@/lib/actions";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
 const Navbar = () => {
   const path = usePathname();
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   // const pathName = path.split("/");
   // console.log(pathName[0] == "");
 

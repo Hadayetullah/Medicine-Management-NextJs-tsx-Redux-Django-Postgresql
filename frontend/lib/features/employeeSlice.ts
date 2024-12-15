@@ -1,5 +1,5 @@
 
-import { getTokensFromCookies } from "@/actions";
+import { getTokensFromCookies } from "@/lib/actions";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 

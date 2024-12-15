@@ -7,7 +7,7 @@
 // import { authServerSideProps } from "../server/authServerSideProps";
 // export { authServerSideProps as getServerSideProps };
 
-import DataTable from "@/components/home/DataTable";
+import DataTable from "@/app/components/client/home/DataTable";
 
 // export default function Home({
 //   accessToken,
