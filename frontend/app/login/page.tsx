@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<any>(null);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -42,6 +42,9 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    dispatch(setLoading(true));
+
     const res = await fetch("/api/auth/login/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -50,15 +53,18 @@ const LoginPage = () => {
 
     const result = await res.json();
     if (result.success) {
+      dispatch(setLoading(false));
       router.push(result.redirectTo); // Redirect to the root URL
     } else {
+      dispatch(setLoading(false));
+      setError(result.error);
       console.error("Error logging in");
     }
   };
 
-  useEffect(() => {
-    dispatch(setLoading(false));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setLoading(false));
+  // }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -69,7 +75,7 @@ const LoginPage = () => {
             {error}
           </div>
         )}
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -107,7 +113,7 @@ const LoginPage = () => {
           </div>
 
           <button
-            onClick={handleSubmit}
+            type="submit"
             className={`w-full px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
