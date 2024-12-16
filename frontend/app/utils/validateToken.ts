@@ -4,7 +4,7 @@
 // Signature: Ensures the token hasn’t been tampered with.
 import { cookies } from "next/headers";
 
-export default function validateToken(): boolean {
+export default async function validateToken(): Promise<boolean> {
   try {
     // Get cookies from the headers
     const cookieStore = cookies();
