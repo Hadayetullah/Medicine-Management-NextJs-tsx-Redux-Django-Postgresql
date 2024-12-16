@@ -6,7 +6,7 @@ import { logoutUser } from "@/lib/features/authSlice";
 import { tokenValidationToLogout } from "@/lib/actions";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
-const Navbar = () => {
+const NavContent = () => {
   const path = usePathname();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -231,4 +231,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavContent;
