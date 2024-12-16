@@ -8,6 +8,8 @@
 // export { authServerSideProps as getServerSideProps };
 
 import DataTable from "@/app/components/client/home/DataTable";
+import validateToken from "./utils/validateToken";
+import { redirect } from "next/navigation";
 
 // export default function Home({
 //   accessToken,
@@ -125,25 +127,15 @@ import DataTable from "@/app/components/client/home/DataTable";
 //   }
 // }
 
-import { cookies } from "next/headers";
-
 export default async function HomePage() {
-  const cookieStore = cookies();
+  const isTokenExpired: boolean = await validateToken();
 
-  const accessToken = cookieStore.get("accessToken")?.value;
-  const refreshToken = cookieStore.get("refreshToken")?.value;
-
-  // console.log("Access token in ProtectedPage:", accessToken);
-
-  if (!accessToken) {
-    throw new Error("Access token is missing"); // Alternatively, redirect to login
+  if (!isTokenExpired) {
+    redirect("/login");
   }
 
   return (
     <div>
-      <h1>Protected Page</h1>
-      <p>Access Token: {accessToken}</p>
-      <p>Refresh Token: {refreshToken}</p>
       <DataTable />
     </div>
   );
