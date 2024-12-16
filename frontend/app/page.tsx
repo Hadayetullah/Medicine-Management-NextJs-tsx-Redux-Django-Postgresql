@@ -133,7 +133,7 @@ export default async function HomePage() {
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
-  console.log("Access token in ProtectedPage:", accessToken);
+  // console.log("Access token in ProtectedPage:", accessToken);
 
   if (!accessToken) {
     throw new Error("Access token is missing"); // Alternatively, redirect to login
