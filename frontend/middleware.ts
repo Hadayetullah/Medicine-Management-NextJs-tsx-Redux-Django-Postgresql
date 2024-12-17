@@ -3,14 +3,18 @@ import { parse } from "cookie";
 
 export function middleware(req: Request) {
   console.log("Middleware triggered");
+  
+  const response = NextResponse.redirect(new URL("/login", req.url));
 
   const cookieHeader = req.headers.get("cookie") || "";
   const cookies = parse(cookieHeader);
   const accessToken = cookies.accessToken;
 
+
   if (!accessToken) {
     console.log("Access token is missing, redirecting...");
-    return NextResponse.redirect(new URL("/login", req.url));
+    response.headers.set("access-token-valid", "false");
+    return response;
   }
 
   // Decode the token manually to check expiration time
@@ -27,14 +31,16 @@ export function middleware(req: Request) {
 
     if (!exp || currentTime >= exp) {
       console.log("Access token has expired, redirecting...");
-      return NextResponse.redirect(new URL("/login", req.url));
+      response.headers.set("access-token-valid", "false");
+      return response;
     }
 
     console.log("Access token is valid, allowing request");
     return NextResponse.next();
   } catch (error) {
+    response.headers.set("access-token-valid", "false");
     console.error("Error decoding token:", error);
-    return NextResponse.redirect(new URL("/login", req.url));
+    return response;
   }
 }
 
