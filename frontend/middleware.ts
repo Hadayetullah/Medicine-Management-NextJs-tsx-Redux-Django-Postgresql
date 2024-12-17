@@ -1,8 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { parse } from "cookie";
 
-export function middleware(req: Request) {
+export function middleware(req: NextRequest) {
   console.log("Middleware triggered");
+
+  const url = req.nextUrl.pathname;
+
+  if (url.startsWith("/login") || url.startsWith("/signup") || url.startsWith("/api")) {
+    return NextResponse.next();
+  }
   
   const response = NextResponse.redirect(new URL("/login", req.url));
 
