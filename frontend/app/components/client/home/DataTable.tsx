@@ -7,9 +7,8 @@
 // import { RootState, useAppDispatch } from "@/lib/store";
 // import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import Loader from "../Loader";
-import { RootState } from "@/lib/store";
+import { useAppSelector } from "@/lib/hooks";
 
 const DataTable = () => {
   // const dispatch = useAppDispatch();
@@ -23,13 +22,13 @@ const DataTable = () => {
   //   refreshToken,
   // } = useSelector((state: RootState) => state.auth);
 
-  // const {
-  //   loading: websocketLoading,
-  //   message,
-  //   error: websocketError,
-  //   connections,
-  //   medicineList,
-  // } = useSelector((state: RootState) => state.websocket);
+  const {
+    loading: websocketLoading,
+    message,
+    error: websocketError,
+    connections,
+    medicineList,
+  } = useAppSelector((state) => state.websocket);
 
   // const fetchMedicines = async () => {
   //   const validatedTokens: boolean = await validateAccessTokenLife(accessToken);
@@ -114,7 +113,7 @@ const DataTable = () => {
 
   return (
     <div className="w-full mb-5">
-      {/* <div
+      <div
         className="overflow-x-auto overflow-y-hidden w-full h-full"
         style={{ scrollbarWidth: "thin", zIndex: "-1" }}
       >
@@ -223,8 +222,7 @@ const DataTable = () => {
             </div>
           </div>
         </div>
-      </div> */}
-      Data Table
+      </div>
     </div>
   );
 };
