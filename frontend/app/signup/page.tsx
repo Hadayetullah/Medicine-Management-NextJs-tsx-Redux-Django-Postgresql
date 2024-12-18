@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { registerUser } from "../../lib/features/authSlice";
-import OtpModal from "../../components/OTPModal";
+import OtpModal from "../components/client/OTPModal";
 import { useAppDispatch } from "@/lib/hooks";
 
 const Register = () => {
