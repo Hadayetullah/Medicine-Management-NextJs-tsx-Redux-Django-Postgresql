@@ -8,7 +8,7 @@
 // export { authServerSideProps as getServerSideProps };
 
 import DataTable from "@/app/components/client/home/DataTable";
-import validateToken from "./utils/validateToken";
+// import validateToken from "./utils/validateToken";
 import { redirect } from "next/navigation";
 
 // export default function Home({
@@ -128,11 +128,11 @@ import { redirect } from "next/navigation";
 // }
 
 export default async function HomePage() {
-  const isTokenExpired: boolean = await validateToken();
+  // const isTokenExpired: boolean = await validateToken();
 
-  if (!isTokenExpired) {
-    redirect("/login");
-  }
+  // if (!isTokenExpired) {
+  //   redirect("/login");
+  // }
 
   return (
     <div>

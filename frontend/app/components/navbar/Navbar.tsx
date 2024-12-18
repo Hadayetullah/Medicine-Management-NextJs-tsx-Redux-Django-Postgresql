@@ -1,13 +1,12 @@
-import validateToken from "@/app/utils/validateToken";
+import { headers } from "next/headers";
 import NavContent from "./NavContent";
 
-const Navbar = async () => {
-  const isTokenExpired: boolean = await validateToken();
-  return (
-    <nav className="bg-indigo-600 py-3 px-2 sm:px-4 fixed top-0 left-0 w-full z-50">
-      <NavContent isTokenExpired={isTokenExpired} />
-    </nav>
-  );
+const Navbar = () => {
+  const tokenStatus = headers().get("access-token-status");
+  const isAccessTokenExpired = tokenStatus !== "valid"; // If no header, assume expired
+
+  console.log("Token Status: ", tokenStatus);
+  return <NavContent isAccessTokenExpired={isAccessTokenExpired} />;
 };
 
 export default Navbar;

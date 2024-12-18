@@ -6,7 +6,11 @@ import { logoutUser } from "@/lib/features/authSlice";
 import { tokenValidationToLogout } from "@/lib/actions";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
-const NavContent = ({ isTokenExpired }: { isTokenExpired: boolean }) => {
+const NavContent = ({
+  isAccessTokenExpired,
+}: {
+  isAccessTokenExpired: boolean;
+}) => {
   const path = usePathname();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -226,7 +230,7 @@ const NavContent = ({ isTokenExpired }: { isTokenExpired: boolean }) => {
 
   return (
     <nav className="bg-indigo-600 py-3 px-2 sm:px-4 fixed top-0 left-0 w-full z-50">
-      {isTokenExpired ? authenticated : notAuthenticated}
+      {isAccessTokenExpired ? notAuthenticated : authenticated}
     </nav>
   );
 };
