@@ -1,5 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { connect, disconnect, addMessage, setError } from "./lib/features/websocketSlice";
+import { connect, disconnect, addMessage, setError } from "./features/websocketSlice";
 
 // let websocketInitialized = false;
 

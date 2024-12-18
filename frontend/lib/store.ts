@@ -64,7 +64,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import { rootReducer } from "./reducers";
-import { createWebSocketMiddleware } from '@/websocketMiddleware';
+import { createWebSocketMiddleware } from '@/lib/websocketMiddleware';
 
 
 const websocketMiddleware = createWebSocketMiddleware();
