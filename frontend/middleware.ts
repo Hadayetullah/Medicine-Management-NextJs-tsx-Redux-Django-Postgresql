@@ -11,6 +11,7 @@ export function middleware(req: NextRequest) {
   const cookieHeader = req.headers.get("cookie") || "";
   const cookies = parse(cookieHeader);
   const accessToken = cookies.accessToken;
+  const refreshToken = cookies.refreshToken;
 
 
   // Allow these route without token validation
@@ -19,7 +20,7 @@ export function middleware(req: NextRequest) {
   }
 
 
-  if (!accessToken) {
+  if (!accessToken || !refreshToken) {
     console.log("Access token is missing, redirecting...");
     return NextResponse.redirect(new URL("/login?expired=true", req.url));
   }
@@ -44,6 +45,8 @@ export function middleware(req: NextRequest) {
     console.log("Access token is valid, allowing request");
 
     response.headers.set("access-token-status", "valid");
+    response.headers.set("access-token", accessToken);
+    response.headers.set("refresh-token", refreshToken);
     return response;
 
   } catch (error) {

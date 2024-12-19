@@ -8,6 +8,7 @@
 // export { authServerSideProps as getServerSideProps };
 
 import DataTable from "@/app/components/client/home/DataTable";
+import { headers } from "next/headers";
 // import validateToken from "./utils/validateToken";
 import { redirect } from "next/navigation";
 
