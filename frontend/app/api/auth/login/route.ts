@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     // redirectUrl.searchParams.set("error", "Internal server error");
     // return NextResponse.redirect(redirectUrl);
 
-    const redirectResponse = NextResponse.json({ success: true, redirectTo: "/", error: error });
+    const redirectResponse = NextResponse.json({ success: false, redirectTo: "/login", error: error });
     return redirectResponse;
   }
 }
