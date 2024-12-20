@@ -43,7 +43,7 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // dispatch(setLoading(true));
+    dispatch(setLoading(true));
 
     const res = await fetch("/api/auth/login/", {
       method: "POST",
@@ -53,11 +53,11 @@ const LoginPage = () => {
 
     const result = await res.json();
     if (result.success) {
-      // dispatch(setLoading(false));
+      dispatch(setLoading(false));
       router.push(result.redirectTo); // Redirect to the root URL
     } else {
-      // dispatch(setLoading(false));
-      // setError(result.error);
+      dispatch(setLoading(false));
+      setError(result.error);
       console.log(result.error);
       console.error("Error logging in");
     }
