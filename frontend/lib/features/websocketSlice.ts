@@ -165,6 +165,7 @@ const websocketSlice = createSlice({
       const {message, data} = action.payload;
       state.message = message;
       state.medicineList = data;
+      state.loading = false;
     }
   },
 

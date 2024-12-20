@@ -41,7 +41,8 @@ const DataTable = () => {
   //   }
   // };
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const getMedicineListRef = React.useRef<boolean>();
 
   // const handleLoading = async () => {
   //   console.log("HandleLoading called");
@@ -93,47 +94,33 @@ const DataTable = () => {
   // console.log("IsAuthenticated Outside useEffect: ", isAuthenticated);
 
   const getMedicineList = async () => {
-    const res = await fetch("/api/auth/login/", {
+    const res = await fetch("/api/product/", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
 
     const result = await res.json();
     if (result.success) {
-      console.log("Product data : ", result.data);
       dispatch(setMedicineList(result.data));
-      // setMedicineList(result.data)
+      setLoading(false);
     } else {
-      // useAppDispatch(setLoading(false));
-      // useAppDispatch(setError(result.error));
       console.log(result.error);
-      console.error("Error logging in");
+      console.error("Error getting medicine list");
     }
   };
 
   useEffect(() => {
     if (medicineList.length === 0) {
-      getMedicineList();
+      if (!getMedicineListRef.current) {
+        getMedicineListRef.current = true;
+        getMedicineList();
+      }
     }
-
-    console.log(
-      "This does not print in the browser console until i reload the page again."
-    );
-    // handleLoading();
-    // handleAuthCheck();
-
-    // console.log("Outside Lenght: ", medicineList.length);
-    // if (medicineList.length === 0) {
-    //   console.log("Inside Lenght: ", medicineList.length);
-    //   if (accessToken) {
-    //     dispatchFetchMedicines(dispatch, accessToken);
-    //   }
-    // }
   }, []);
 
-  // if (loading) {
-  //   return <Loader />;
-  // }
+  if (websocketLoading || loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="w-full mb-5">
@@ -186,32 +173,33 @@ const DataTable = () => {
                   {medicineList.map((medicine, index) => {
                     return (
                       <div
+                        key={index}
                         className={`w-full h-full flex flex-row text-gray-500 ${
                           index % 2 === 1 ? "bg-gray-100" : "bg-white"
                         }`}
                       >
                         <div className="w-[15%] h-full flex my-1 items-center pl-2">
-                          <h4>{"medicine name"}</h4>
+                          <h4>{medicine.name}</h4>
                         </div>
 
                         <div className="w-[15%] h-full flex my-1 items-center pl-1">
-                          <h4>{"company name"}</h4>
+                          <h4>{medicine.company?.name}</h4>
                         </div>
 
                         <div className="w-[14%] h-full flex my-1 items-center pl-1">
-                          <h4>{"category name"}</h4>
+                          <h4>{medicine.category?.name}</h4>
                         </div>
 
                         <div className="w-[14%] h-full flex my-1 items-center pl-1">
-                          <h4>{"dosage form"}</h4>
+                          <h4>{medicine.dosage_form?.name}</h4>
                         </div>
 
                         <div className="w-[12%] h-full flex my-1 items-center justify-center pl-1">
-                          <h4>{"medicine power"}</h4>
+                          <h4>{medicine.power}</h4>
                         </div>
 
                         <div className="w-[7%] h-full flex my-1 pl-1 justify-center">
-                          <h4>{"medicine price"}</h4>
+                          <h4>{medicine.price}</h4>
                         </div>
 
                         <div className="w-[10%] h-full flex my-1 flex-col pl-1">
