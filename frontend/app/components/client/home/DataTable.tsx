@@ -1,18 +1,19 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 // import { getTokensFromCookies, validateAccessTokenLife } from "@/actions";
 // import { authCheck } from "@/app/utils/authCheckUtil";
 // import { dispatchFetchMedicines } from "@/app/utils/fetchMedicinesUtil";
 // import { restoreAuthState } from "@/lib/features/authSlice";
 // import { RootState, useAppDispatch } from "@/lib/store";
-// import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Loader from "../Loader";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { setMedicineList } from "@/lib/features/websocketSlice";
 
 const DataTable = () => {
-  // const dispatch = useAppDispatch();
-  // const router = useRouter();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   // const {
   //   loading: authLoading,
@@ -91,7 +92,30 @@ const DataTable = () => {
   // console.log("accessToken Outside useEffect: ", accessToken);
   // console.log("IsAuthenticated Outside useEffect: ", isAuthenticated);
 
+  const getMedicineList = async () => {
+    const res = await fetch("/api/auth/login/", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      console.log("Product data : ", result.data);
+      dispatch(setMedicineList(result.data));
+      // setMedicineList(result.data)
+    } else {
+      // useAppDispatch(setLoading(false));
+      // useAppDispatch(setError(result.error));
+      console.log(result.error);
+      console.error("Error logging in");
+    }
+  };
+
   useEffect(() => {
+    if (medicineList.length === 0) {
+      getMedicineList();
+    }
+
     console.log(
       "This does not print in the browser console until i reload the page again."
     );

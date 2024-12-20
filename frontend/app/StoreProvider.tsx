@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRef } from "react";
 import { Provider } from "react-redux";
-import { makeStore, AppStore } from "./store";
+import { makeStore, AppStore } from "../lib/store";
 
 /* Approach - 1 (Recommended by Redux, most times work) */
 

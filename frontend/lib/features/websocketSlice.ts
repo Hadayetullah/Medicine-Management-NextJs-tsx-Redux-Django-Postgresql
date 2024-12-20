@@ -103,24 +103,24 @@ const initialState: MainStateType = {
 // )
 
 
-export const fetchMedicines = createAsyncThunk(
-  "employee/addMedicine",
-  async(token: string, {rejectWithValue}) => {
-      try {
-          const response = await axios.get('http://localhost:8000/api/product/medicine/', {
-              headers: {
-                  'accept': 'application/json',
-                  "Content-Type": 'application/json',
-                  'Authorization': `Bearer ${token}`
-              }
-          })
+// export const fetchMedicines = createAsyncThunk(
+//   "employee/addMedicine",
+//   async(token: string, {rejectWithValue}) => {
+//       try {
+//           const response = await axios.get('http://localhost:8000/api/product/medicine/', {
+//               headers: {
+//                   'accept': 'application/json',
+//                   "Content-Type": 'application/json',
+//                   'Authorization': `Bearer ${token}`
+//               }
+//           })
 
-          return response.data
-      } catch (error: any){
-          return rejectWithValue(error.response?.data || error.message)
-      }
-  }
-)
+//           return response.data
+//       } catch (error: any){
+//           return rejectWithValue(error.response?.data || error.message)
+//       }
+//   }
+// )
 
 
 const websocketSlice = createSlice({
@@ -160,23 +160,29 @@ const websocketSlice = createSlice({
         state.connections[connectionKey].error = error;
       }
     },
+
+    setMedicineList: (state, action) => {
+      const {message, data} = action.payload;
+      state.message = message;
+      state.medicineList = data;
+    }
   },
 
-  extraReducers: (builder) => {
-    builder.addCase(fetchMedicines.pending, (state) => {
-        state.loading = true
-    });
-    builder.addCase(fetchMedicines.fulfilled, (state, action) => {
-        state.loading = false,
-        state.message = action.payload.message,
-        state.medicineList = action.payload.data
-    })
-    builder.addCase(fetchMedicines.rejected, (state, action: PayloadAction<any>) => {
-        state.error = action.payload?.detail || "Something went wrong"
-    })
-},
+//   extraReducers: (builder) => {
+//     builder.addCase(fetchMedicines.pending, (state) => {
+//         state.loading = true
+//     });
+//     builder.addCase(fetchMedicines.fulfilled, (state, action) => {
+//         state.loading = false,
+//         state.message = action.payload.message,
+//         state.medicineList = action.payload.data
+//     })
+//     builder.addCase(fetchMedicines.rejected, (state, action: PayloadAction<any>) => {
+//         state.error = action.payload?.detail || "Something went wrong"
+//     })
+// },
 });
 
-export const { connect, disconnect, addMessage, setError } = websocketSlice.actions;
+export const { connect, disconnect, addMessage, setError, setMedicineList } = websocketSlice.actions;
 
 export default websocketSlice.reducer;

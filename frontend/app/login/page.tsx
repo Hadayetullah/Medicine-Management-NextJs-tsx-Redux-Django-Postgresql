@@ -45,21 +45,22 @@ const LoginPage = () => {
 
     // dispatch(setLoading(true));
 
-    // const res = await fetch("/api/auth/login/", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ email, password }),
-    // });
+    const res = await fetch("/api/auth/login/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-    // const result = await res.json();
-    // if (result.success) {
-    //   dispatch(setLoading(false));
-    //   router.push(result.redirectTo); // Redirect to the root URL
-    // } else {
-    //   dispatch(setLoading(false));
-    //   setError(result.error);
-    //   console.error("Error logging in");
-    // }
+    const result = await res.json();
+    if (result.success) {
+      // dispatch(setLoading(false));
+      router.push(result.redirectTo); // Redirect to the root URL
+    } else {
+      // dispatch(setLoading(false));
+      // setError(result.error);
+      console.log(result.error);
+      console.error("Error logging in");
+    }
   };
 
   // useEffect(() => {
