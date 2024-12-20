@@ -13,7 +13,7 @@ interface AuthState {
   } | null;
   isAuthenticated: boolean;
   loading: boolean;
-  error: string | null;
+  error: any;
   accessToken: string | null;
   refreshToken: string | null;
 }
@@ -176,7 +176,7 @@ const authSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    resetError: (state) => {
+    setError: (state) => {
       state.error = null;
     },
     resetLodingAndAuthStatus: (state, action: PayloadAction<boolean>) => {
@@ -287,5 +287,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setLoading, resetError, restoreAuthState, resetLodingAndAuthStatus } = authSlice.actions;
+export const { setLoading, setError, restoreAuthState, resetLodingAndAuthStatus } = authSlice.actions;
 export default authSlice.reducer;

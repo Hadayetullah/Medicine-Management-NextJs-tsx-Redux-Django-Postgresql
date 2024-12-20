@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   const apiBaseUrl = process.env.BACKEND_API_BASE_URL;

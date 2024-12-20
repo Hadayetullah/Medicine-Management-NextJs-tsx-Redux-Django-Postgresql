@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
 
   const url = req.nextUrl;
 
-  const response = NextResponse.next();
+  // const response = NextResponse.next();
 
   const cookieHeader = req.headers.get("cookie") || "";
   const cookies = parse(cookieHeader);
@@ -44,10 +44,11 @@ export function middleware(req: NextRequest) {
 
     console.log("Access token is valid, allowing request");
 
-    response.headers.set("access-token-status", "valid");
-    response.headers.set("access-token", accessToken);
-    response.headers.set("refresh-token", refreshToken);
-    return response;
+    // response.headers.set("access-token-status", "valid");
+    // response.headers.set("access-token", accessToken);
+    // response.headers.set("refresh-token", refreshToken);
+    // return response;
+    return NextResponse.next();
 
   } catch (error) {
     console.error("Invalid token: Redirecting...");
