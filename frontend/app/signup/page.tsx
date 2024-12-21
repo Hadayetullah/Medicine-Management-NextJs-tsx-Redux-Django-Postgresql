@@ -4,6 +4,7 @@ import { useState } from "react";
 import { setLoading } from "../../lib/features/authSlice";
 import OtpModal from "../components/client/OTPModal";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import DisplayError from "../components/DisplayError";
 
 const Register = () => {
   const { loading } = useAppSelector((state) => state.auth);
@@ -53,6 +54,10 @@ const Register = () => {
     });
   }
 
+  const handleError = () => {
+    setError(null);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -100,7 +105,9 @@ const Register = () => {
         </h2>
 
         {/* Display Errors */}
-        {error && errorMsg}
+        <DisplayError error={error} handleError={handleError} />
+        {/* {error && errorMsg} */}
+
         {/* {Object.keys(error).length > 0 && (
           <div className="space-y-2">
             {Object.keys(error).map((key) =>
