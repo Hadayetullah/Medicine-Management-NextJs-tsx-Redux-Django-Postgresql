@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { registerUser } from "../../lib/features/authSlice";
+import { setLoading } from "../../lib/features/authSlice";
 import OtpModal from "../components/client/OTPModal";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
 const Register = () => {
+  const { loading } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     email: "",
@@ -13,8 +14,9 @@ const Register = () => {
     phone: "",
     password: "",
   });
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  const [emailForOtp, setEmailForOtp] = useState("");
+
+  const [emailForOtp, setEmailForOtp] = useState<string | null>(null);
+  const [error, setError] = useState<any>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -25,12 +27,33 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result = await dispatch(registerUser(formData));
-    if (result.meta.requestStatus === "fulfilled") {
-      // Open OTP modal if registration is successful
-      setEmailForOtp(formData.email);
-      setShowOtpModal(true);
+
+    dispatch(setLoading(true));
+
+    const res = await fetch("/api/auth/signup/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      dispatch(setLoading(false));
+      setEmailForOtp(result.email);
+    } else {
+      setEmailForOtp(null);
+      dispatch(setLoading(false));
+      setError(result.error);
+      console.log(result.error);
+      console.error("Error logging in");
     }
+
+    // const result = await dispatch(registerUser(formData));
+    // if (result.meta.requestStatus === "fulfilled") {
+    //   // Open OTP modal if registration is successful
+    //   setEmailForOtp(formData.email);
+    //   setShowOtpModal(true);
+    // }
   };
 
   return (
@@ -39,6 +62,11 @@ const Register = () => {
         <h2 className="text-2xl font-bold text-center text-gray-900">
           Register
         </h2>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
@@ -112,16 +140,13 @@ const Register = () => {
             type="submit"
             className="w-full px-4 py-2 font-semibold text-white bg-indigo-600 rounded hover:bg-indigo-700"
           >
-            Register
+            {loading ? "Signing in..." : "Login"}
           </button>
         </form>
 
         {/* OTP Modal */}
-        {showOtpModal && (
-          <OtpModal
-            email={emailForOtp}
-            onClose={() => setShowOtpModal(false)}
-          />
+        {emailForOtp !== null && (
+          <OtpModal email={emailForOtp} onClose={() => setEmailForOtp(null)} />
         )}
       </div>
     </div>
