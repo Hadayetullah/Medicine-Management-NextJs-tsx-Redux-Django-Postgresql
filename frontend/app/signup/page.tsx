@@ -16,7 +16,16 @@ const Register = () => {
   });
 
   const [emailForOtp, setEmailForOtp] = useState<string | null>(null);
-  const [error, setError] = useState<any>(null);
+  // const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<{ [key: string]: string[] }>({});
+
+  // const errorMessages = Object.keys(error).map((key) => {
+  //   return error[key].map((message, index) => (
+  //     <p key={`${key}-${index}`} className="text-red-500">
+  //       {key}: {message}
+  //     </p>
+  //   ));
+  // });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -30,13 +39,14 @@ const Register = () => {
 
     dispatch(setLoading(true));
 
-    const res = await fetch("/api/auth/signup/", {
+    const res = await fetch("/api/auth/register/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
 
     const result = await res.json();
+    console.log("Signup Result: ", result);
     if (result.success) {
       dispatch(setLoading(false));
       setEmailForOtp(result.email);
@@ -62,11 +72,34 @@ const Register = () => {
         <h2 className="text-2xl font-bold text-center text-gray-900">
           Register
         </h2>
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
-            {error}
+
+        {/* Display Errors */}
+        {Object.keys(error).length > 0 && (
+          <div className="space-y-2">
+            {Object.keys(error).map((key) =>
+              error[key].map((message, index) => (
+                <p key={`${key}-${index}`} className="text-red-500">
+                  {key}: {message}
+                </p>
+              ))
+            )}
           </div>
         )}
+
+        {/* {error && (
+          <>
+            {error.map((err: any, index: number) => {
+              return (
+                <div
+                  key={index}
+                  className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4"
+                >
+                  {err}
+                </div>
+              );
+            })}
+          </>
+        )} */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
@@ -148,7 +181,7 @@ const Register = () => {
         </form>
 
         {/* OTP Modal */}
-        {emailForOtp !== null && (
+        {emailForOtp && (
           <OtpModal email={emailForOtp} onClose={() => setEmailForOtp(null)} />
         )}
       </div>

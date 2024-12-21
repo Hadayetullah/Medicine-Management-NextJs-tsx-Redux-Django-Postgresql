@@ -1,17 +1,19 @@
 import { NextResponse } from "next/server";
 
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   const apiBaseUrl = process.env.BACKEND_API_BASE_URL;
 
   try {
-    const body = await request.json();
+    const formData = await request.json();
 
-    const response = await fetch(`${apiBaseUrl}/api/auth/signup/`, {
+    console.log("Form Data: ", JSON.stringify(formData));
+
+    const response = await fetch(`${apiBaseUrl}/api/auth/register/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: body,
+      body: JSON.stringify(formData),
     });
 
     
@@ -19,9 +21,14 @@ export async function POST(request: Request) {
       const responseData = await response.json();
     
       return NextResponse.json({ success: true, data: responseData });
+    } else {
+      const errorData = await response.json();
+      return NextResponse.json({ success: false, error: errorData });
     }
     
   } catch (error) {
+    console.log("Error registering user: ", error);
+    // console.error("Error registering user: ", error);
    return NextResponse.json({ success: false, error: error });
   }
 }
