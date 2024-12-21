@@ -17,27 +17,11 @@ export async function POST(request: Request) {
     
     if (response.ok) {
       const responseData = await response.json();
-      const { accessToken, refreshToken } = responseData.token;
     
-      const redirectResponse = NextResponse.json({ success: true, redirectTo: "/" });
-      redirectResponse.cookies.set("accessToken", accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        // maxAge: Number(process.env.ACCESS_TOKEN_EXPIRY || 3600),
-      });
-      redirectResponse.cookies.set("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        // maxAge: Number(process.env.REFRESH_TOKEN_EXPIRY || 604800),
-      });
-    
-      return redirectResponse;
+      return NextResponse.json({ success: true, data: responseData });
     }
     
   } catch (error) {
-    const redirectResponse = NextResponse.json({ success: false, redirectTo: "/login", error: error });
-    return redirectResponse;
+   return NextResponse.json({ success: false, error: error });
   }
 }

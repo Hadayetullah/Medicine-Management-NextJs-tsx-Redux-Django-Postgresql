@@ -1,6 +1,8 @@
+"use client";
+
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { verifyOtp } from "@/lib/features/authSlice";
+import { setLoading } from "@/lib/features/authSlice";
 import { useRouter } from "next/navigation";
 
 interface OtpModalProps {
@@ -11,23 +13,39 @@ interface OtpModalProps {
 const OtpModal: React.FC<OtpModalProps> = ({ email, onClose }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+
   const [otp, setOtp] = useState("");
+  const [error, setError] = useState<any>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result = await dispatch(verifyOtp({ email, otp }));
-    if (result.meta.requestStatus === "fulfilled") {
-      onClose(); // Close the modal if OTP is verified
+
+    dispatch(setLoading(true));
+
+    const res = await fetch("/api/auth/otpverification/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp }),
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      dispatch(setLoading(false));
+      router.push(result.redirectTo); // Redirect to the root URL
+    } else {
+      dispatch(setLoading(false));
+      setError(result.error);
+      console.log(result.error);
+      console.error("Error logging in");
     }
+
+    // const result = await dispatch(verifyOtp({ email, otp }));
+    // if (result.meta.requestStatus === "fulfilled") {
+    //   onClose(); // Close the modal if OTP is verified
+    // }
   };
 
-  const { loading, error, isAuthenticated } = useAppSelector(
-    (state) => state.auth
-  );
-
-  if (isAuthenticated) {
-    router.push("/");
-  }
+  const { loading } = useAppSelector((state) => state.auth);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -35,6 +53,11 @@ const OtpModal: React.FC<OtpModalProps> = ({ email, onClose }) => {
         <h2 className="text-2xl font-bold text-center text-gray-900">
           Verify OTP
         </h2>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
@@ -71,9 +94,12 @@ const OtpModal: React.FC<OtpModalProps> = ({ email, onClose }) => {
 
           <button
             type="submit"
-            className="w-full px-4 py-2 font-semibold text-white bg-indigo-600 rounded hover:bg-indigo-700"
+            className={`w-full px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
           >
-            Verify OTP
+            {loading ? "Verifying OTP..." : "Verify OTP"}
           </button>
         </form>
 
