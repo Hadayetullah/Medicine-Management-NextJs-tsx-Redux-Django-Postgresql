@@ -138,9 +138,12 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full px-4 py-2 font-semibold text-white bg-indigo-600 rounded hover:bg-indigo-700"
+            className={`w-full px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
           >
-            {loading ? "Signing in..." : "Login"}
+            {loading ? "Signing in..." : "Sign Up"}
           </button>
         </form>
 
