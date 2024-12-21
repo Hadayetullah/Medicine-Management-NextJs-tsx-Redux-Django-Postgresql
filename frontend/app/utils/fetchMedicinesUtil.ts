@@ -1,4 +1,4 @@
-import { fetchMedicines } from "@/lib/features/websocketSlice";
+import { fetchMedicines } from "@/lib/features/productSlice";
 
 export const dispatchFetchMedicines = async(dispatch: Function, token: string|null) => {
   if (!token) {

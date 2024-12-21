@@ -2,11 +2,11 @@ import { combineReducers } from "@reduxjs/toolkit";
 
 import authReducer from "./features/authSlice";
 import employeeReducer from "./features/employeeSlice";
-import websocketReducer from "./features/websocketSlice";
+import productReducer from "./features/productSlice";
 
 // Combine reducers
 export const rootReducer = combineReducers({
     auth: authReducer,
-    websocket: websocketReducer,
+    product: productReducer,
     employee: employeeReducer,
 });
