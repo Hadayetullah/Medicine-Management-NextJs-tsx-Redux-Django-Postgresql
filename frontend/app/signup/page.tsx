@@ -17,7 +17,8 @@ const Register = () => {
 
   const [emailForOtp, setEmailForOtp] = useState<string | null>(null);
   // const [error, setError] = useState<any>(null);
-  const [error, setError] = useState<{ [key: string]: string[] }>({});
+  const [error, setError] = useState<any>(null);
+  // const [error, setError] = useState<{ [key: string]: string[] }>({});
 
   // const errorMessages = Object.keys(error).map((key) => {
   //   return error[key].map((message, index) => (
@@ -26,6 +27,31 @@ const Register = () => {
   //     </p>
   //   ));
   // });
+
+  let errorMsg;
+
+  if (error && typeof error === "string") {
+    errorMsg = (
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+        {error}
+      </div>
+    );
+  } else if (error && typeof error === "object") {
+    errorMsg = Object.keys(error).map((key) => {
+      return error[key].map((message: string, index: boolean) => (
+        // <p key={`${key}-${index}`} className="text-red-500">
+        //   {key}: {message}
+        // </p>
+
+        <div
+          key={key + index}
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4"
+        >
+          {message}
+        </div>
+      ));
+    });
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -74,7 +100,8 @@ const Register = () => {
         </h2>
 
         {/* Display Errors */}
-        {Object.keys(error).length > 0 && (
+        {error && errorMsg}
+        {/* {Object.keys(error).length > 0 && (
           <div className="space-y-2">
             {Object.keys(error).map((key) =>
               error[key].map((message, index) => (
@@ -84,7 +111,7 @@ const Register = () => {
               ))
             )}
           </div>
-        )}
+        )} */}
 
         {/* {error && (
           <>
