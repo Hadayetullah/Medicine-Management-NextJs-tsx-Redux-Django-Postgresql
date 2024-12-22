@@ -38,9 +38,14 @@ const Register = () => {
     });
 
     const result = await res.json();
-    if (result.success) {
+
+    if (result.success === true) {
       dispatch(setLoading(false));
       setEmailForOtp(result.data.email);
+    } else if (result.success === 409) {
+      console.log("Signup Email conflict : ", result.error);
+      dispatch(setLoading(false));
+      // setError(result.error);
     } else {
       setEmailForOtp(null);
       dispatch(setLoading(false));
