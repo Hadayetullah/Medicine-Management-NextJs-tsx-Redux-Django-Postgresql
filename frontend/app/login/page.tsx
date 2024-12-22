@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 import { setLoading } from "../../lib/features/authSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import DisplayError from "../components/DisplayError";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -57,7 +58,11 @@ const LoginPage = () => {
       router.push(result.redirectTo); // Redirect to the root URL
     } else {
       dispatch(setLoading(false));
-      setError(result.error);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setError("Error registering user");
+      }
       console.log(result.error);
       console.error("Error logging in");
     }
@@ -71,11 +76,9 @@ const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
-            {error}
-          </div>
-        )}
+
+        {/* Display Errors */}
+        <DisplayError error={error} handleError={() => setError(null)} />
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
