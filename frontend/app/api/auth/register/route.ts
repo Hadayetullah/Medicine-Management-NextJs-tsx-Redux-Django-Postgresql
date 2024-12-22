@@ -8,8 +8,6 @@ export async function POST(request: Request) {
   try {
     const formData = await request.json();
 
-    console.log("Form Data: ", JSON.stringify(formData));
-
     const response = await fetch(`${apiBaseUrl}/api/auth/register/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -19,8 +17,12 @@ export async function POST(request: Request) {
     
     if (response.ok) {
       const responseData = await response.json();
-    
       return NextResponse.json({ success: true, data: responseData });
+
+    } else if(response.status === 409) {
+      const errorData = await response.json();
+      return NextResponse.json({ success: 409, error: errorData });
+
     } else {
       const errorData = await response.json();
       return NextResponse.json({ success: false, error: errorData });
