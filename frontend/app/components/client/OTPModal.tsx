@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setLoading } from "@/lib/features/authSlice";
 import { useRouter } from "next/navigation";
+import DisplayError from "../DisplayError";
 
 interface OtpModalProps {
   email: string;
@@ -53,11 +54,10 @@ const OtpModal: React.FC<OtpModalProps> = ({ email, onClose }) => {
         <h2 className="text-2xl font-bold text-center text-gray-900">
           Verify OTP
         </h2>
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
-            {error}
-          </div>
-        )}
+
+        {/* Display Errors */}
+        <DisplayError error={error} handleError={() => setError(null)} />
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label

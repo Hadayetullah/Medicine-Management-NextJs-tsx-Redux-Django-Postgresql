@@ -17,46 +17,7 @@ const Register = () => {
   });
 
   const [emailForOtp, setEmailForOtp] = useState<string | null>(null);
-  // const [error, setError] = useState<any>(null);
   const [error, setError] = useState<any>(null);
-  // const [error, setError] = useState<{ [key: string]: string[] }>({});
-
-  // const errorMessages = Object.keys(error).map((key) => {
-  //   return error[key].map((message, index) => (
-  //     <p key={`${key}-${index}`} className="text-red-500">
-  //       {key}: {message}
-  //     </p>
-  //   ));
-  // });
-
-  let errorMsg;
-
-  if (error && typeof error === "string") {
-    errorMsg = (
-      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
-        {error}
-      </div>
-    );
-  } else if (error && typeof error === "object") {
-    errorMsg = Object.keys(error).map((key) => {
-      return error[key].map((message: string, index: boolean) => (
-        // <p key={`${key}-${index}`} className="text-red-500">
-        //   {key}: {message}
-        // </p>
-
-        <div
-          key={key + index}
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4"
-        >
-          {message}
-        </div>
-      ));
-    });
-  }
-
-  const handleError = () => {
-    setError(null);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -77,24 +38,20 @@ const Register = () => {
     });
 
     const result = await res.json();
-    console.log("Signup Result: ", result);
     if (result.success) {
       dispatch(setLoading(false));
-      setEmailForOtp(result.email);
+      setEmailForOtp(result.data.email);
     } else {
       setEmailForOtp(null);
       dispatch(setLoading(false));
-      setError(result.error);
-      console.log(result.error);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setError("Error registering user");
+      }
+      console.log("Error : ", result.error);
       console.error("Error logging in");
     }
-
-    // const result = await dispatch(registerUser(formData));
-    // if (result.meta.requestStatus === "fulfilled") {
-    //   // Open OTP modal if registration is successful
-    //   setEmailForOtp(formData.email);
-    //   setShowOtpModal(true);
-    // }
   };
 
   return (
@@ -105,35 +62,8 @@ const Register = () => {
         </h2>
 
         {/* Display Errors */}
-        <DisplayError error={error} handleError={handleError} />
-        {/* {error && errorMsg} */}
+        <DisplayError error={error} handleError={() => setError(null)} />
 
-        {/* {Object.keys(error).length > 0 && (
-          <div className="space-y-2">
-            {Object.keys(error).map((key) =>
-              error[key].map((message, index) => (
-                <p key={`${key}-${index}`} className="text-red-500">
-                  {key}: {message}
-                </p>
-              ))
-            )}
-          </div>
-        )} */}
-
-        {/* {error && (
-          <>
-            {error.map((err: any, index: number) => {
-              return (
-                <div
-                  key={index}
-                  className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4"
-                >
-                  {err}
-                </div>
-              );
-            })}
-          </>
-        )} */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
