@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
+from rest_framework.exceptions import ValidationError
+
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
@@ -21,15 +23,32 @@ def get_tokens_for_user(user):
         'accessToken': str(refresh.access_token),
     }
 
+# class RegisterView(APIView):
+#     permission_classes = [AllowAny]  # Allow anyone to access this view
+#     def post(self, request):
+#         serializer = RegisterSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             email = serializer.data.get('email')
+#             return Response({'msg': 'OTP sent to your email.', 'email': email}, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class RegisterView(APIView):
-    permission_classes = [AllowAny]  # Allow anyone to access this view
+    permission_classes = [AllowAny]
+
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
-        if serializer.is_valid():
+        try:
+            serializer.is_valid(raise_exception=True)
             serializer.save()
             email = serializer.data.get('email')
             return Response({'msg': 'OTP sent to your email.', 'email': email}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except ValidationError as e:
+            if 'email' in e.detail:
+                return Response({'error': 'User with this email already exists.'}, status=status.HTTP_409_CONFLICT)
+            # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
     
 
 
