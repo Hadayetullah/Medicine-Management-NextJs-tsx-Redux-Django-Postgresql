@@ -58,7 +58,12 @@ const LoginPage = () => {
       router.push(result.redirectTo); // Redirect to the root URL
     } else {
       dispatch(setLoading(false));
-      if (result.error) {
+      if (result.error.non_field_errors[0].code === "user_inactive") {
+        console.log(
+          "Inactive error login: ",
+          result.error.non_field_errors[0].code
+        );
+      } else if (result.error) {
         setError(result.error);
       } else {
         setError("Error registering user");
