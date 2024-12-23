@@ -71,17 +71,52 @@ class LoginSerializer(serializers.Serializer):  # Use Serializer instead of Mode
     email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
+    # def validate(self, data):
+    #     email = data.get('email')
+    #     password = data.get('password')
+
+    #     if email and password:
+    #         user = User.objects.get(email=email)
+    #         if not user.is_active:
+    #             raise serializers.ValidationError("User account is disabled.", code='user_inactive')
+            
+    #         user = authenticate(email=email, password=password)
+    #         if user is None:
+    #             raise serializers.ValidationError("Invalid email or password.", code='authentication_failed')
+            
+    #     else:
+    #         raise serializers.ValidationError("Both email and password are required.")
+
+    #     data['user'] = user
+    #     return data
+
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')
 
         if email and password:
-            # Use authenticate method to check credentials
-            user = authenticate(email=email, password=password)
-            if user is None:
-                raise serializers.ValidationError("Invalid email or password.")
-            if not user.is_active:
-                raise serializers.ValidationError("User account is disabled.")
+            try:
+                user = User.objects.get(email=email)
+                if not user.is_active:
+                    raise serializers.ValidationError({
+                        "non_field_errors": [
+                            {"message": "User account is disabled.", "code": "user_inactive"}
+                        ]
+                    })
+                
+                user = authenticate(email=email, password=password)
+                if user is None:
+                    raise serializers.ValidationError({
+                        "non_field_errors": [
+                            {"message": "Invalid email or password.", "code": "authentication_failed"}
+                        ]
+                    })
+            except User.DoesNotExist:
+                raise serializers.ValidationError({
+                    "non_field_errors": [
+                        {"message": "Invalid email or password.", "code": "authentication_failed"}
+                    ]
+                })
         else:
             raise serializers.ValidationError("Both email and password are required.")
 
