@@ -1,4 +1,3 @@
-"use server"
 import { WebSocket } from "ws";
 
 const websocketConnections: Map<string, WebSocket> = new Map();
@@ -18,21 +17,27 @@ export const connectWebSocket = async (connectionKey: string, url: string, token
     };
 
     socket.onerror = (error:any) => {
-      reject({ connectionKey, error: "WebSocket error occurred" });
+      console.log("Websocket On error : ", error);
+      reject({ connectionKey, error: error });
     };
 
     socket.onclose = () => {
+      console.log("Websocket On close before : ", websocketConnections);
       websocketConnections.delete(connectionKey);
+      console.log("Websocket On close after : ", websocketConnections);
     };
   });
 };
 
 export const sendMessageWebSocket = (connectionKey: string, message: any) => {
   const socket = websocketConnections.get(connectionKey);
+  console.log("Send websocket message : ", websocketConnections);
   if (!socket) {
     throw new Error(`No WebSocket connection for ${connectionKey}`);
   }
 
+  console.log("Send websocket socket : ", socket);
+  console.log("Send websocket socket status : ", socket.readyState);
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(message));
     return { connectionKey, message: "Message sent successfully" };
