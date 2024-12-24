@@ -10,15 +10,15 @@ export const connectWebSocket = async (connectionKey: string, url: string, token
   const connectionUrl = `${url}?token=${token}`;
   const socket = new WebSocket(connectionUrl);
 
-  return new Promise((resolve, reject) => {
-    socket.onopen = () => {
+  return new Promise((resolve) => {
+    socket.onopen = (data) => {
       websocketConnections.set(connectionKey, socket);
-      resolve({ connectionKey, message: "Connected successfully" });
+      resolve({ success: true, connectionKey, message: "Connected successfully", data: data });
     };
 
     socket.onerror = (error:any) => {
       console.log("Websocket On error : ", error);
-      reject({ connectionKey, error: error });
+      resolve({ success: false, connectionKey, message: "WebSocket error occurred", error: error });
     };
 
     socket.onclose = () => {

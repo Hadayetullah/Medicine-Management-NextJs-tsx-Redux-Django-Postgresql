@@ -2,44 +2,42 @@ import { connectWebSocket, disconnectWebSocket, sendMessageWebSocket } from "@/a
 import { getTokens } from "@/app/actions/serverActions";
 import { NextResponse } from "next/server";
 
-
 export async function POST(req: Request) {
-//   const { action, connectionKey, url, token, message } = req.body;
-  const { action, connectionKey, message } = req.body;
+  try {
+    // Parse the JSON body
+    const body: {action:string; connectionKey: string; message: any} = await req.json();
+    const { action, connectionKey, message } = body;
 
-  const {accessToken} = await getTokens();
-  
-      if (!accessToken) {
-          return NextResponse.json({ success: false, error: "Invalid access token" });
-      }
+    // Fetch access tokens
+    const { accessToken } = await getTokens();
+    if (!accessToken) {
+      return NextResponse.json({ success: false, error: "Invalid access token" });
+    }
+
+    // Define WebSocket API base URL
     const apiBaseUrl = process.env.BACKEND_API_BASE_URL + "/ws/product/medicine/";
 
-  try {
+    // Handle WebSocket actions
     switch (action) {
-      case "connect":
+      case "connect": {
         const connectResponse = await connectWebSocket(connectionKey, apiBaseUrl, accessToken);
-        // res.status(200).json(connectResponse);
-        // break;
-        return NextResponse.json({ response: connectResponse });
+        return NextResponse.json(connectResponse);
+      }
 
-      case "sendMessage":
+      case "sendMessage": {
         const sendResponse = sendMessageWebSocket(connectionKey, message);
-        // res.status(200).json(sendResponse);
-        // break;
-        return NextResponse.json({ response: sendResponse });
+        return NextResponse.json({ success: true, data: sendResponse });
+      }
 
-      case "disconnect":
+      case "disconnect": {
         const disconnectResponse = disconnectWebSocket(connectionKey);
-        // res.status(200).json(disconnectResponse);
-        // break;
-        return NextResponse.json({ response: disconnectResponse });
+        return NextResponse.json({ success: true, data: disconnectResponse });
+      }
 
       default:
-        // res.status(400).json({ error: "Invalid action" });
-        return NextResponse.json({ error: "Invalid action" });
+        return NextResponse.json({ success: false, error: "Invalid action" });
     }
-  } catch (error:any) {
-    // res.status(500).json({ error: error.message });
-    return NextResponse.json({ error: error });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message || "An unknown error occurred" });
   }
 }
