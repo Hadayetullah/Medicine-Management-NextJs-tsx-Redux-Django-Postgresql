@@ -136,6 +136,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setMedicineList } from "@/lib/features/productSlice";
 
 import Loader from "./components/client/Loader";
+import { handleWebSocket } from "./actions/clientActions";
 
 export default async function HomePage() {
   const router = useRouter();
@@ -162,6 +163,16 @@ export default async function HomePage() {
     if (result.success) {
       dispatch(setMedicineList(result.data));
       setLoading(false);
+      const connect = await handleWebSocket("connect", {
+        connectionKey: "medicineConnection",
+        message: null,
+      });
+
+      if (connect.success) {
+        console.log("WebSocket connection established");
+      } else {
+        console.error("Failed to establish WebSocket connection");
+      }
     } else {
       console.log(result.error);
       console.error("Error getting medicine list");
