@@ -15,13 +15,13 @@ export async function POST(req: Request) {
     }
 
     // Define WebSocket API base URL
-    const apiBaseUrl = process.env.BACKEND_API_BASE_URL + "/ws/product/medicine/";
+    const apiBaseUrl = process.env.BACKEND_SOCKET_BASE_URL + "/ws/product/medicine/";
 
     // Handle WebSocket actions
     switch (action) {
       case "connect": {
         const connectResponse = await connectWebSocket(connectionKey, apiBaseUrl, accessToken);
-        return NextResponse.json(connectResponse);
+        return NextResponse.json({ success: true, data: connectResponse });
       }
 
       case "sendMessage": {

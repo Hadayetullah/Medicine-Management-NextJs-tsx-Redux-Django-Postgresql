@@ -1,4 +1,4 @@
-import { WebSocket } from "ws";
+// import { WebSocket } from "ws";
 
 const websocketConnections: Map<string, WebSocket> = new Map();
 
@@ -13,7 +13,13 @@ export const connectWebSocket = async (connectionKey: string, url: string, token
   return new Promise((resolve) => {
     socket.onopen = (data) => {
       websocketConnections.set(connectionKey, socket);
+      console.log("On open : ", data);
       resolve({ success: true, connectionKey, message: "Connected successfully", data: data });
+    };
+
+    socket.onmessage = (data: any) => {
+      console.log("Websocket On message : ", data);
+      resolve({ success: true, connectionKey, message: "Message received", data: data});
     };
 
     socket.onerror = (error:any) => {
@@ -33,6 +39,7 @@ export const sendMessageWebSocket = (connectionKey: string, message: any) => {
   const socket = websocketConnections.get(connectionKey);
   console.log("Send websocket message : ", websocketConnections);
   if (!socket) {
+    console.log("Send websocket message error : ", websocketConnections);
     throw new Error(`No WebSocket connection for ${connectionKey}`);
   }
 
@@ -43,6 +50,7 @@ export const sendMessageWebSocket = (connectionKey: string, message: any) => {
     return { connectionKey, message: "Message sent successfully" };
   }
 
+  console.log("Send websocket message error : ", websocketConnections);
   throw new Error(`WebSocket is not open for ${connectionKey}`);
 };
 

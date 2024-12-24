@@ -170,6 +170,7 @@ export default async function HomePage() {
 
       if (connect.success) {
         console.log("WebSocket connection established");
+        console.log("connection data: ", connect.data);
       } else {
         console.error("Failed to establish WebSocket connection");
       }
