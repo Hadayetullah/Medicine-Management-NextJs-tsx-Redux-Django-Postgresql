@@ -38,7 +38,7 @@ export const connectWebSocket = async (connectionKey: string, url: string, token
   });
 };
 
-export const sendMessageWebSocket = (connectionKey: string, message: any) => {
+export const sendMessageWebSocket = async (connectionKey: string, message: any) => {
   const socket = websocketConnections.get(connectionKey);
   console.log("Send websocket message : ", websocketConnections);
   if (!socket) {
@@ -57,13 +57,14 @@ export const sendMessageWebSocket = (connectionKey: string, message: any) => {
   throw new Error(`WebSocket is not open for ${connectionKey}`);
 };
 
-export const disconnectWebSocket = (connectionKey: string) => {
+export const disconnectWebSocket = async (connectionKey: string) => {
   const socket = websocketConnections.get(connectionKey);
+  console.log("Disconnect websocket socket : ", socket);
   if (socket) {
     socket.close();
     websocketConnections.delete(connectionKey);
     return { connectionKey, message: "Disconnected successfully" };
+  } else {
+    return { connectionKey, message: "No WebSocket connection found" };
   }
-
-  throw new Error(`No WebSocket connection for ${connectionKey}`);
 };

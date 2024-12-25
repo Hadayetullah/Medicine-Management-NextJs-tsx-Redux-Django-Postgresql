@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/features/authSlice";
 import { tokenValidationToLogout } from "@/lib/actions";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { logout } from "@/app/actions/clientActions";
+import { handleWebSocket, logout } from "@/app/actions/clientActions";
 
 const Navbar = () => {
   const path = usePathname();
@@ -20,18 +20,24 @@ const Navbar = () => {
     useState<boolean>(true);
 
   const handleLogout = async () => {
-    // const tokens: any = await tokenValidationToLogout();
-    // setToggleUser(false);
-    // if (tokens && tokens.accessToken) {
-    //   dispatch(logoutUser(tokens));
-    // }
-    const response = await logout();
-    if (response.success) {
-      console.log("Logout response: ", response.data);
+    const websocketResponse = await handleWebSocket("disconnect", {
+      connectionKey: "medicineConnection",
+      message: null,
+    });
+
+    if (websocketResponse.success) {
+      console.log("Websocket disconnected: ", websocketResponse.data);
+    } else {
+      console.log("Websocket disconnected: ", websocketResponse.error);
+    }
+
+    const logoutResponse = await logout();
+    if (logoutResponse.success) {
+      console.log("Logout logoutResponse: ", logoutResponse.data);
       setToggleUser(false);
       router.push("/login");
     } else {
-      console.log("Logout response: ", response.error);
+      console.log("Logout logoutResponse: ", logoutResponse.error);
       setToggleUser(false);
       router.push("/login");
     }
