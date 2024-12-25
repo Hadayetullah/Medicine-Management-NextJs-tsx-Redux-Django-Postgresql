@@ -4,7 +4,7 @@ import { parse } from "cookie";
 import { headers } from "next/headers";
 
 
-{/* Types declaration */}
+{/* Types declarations */}
 export type tokenProps = {
     accessToken: string|null;
     refreshToken: string|null;

@@ -10,7 +10,6 @@ const Navbar = () => {
   const path = usePathname();
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
   // const pathName = path.split("/");
   // console.log(pathName[0] == "");
 
@@ -19,12 +18,9 @@ const Navbar = () => {
   const [isAccessTokenExpired, setIsAccessTokenExpired] =
     useState<boolean>(true);
 
-  // console.log(isAuthenticated);
-
   const handleLogout = async () => {
     const tokens: any = await tokenValidationToLogout();
     setToggleUser(false);
-    // router.push("/login");
     if (tokens && tokens.accessToken) {
       dispatch(logoutUser(tokens));
     }
