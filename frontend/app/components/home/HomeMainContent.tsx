@@ -56,6 +56,8 @@ const HomeMainContent = () => {
         getMedicineListRef.current = true;
         getMedicineList();
       }
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -64,7 +66,7 @@ const HomeMainContent = () => {
   }
 
   return (
-    <div className="w-full my-5">
+    <div className="w-full mt-16 mb-5">
       <div
         className="overflow-x-auto overflow-y-hidden w-full h-full"
         style={{ scrollbarWidth: "thin", zIndex: "-1" }}
