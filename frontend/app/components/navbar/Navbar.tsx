@@ -52,6 +52,8 @@ const Navbar = () => {
   useEffect(() => {
     if (path !== "/login" && path !== "/signup") {
       setIsAccessTokenExpired(false);
+    } else {
+      setIsAccessTokenExpired(true);
     }
   }, [path]);
 
