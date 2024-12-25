@@ -1,10 +1,10 @@
 'use server'
 
 import { parse } from "cookie";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 
 
-{/* Types declaration */}
+{/* Types declarations */}
 export type tokenProps = {
     accessToken: string|null;
     refreshToken: string|null;
@@ -42,4 +42,10 @@ export async function getTokens() {
     }
 
     return {...tokens, accessToken: accessToken, refreshToken: refreshToken};
+}
+
+
+export async function resetAuthCookies() {
+    cookies().set('accessToken', '');
+    cookies().set('refreshToken', '');
 }

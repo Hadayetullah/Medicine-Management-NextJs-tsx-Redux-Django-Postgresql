@@ -5,12 +5,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/features/authSlice";
 import { tokenValidationToLogout } from "@/lib/actions";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { logout } from "@/app/actions/clientActions";
 
 const Navbar = () => {
   const path = usePathname();
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
   // const pathName = path.split("/");
   // console.log(pathName[0] == "");
 
@@ -19,14 +19,21 @@ const Navbar = () => {
   const [isAccessTokenExpired, setIsAccessTokenExpired] =
     useState<boolean>(true);
 
-  // console.log(isAuthenticated);
-
   const handleLogout = async () => {
-    const tokens: any = await tokenValidationToLogout();
-    setToggleUser(false);
-    // router.push("/login");
-    if (tokens && tokens.accessToken) {
-      dispatch(logoutUser(tokens));
+    // const tokens: any = await tokenValidationToLogout();
+    // setToggleUser(false);
+    // if (tokens && tokens.accessToken) {
+    //   dispatch(logoutUser(tokens));
+    // }
+    const response = await logout();
+    if (response.success) {
+      console.log("Logout response: ", response.data);
+      setToggleUser(false);
+      router.push("/login");
+    } else {
+      console.log("Logout response: ", response.error);
+      setToggleUser(false);
+      router.push("/login");
     }
   };
 

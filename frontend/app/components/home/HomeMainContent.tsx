@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setMedicineList } from "@/lib/features/productSlice";
 import { handleWebSocket } from "@/app/actions/clientActions";
+import Loader from "../client/Loader";
 
 const HomeMainContent = () => {
   const router = useRouter();
@@ -58,9 +59,9 @@ const HomeMainContent = () => {
     }
   }, []);
 
-  // if (productLoading || loading) {
-  //     return <Loader />;
-  //   }
+  if (productLoading || loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="w-full my-5">
