@@ -1,7 +1,7 @@
 'use server'
 
 import { parse } from "cookie";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 
 
 {/* Types declarations */}
@@ -42,4 +42,10 @@ export async function getTokens() {
     }
 
     return {...tokens, accessToken: accessToken, refreshToken: refreshToken};
+}
+
+
+export async function resetAuthCookies() {
+    cookies().set('accessToken', '');
+    cookies().set('refreshToken', '');
 }
