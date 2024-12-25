@@ -11,3 +11,15 @@ export async function handleWebSocket(action:string, payload:any): Promise<any> 
   
     return response.json();
 }
+
+
+export async function logout() {
+    const response = await fetch("/api/auth/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  
+    return response.json();
+}
