@@ -9,12 +9,15 @@ export const connectWebSocket = async (connectionKey: string, url: string, token
 
   const connectionUrl = `${url}?token=${token}`;
   const socket = new WebSocket(connectionUrl);
+  
+  console.log("Websocket Open at beginnig: ", WebSocket.OPEN);
 
   return new Promise((resolve) => {
-    socket.onopen = (data) => {
+    socket.onopen = (data:any) => {
       websocketConnections.set(connectionKey, socket);
-      console.log("On open : ", data);
-      resolve({ success: true, connectionKey, message: "Connected successfully", data: data });
+      console.log("On open readyState : ", data.target.readyState);
+      console.log("Websocket Open : ", WebSocket.OPEN);
+      resolve({ success: true, connectionKey, message: "Connected successfully", data: data.target.readyState });
     };
 
     socket.onmessage = (data: any) => {
