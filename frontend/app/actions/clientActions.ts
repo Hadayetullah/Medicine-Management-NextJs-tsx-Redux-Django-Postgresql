@@ -13,7 +13,7 @@ export async function handleWebSocket(action:string, payload:any): Promise<any> 
 }
 
 
-export async function logout() {
+export async function logout(): Promise<any> {
     const response = await fetch("/api/auth/logout", {
       method: "POST",
       headers: {
