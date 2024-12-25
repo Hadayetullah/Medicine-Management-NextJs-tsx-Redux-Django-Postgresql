@@ -12,7 +12,7 @@ export async function POST() {
 
   try {
 
-    const response = await fetch(`${apiBaseUrl}/api/product/medicine/`, {
+    const response = await fetch(`${apiBaseUrl}/api/auth/logout/`, {
       method: "POST",
       headers: { 
         'Accept': 'Application/json',
