@@ -4,7 +4,7 @@ import { parse } from "cookie";
 export function middleware(req: NextRequest) {
   console.log("Middleware triggered");
 
-  const url = req.nextUrl;
+  // const url = req.nextUrl;
 
   // const response = NextResponse.next();
 
@@ -15,9 +15,9 @@ export function middleware(req: NextRequest) {
 
 
   // Allow these route without token validation
-  if (url.pathname.startsWith("/login") || url.pathname.startsWith("/signup") || url.pathname.startsWith("/api")) {
-    return NextResponse.next();
-  }
+  // if (url.pathname.startsWith("/login") || url.pathname.startsWith("/signup") || url.pathname.startsWith("/api")) {
+  //   return NextResponse.next();
+  // }
 
 
   if (!accessToken || !refreshToken) {
