@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setMedicineList } from "@/lib/features/productSlice";
-import { handleWebSocket } from "@/app/actions/clientActions";
 import Loader from "../client/Loader";
 import Search from "./SearchMedicine";
+import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
 
 const HomeMainContent = () => {
   const router = useRouter();
@@ -34,10 +34,7 @@ const HomeMainContent = () => {
     if (result.success) {
       dispatch(setMedicineList(result.data));
       setLoading(false);
-      const connect = await handleWebSocket("connect", {
-        connectionKey: "medicineConnection",
-        message: null,
-      });
+      const connect: any = await connectWebSocket("medicineConnection");
 
       if (connect.success) {
         console.log("WebSocket connection established");
@@ -116,7 +113,7 @@ const HomeMainContent = () => {
               <div className="w-full min-h-[60vh] max-h-[75vh] pb-5 bg-white">
                 {medicineList.length > 0 ? (
                   <div className="w-full h-full">
-                    {medicineList.map((medicine, index) => {
+                    {medicineList.map((medicine: any, index) => {
                       return (
                         <div
                           key={index}
