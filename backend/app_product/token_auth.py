@@ -49,6 +49,9 @@ class TokenAuthMiddleware(BaseMiddleware):
     
 
     async def token_validation_loop(self, scope, send):
+        short_sleep_done = False
+        long_sleep_done = False
+
         while True:
             token_expiry = scope.get('token_expiry')
             if not token_expiry:
@@ -58,11 +61,28 @@ class TokenAuthMiddleware(BaseMiddleware):
 
             # Check if the token is about to expire
             time_left = (token_expiry - datetime.now(timezone.utc)).total_seconds()
-            if time_left < 30:  # 30 seconds threshold for token renewal
+            print("Current time : ", datetime.now(timezone.utc))
+            print("Time Left : ", time_left)
+            if time_left < 0:
+                await send({'type': 'websocket.close'})
+                break
+
+            elif time_left < 30:  # 30 seconds threshold for token renewal
                 # Request token renewal from the client
                 await send({
                     'type': 'websocket.send',
                     'text': json.dumps({'action': 'renew_token'})
                 })
 
-            await asyncio.sleep(10)  # Check token validity every 10 seconds
+            # await asyncio.sleep(270)  # Check token validity every 270 seconds (4.5 seconds)
+
+            if not long_sleep_done:
+                await asyncio.sleep(270)
+                long_sleep_done = True
+
+            elif not short_sleep_done:
+                await asyncio.sleep(30)  # Perform a short sleep first
+                short_sleep_done = True  # Mark the short sleep as done
+            else:
+                await asyncio.sleep(240)  # Use the longer sleep interval afterward
+                short_sleep_done = False  # Mark the short sleep as undone
