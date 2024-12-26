@@ -1,39 +1,40 @@
 // import { WebSocket } from "ws";
 
+import { getTokens } from "../actions/serverActions";
+
 const websocketConnections: Map<string, WebSocket> = new Map();
 
-export const connectWebSocket = async (connectionKey: string, url: string, token: string) => {
+export const connectWebSocket = async (connectionKey: string) => {
+  
   if (websocketConnections.has(connectionKey)) {
     throw new Error(`WebSocket connection for ${connectionKey} already exists.`);
   }
 
-  const connectionUrl = `${url}?token=${token}`;
+  const {accessToken} = await getTokens()
+
+  const url = process.env.BACKEND_SOCKET_BASE_URL + "/ws/product/medicine/";
+  const connectionUrl = `${url}?token=${accessToken}`;
   const socket = new WebSocket(connectionUrl);
   
-  console.log("Websocket Open at beginnig: ", WebSocket.OPEN);
-
   return new Promise((resolve) => {
-    socket.onopen = (data:any) => {
+    socket.onopen = (event:any) => {
       websocketConnections.set(connectionKey, socket);
-      console.log("On open readyState : ", data.target.readyState);
-      console.log("Websocket Open : ", WebSocket.OPEN);
-      resolve({ success: true, connectionKey, message: "Connected successfully", data: data.target.readyState });
+      resolve({ success: true, connectionKey, message: "Connected successfully", data: event.target.readyState });
     };
 
-    socket.onmessage = (data: any) => {
-      console.log("Websocket On message : ", data);
-      resolve({ success: true, connectionKey, message: "Message received", data: data});
+    socket.onmessage = (event: any) => {
+      console.log("Websocket On message : ", event.data);
+      // resolve({ success: true, connectionKey, message: "Message received", data: data});
     };
 
     socket.onerror = (error:any) => {
       console.log("Websocket On error : ", error);
-      resolve({ success: false, connectionKey, message: "WebSocket error occurred", error: error });
+      // resolve({ success: false, connectionKey, message: "WebSocket error occurred", error: error });
     };
 
     socket.onclose = () => {
-      console.log("Websocket On close before : ", websocketConnections);
       websocketConnections.delete(connectionKey);
-      console.log("Websocket On close after : ", websocketConnections);
+      // resolve({ success: false, connectionKey, message: "WebSocket error occurred", error: error });
     };
   });
 };
