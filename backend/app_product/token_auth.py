@@ -67,7 +67,7 @@ class TokenAuthMiddleware(BaseMiddleware):
                 await send({'type': 'websocket.close'})
                 break
 
-            elif time_left < 30:  # 30 seconds threshold for token renewal
+            elif time_left < 15:  # 30 seconds threshold for token renewal
                 # Request token renewal from the client
                 await send({
                     'type': 'websocket.send',
@@ -77,12 +77,14 @@ class TokenAuthMiddleware(BaseMiddleware):
             # await asyncio.sleep(270)  # Check token validity every 270 seconds (4.5 seconds)
 
             if not long_sleep_done:
-                await asyncio.sleep(270)
+                # await asyncio.sleep(270)
+                await asyncio.sleep(45)
                 long_sleep_done = True
 
             elif not short_sleep_done:
-                await asyncio.sleep(30)  # Perform a short sleep first
+                await asyncio.sleep(15)  # Perform a short sleep first
                 short_sleep_done = True  # Mark the short sleep as done
             else:
-                await asyncio.sleep(240)  # Use the longer sleep interval afterward
+                # await asyncio.sleep(240)  # Use the longer sleep interval afterward
+                await asyncio.sleep(30)  # Use the longer sleep interval afterward
                 short_sleep_done = False  # Mark the short sleep as undone
