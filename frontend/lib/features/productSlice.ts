@@ -65,7 +65,7 @@ interface WebSocketState {
 }
 
 interface MainStateType {
-  message: string | null;
+  message: any;
   loading: boolean;
   error: any;
   connections: WebSocketState;
@@ -166,6 +166,10 @@ const websocketSlice = createSlice({
       state.message = message;
       state.medicineList = data;
       state.loading = false;
+    },
+
+    setMessage: (state, action) => {
+      state.message = action.payload;
     }
   },
 
@@ -184,6 +188,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connect, disconnect, addMessage, setError, setMedicineList } = websocketSlice.actions;
+export const { connect, disconnect, addMessage, setError, setMedicineList, setMessage } = websocketSlice.actions;
 
 export default websocketSlice.reducer;

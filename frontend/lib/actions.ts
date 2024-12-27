@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie"
+import { websocketEventEmitter } from "@/app/utils/websocketUtils";
 
 export type isValidProps = {
     isTokenValid: boolean;
@@ -107,3 +108,10 @@ export const tokenValidationToLogout = async() => {
 
     return isValid
 }
+
+websocketEventEmitter.on("message", ({ connectionKey, data }) => {
+    console.log(`Message received on connection ${connectionKey}:`, data);
+  
+    // Dispatch the data to the Redux store
+    // store.dispatch(addWebSocketMessage({ connectionKey, data }));
+  });
