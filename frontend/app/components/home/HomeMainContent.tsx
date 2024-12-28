@@ -7,12 +7,11 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setMedicineList } from "@/lib/features/productSlice";
 import Loader from "../client/Loader";
 import Search from "./SearchMedicine";
-import {
-  connectWebSocket,
-  websocketEventEmitter,
-} from "@/app/utils/websocketMiddlewareUtil";
-
-// import { websocketEvents } from "@/app/utils/websocketUtils";
+// import {
+//   connectWebSocket,
+//   websocketEventEmitter,
+// } from "@/app/utils/websocketMiddlewareUtil";
+import { handleConnectWebSocket } from "@/app/actions/apiActions";
 
 const HomeMainContent = () => {
   const router = useRouter();
@@ -29,6 +28,8 @@ const HomeMainContent = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const getMedicineListRef = React.useRef<boolean>();
 
+  console.log("Socket MSG : ", message);
+
   const getMedicineList = async () => {
     const res = await fetch("/api/product/", {
       method: "GET",
@@ -39,7 +40,7 @@ const HomeMainContent = () => {
     if (result.success) {
       dispatch(setMedicineList(result.data));
       setLoading(false);
-      const connect: any = await connectWebSocket("medicineConnection");
+      const connect: any = await handleConnectWebSocket("medicineConnection");
 
       console.log("Success Msg : ", connect);
 
@@ -56,8 +57,6 @@ const HomeMainContent = () => {
     }
   };
 
-  console.log("Websocket message data : ", message);
-
   // websocketEventEmitter.on("message", ({ connectionKey, data }) => {
   //   console.log(`Message received on connection ${connectionKey}:`, data);
 
@@ -65,31 +64,31 @@ const HomeMainContent = () => {
   //   // store.dispatch(addWebSocketMessage({ connectionKey, data }));
   // });
 
-  useEffect(() => {
-    // Register WebSocket event listeners
-    const onMessage = ({
-      connectionKey,
-      data,
-    }: {
-      connectionKey: string;
-      data: string;
-    }) => {
-      console.log(`Message received on ${connectionKey}:`, data);
-    };
+  // useEffect(() => {
+  //   // Register WebSocket event listeners
+  //   const onMessage = ({
+  //     connectionKey,
+  //     data,
+  //   }: {
+  //     connectionKey: string;
+  //     data: string;
+  //   }) => {
+  //     console.log(`Message received on ${connectionKey}:`, data);
+  //   };
 
-    const onOpen = ({ connectionKey }: { connectionKey: string }) => {
-      console.log(`Connection opened for ${connectionKey}`);
-    };
+  //   const onOpen = ({ connectionKey }: { connectionKey: string }) => {
+  //     console.log(`Connection opened for ${connectionKey}`);
+  //   };
 
-    websocketEventEmitter.on("message", onMessage);
-    websocketEventEmitter.on("open", onOpen);
+  //   websocketEventEmitter.on("message", onMessage);
+  //   websocketEventEmitter.on("open", onOpen);
 
-    // Cleanup listeners on unmount
-    return () => {
-      websocketEventEmitter.off("message", onMessage);
-      websocketEventEmitter.off("open", onOpen);
-    };
-  }, []);
+  //   // Cleanup listeners on unmount
+  //   return () => {
+  //     websocketEventEmitter.off("message", onMessage);
+  //     websocketEventEmitter.off("open", onOpen);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (medicineList.length === 0) {

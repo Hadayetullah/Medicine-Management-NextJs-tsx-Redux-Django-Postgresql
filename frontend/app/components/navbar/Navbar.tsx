@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/features/authSlice";
-import { tokenValidationToLogout } from "@/lib/actions";
+import { tokenValidationToLogout } from "@/lib/globalAction";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { logout } from "@/app/actions/clientActions";
+import { logout } from "@/app/actions/apiActions";
+import { websocketEventEmitter } from "@/app/utils/websocketMiddlewareUtil";
+import { setMessage } from "@/lib/features/productSlice";
 
 const Navbar = () => {
   const path = usePathname();
@@ -54,6 +56,32 @@ const Navbar = () => {
   //     router.push("/login");
   //   }
   // }, [isAuthenticated, dispatch, router]);
+
+  useEffect(() => {
+    // Register WebSocket event listeners
+    const onMessage = ({
+      connectionKey,
+      data,
+    }: {
+      connectionKey: string;
+      data: any;
+    }) => {
+      dispatch(setMessage(data));
+    };
+
+    const onOpen = ({ connectionKey }: { connectionKey: string }) => {
+      console.log(`Connection opened for ${connectionKey}`);
+    };
+
+    websocketEventEmitter.on("message", onMessage);
+    websocketEventEmitter.on("open", onOpen);
+
+    // Cleanup listeners on unmount
+    return () => {
+      websocketEventEmitter.off("message", onMessage);
+      websocketEventEmitter.off("open", onOpen);
+    };
+  }, []);
 
   useEffect(() => {
     if (path !== "/login" && path !== "/signup") {
