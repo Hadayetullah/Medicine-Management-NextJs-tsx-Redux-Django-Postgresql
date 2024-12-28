@@ -7,10 +7,11 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setMedicineList } from "@/lib/features/productSlice";
 import Loader from "../client/Loader";
 import Search from "./SearchMedicine";
-import {
-  connectWebSocket,
-  websocketEventEmitter,
-} from "@/app/utils/websocketMiddlewareUtil";
+// import {
+//   connectWebSocket,
+//   websocketEventEmitter,
+// } from "@/app/utils/websocketMiddlewareUtil";
+import { handleConnectWebSocket } from "@/app/actions/apiActions";
 
 const HomeMainContent = () => {
   const router = useRouter();
@@ -39,7 +40,7 @@ const HomeMainContent = () => {
     if (result.success) {
       dispatch(setMedicineList(result.data));
       setLoading(false);
-      const connect: any = await connectWebSocket("medicineConnection");
+      const connect: any = await handleConnectWebSocket("medicineConnection");
 
       console.log("Success Msg : ", connect);
 
