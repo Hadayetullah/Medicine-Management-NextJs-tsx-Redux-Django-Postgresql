@@ -8,7 +8,6 @@ export const websocketConnections: Map<string, WebSocket> = new Map();
 export const websocketEvents = new EventEmitter();
 
 export const connectWebSocket = async (connectionKey: string) => {
-  websocketEvents.emit("message", { connectionKey: "testKey", data: "testData" });
   if (websocketConnections.has(connectionKey)) {
     throw new Error(`WebSocket connection for ${connectionKey} already exists.`);
   }
@@ -20,21 +19,23 @@ export const connectWebSocket = async (connectionKey: string) => {
 
   return new Promise((resolve, reject) => {
     socket.onopen = (event: any) => {
-      websocketEvents.emit("open", { connectionKey });
-      resolve({ success: true });
+      // websocketEvents.emit("open", { connectionKey });
+      websocketConnections.set(connectionKey, socket);
+      resolve({ success: true, connectionKey, message: "Connected successfully", data: event.target.readyState });
     };
 
     socket.onmessage = (event: any) => {
       websocketEvents.emit("message", { connectionKey, data: event.data });
-      console.log("WebSocket On message:", event.data);
+      // console.log("WebSocket On message:", event.data);
     };
 
     socket.onerror = (error: any) => {
       console.log("WebSocket On error:", error);
-      reject({ success: false, connectionKey, error: "WebSocket error occurred" });
+      reject({ success: false, connectionKey, error: "WebSocket error occurred", data: error });
     };
 
     socket.onclose = () => {
+      websocketEvents.emit("close", { connectionKey, data: {action: "closed"} });
       websocketConnections.delete(connectionKey);
     };
   });

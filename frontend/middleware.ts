@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { parse } from "cookie";
 
 export function middleware(req: NextRequest) {
-  console.log("Middleware triggered");
+  // console.log("Middleware triggered");
 
   // const url = req.nextUrl;
 
@@ -21,7 +21,7 @@ export function middleware(req: NextRequest) {
 
 
   if (!accessToken || !refreshToken) {
-    console.log("Access token is missing, redirecting...");
+    // console.log("Access token is missing, redirecting...");
     return NextResponse.redirect(new URL("/login?expired=true", req.url));
   }
 
@@ -38,11 +38,11 @@ export function middleware(req: NextRequest) {
     const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
 
     if (!exp || currentTime >= exp) {
-      console.log("Access token has expired, redirecting...");
+      // console.log("Access token has expired, redirecting...");
       return NextResponse.redirect(new URL("/login?expired=true", req.url));
     }
 
-    console.log("Access token is valid, allowing request");
+    // console.log("Access token is valid, allowing request");
 
     // response.headers.set("access-token-status", "valid");
     // response.headers.set("access-token", accessToken);
@@ -51,7 +51,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
 
   } catch (error) {
-    console.error("Invalid token: Redirecting...");
+    // console.error("Invalid token: Redirecting...");
     return NextResponse.redirect(new URL("/login?error=invalid-token", req.url));
   }
 }

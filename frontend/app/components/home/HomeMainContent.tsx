@@ -12,8 +12,6 @@ import {
   websocketEventEmitter,
 } from "@/app/utils/websocketMiddlewareUtil";
 
-// import { websocketEvents } from "@/app/utils/websocketUtils";
-
 const HomeMainContent = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -28,6 +26,8 @@ const HomeMainContent = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
   const getMedicineListRef = React.useRef<boolean>();
+
+  console.log("Socket MSG : ", message);
 
   const getMedicineList = async () => {
     const res = await fetch("/api/product/", {
@@ -56,8 +56,6 @@ const HomeMainContent = () => {
     }
   };
 
-  console.log("Websocket message data : ", message);
-
   // websocketEventEmitter.on("message", ({ connectionKey, data }) => {
   //   console.log(`Message received on connection ${connectionKey}:`, data);
 
@@ -65,31 +63,31 @@ const HomeMainContent = () => {
   //   // store.dispatch(addWebSocketMessage({ connectionKey, data }));
   // });
 
-  useEffect(() => {
-    // Register WebSocket event listeners
-    const onMessage = ({
-      connectionKey,
-      data,
-    }: {
-      connectionKey: string;
-      data: string;
-    }) => {
-      console.log(`Message received on ${connectionKey}:`, data);
-    };
+  // useEffect(() => {
+  //   // Register WebSocket event listeners
+  //   const onMessage = ({
+  //     connectionKey,
+  //     data,
+  //   }: {
+  //     connectionKey: string;
+  //     data: string;
+  //   }) => {
+  //     console.log(`Message received on ${connectionKey}:`, data);
+  //   };
 
-    const onOpen = ({ connectionKey }: { connectionKey: string }) => {
-      console.log(`Connection opened for ${connectionKey}`);
-    };
+  //   const onOpen = ({ connectionKey }: { connectionKey: string }) => {
+  //     console.log(`Connection opened for ${connectionKey}`);
+  //   };
 
-    websocketEventEmitter.on("message", onMessage);
-    websocketEventEmitter.on("open", onOpen);
+  //   websocketEventEmitter.on("message", onMessage);
+  //   websocketEventEmitter.on("open", onOpen);
 
-    // Cleanup listeners on unmount
-    return () => {
-      websocketEventEmitter.off("message", onMessage);
-      websocketEventEmitter.off("open", onOpen);
-    };
-  }, []);
+  //   // Cleanup listeners on unmount
+  //   return () => {
+  //     websocketEventEmitter.off("message", onMessage);
+  //     websocketEventEmitter.off("open", onOpen);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (medicineList.length === 0) {
