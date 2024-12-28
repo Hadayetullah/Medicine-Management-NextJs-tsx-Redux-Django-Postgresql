@@ -2,40 +2,40 @@
 // import { WebSocket } from "ws";
 import { EventEmitter } from "events";
 
-import { getTokens } from "../actions/serverActions";
+// import { getTokens } from "../actions/serverActions";
 
 export const websocketConnections: Map<string, WebSocket> = new Map();
 export const websocketEvents = new EventEmitter();
 
-export const connectWebSocket = async (connectionKey: string) => {
+export const connectWebSocket = async (connectionKey: string, url:string) => {
   if (websocketConnections.has(connectionKey)) {
     throw new Error(`WebSocket connection for ${connectionKey} already exists.`);
   }
 
-  const { accessToken } = await getTokens();
-  const url = "ws://127.0.0.1:8000/ws/product/medicine/";
-  const connectionUrl = `${url}?token=${accessToken}`;
-  const socket = new WebSocket(connectionUrl);
+  // const { accessToken } = await getTokens();
+  // const url = "ws://127.0.0.1:8000/ws/product/medicine/";
+  // const connectionUrl = `${url}?token=${accessToken}`;
+  const socket = new WebSocket(url);
 
   return new Promise((resolve, reject) => {
     socket.onopen = (event: any) => {
       // websocketEvents.emit("open", { connectionKey });
       websocketConnections.set(connectionKey, socket);
-      resolve({ success: true, connectionKey, message: "Connected successfully", data: event.target.readyState });
+      resolve({ success: true, connectionKey: connectionKey, message: "Connected successfully", data: event.target.readyState });
     };
 
     socket.onmessage = (event: any) => {
-      websocketEvents.emit("message", { connectionKey, data: event.data });
+      websocketEvents.emit("message", { connectionKey: connectionKey, data: event.data });
       // console.log("WebSocket On message:", event.data);
     };
 
     socket.onerror = (error: any) => {
       console.log("WebSocket On error:", error);
-      reject({ success: false, connectionKey, error: "WebSocket error occurred", data: error });
+      reject({ success: false, connectionKey: connectionKey, error: "WebSocket error occurred", data: error });
     };
 
     socket.onclose = () => {
-      websocketEvents.emit("close", { connectionKey, data: {action: "closed"} });
+      websocketEvents.emit("close", { connectionKey: connectionKey, data: {action: "closed"} });
       websocketConnections.delete(connectionKey);
     };
   });
@@ -54,6 +54,7 @@ export const sendMessageWebSocket = async (connectionKey: string, message: any) 
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(message));
     return { connectionKey, message: "Message sent successfully" };
+    // resolve({ success: true, connectionKey: connectionKey, message: "Message sent successfully", data: null });
   }
 
   console.log("Send websocket message error : ", websocketConnections);
