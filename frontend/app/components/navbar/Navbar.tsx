@@ -16,6 +16,10 @@ const Navbar = () => {
   // const pathName = path.split("/");
   // console.log(pathName[0] == "");
 
+  // const [event, setEvent] = useState<any>(null);
+  // const [loading, setLoading] = useState(true);
+  // const [connected, setConnected] = useState(false);
+
   const [toggleMenu, setToggleMenu] = useState<boolean>(false);
   const [toggleUser, setToggleUser] = useState<boolean>(false);
   const [isAccessTokenExpired, setIsAccessTokenExpired] =
@@ -58,30 +62,60 @@ const Navbar = () => {
   // }, [isAuthenticated, dispatch, router]);
 
   useEffect(() => {
-    // Register WebSocket event listeners
-    const onMessage = ({
-      connectionKey,
-      data,
-    }: {
-      connectionKey: string;
-      data: any;
-    }) => {
-      dispatch(setMessage(data));
+    // const connectionKey = "your-unique-connection-key"; // Or generate dynamically
+    // const eventSource = new EventSource(`/api/websocket-stream?connectionKey=${connectionKey}`);
+    const eventSource = new EventSource(
+      `/api/websocket/websocket-stream?connectionKey=medicineConnection`
+    );
+    // const eventSource = new EventSource("/api/websocket-stream");
+
+    eventSource.onopen = () => {
+      console.log("SSE connection established");
+      // setConnected(true);
+      // setLoading(false);
     };
 
-    const onOpen = ({ connectionKey }: { connectionKey: string }) => {
-      console.log(`Connection opened for ${connectionKey}`);
+    eventSource.onmessage = (e) => {
+      console.log("SSE message received: ", e.data);
+      // setEvent(JSON.parse(e.data));
     };
 
-    websocketEventEmitter.on("message", onMessage);
-    websocketEventEmitter.on("open", onOpen);
+    eventSource.onerror = () => {
+      console.error("Error connecting to SSE");
+      // setConnected(false);
+      eventSource.close();
+    };
 
-    // Cleanup listeners on unmount
     return () => {
-      websocketEventEmitter.off("message", onMessage);
-      websocketEventEmitter.off("open", onOpen);
+      eventSource.close();
     };
   }, []);
+
+  // useEffect(() => {
+  //   // Register WebSocket event listeners
+  //   const onMessage = ({
+  //     connectionKey,
+  //     data,
+  //   }: {
+  //     connectionKey: string;
+  //     data: any;
+  //   }) => {
+  //     dispatch(setMessage(data));
+  //   };
+
+  //   const onOpen = ({ connectionKey }: { connectionKey: string }) => {
+  //     console.log(`Connection opened for ${connectionKey}`);
+  //   };
+
+  //   websocketEventEmitter.on("message", onMessage);
+  //   websocketEventEmitter.on("open", onOpen);
+
+  //   // Cleanup listeners on unmount
+  //   return () => {
+  //     websocketEventEmitter.off("message", onMessage);
+  //     websocketEventEmitter.off("open", onOpen);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (path !== "/login" && path !== "/signup") {
