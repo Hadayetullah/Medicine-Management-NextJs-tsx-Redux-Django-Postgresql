@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { getTokens } from "../actions/serverActions";
-import { connectWebSocket, disconnectWebSocket, sendMessageWebSocket } from "../utils/websocketMiddlewareUtil";
+import { getTokens } from "../../actions/serverActions";
+import { connectWebSocket, disconnectWebSocket, sendMessageWebSocket } from "../../utils/websocketMiddlewareUtil";
 
 
-export default async function handler(req:any) {
+export async function POST(req:Request) {
 
   try {
     const body = await req.json();
@@ -17,7 +17,7 @@ export default async function handler(req:any) {
     }
 
     // Define WebSocket API base URL
-    const apiBaseUrl = process.env.BACKEND_SOCKET_BASE_URL + "/ws/product/medicine/";
+    const apiBaseUrl = process.env.BACKEND_SOCKET_BASE_URL + `/ws/product/medicine/?token=${accessToken}`;
 
 
     switch (action) {
@@ -35,7 +35,7 @@ export default async function handler(req:any) {
 
       default:
         const data = { success: false, connectionKey:null, error: "Invalid action", data: "invalid_action" };
-      return NextResponse.json({ success: false, data: data});
+        return NextResponse.json({ success: false, data: data});
       
     }
   } catch (error) {
