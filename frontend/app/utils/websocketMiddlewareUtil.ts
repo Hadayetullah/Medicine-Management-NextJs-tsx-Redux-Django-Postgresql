@@ -1,8 +1,5 @@
-// "use server"
-// import { WebSocket } from "ws";
-import { EventEmitter } from "events";
 
-// import { getTokens } from "../actions/serverActions";
+import { EventEmitter } from "events";
 
 export const websocketConnections: Map<string, WebSocket> = new Map();
 export const websocketEvents = new EventEmitter();
@@ -12,25 +9,20 @@ export const connectWebSocket = async (connectionKey: string, url:string) => {
     throw new Error(`WebSocket connection for ${connectionKey} already exists.`);
   }
 
-  // const { accessToken } = await getTokens();
-  // const url = "ws://127.0.0.1:8000/ws/product/medicine/";
-  // const connectionUrl = `${url}?token=${accessToken}`;
   const socket = new WebSocket(url);
 
   return new Promise((resolve, reject) => {
     socket.onopen = (event: any) => {
-      // websocketEvents.emit("open", { connectionKey });
       websocketConnections.set(connectionKey, socket);
       resolve({ success: true, connectionKey: connectionKey, message: "Connected successfully", data: event.target.readyState });
     };
 
     socket.onmessage = (event: any) => {
+      console.log("On message : ", event.data);
       websocketEvents.emit("message", { connectionKey: connectionKey, data: event.data });
-      // console.log("WebSocket On message:", event.data);
     };
 
     socket.onerror = (error: any) => {
-      console.log("WebSocket On error:", error);
       reject({ success: false, connectionKey: connectionKey, error: "WebSocket error occurred", data: error });
     };
 
@@ -43,9 +35,7 @@ export const connectWebSocket = async (connectionKey: string, url:string) => {
 
 export const sendMessageWebSocket = async (connectionKey: string, message: any) => {
   const socket = websocketConnections.get(connectionKey);
-  console.log("Send websocket message : ", websocketConnections);
   if (!socket) {
-    console.log("Send websocket message error : ", websocketConnections);
     throw new Error(`No WebSocket connection for ${connectionKey}`);
   }
 
@@ -57,13 +47,11 @@ export const sendMessageWebSocket = async (connectionKey: string, message: any) 
     // resolve({ success: true, connectionKey: connectionKey, message: "Message sent successfully", data: null });
   }
 
-  console.log("Send websocket message error : ", websocketConnections);
   throw new Error(`WebSocket is not open for ${connectionKey}`);
 };
 
 export const disconnectWebSocket = async (connectionKey: string) => {
   const socket = websocketConnections.get(connectionKey);
-  console.log("Disconnect websocket socket : ", socket);
   if (socket) {
     socket.close();
     websocketConnections.delete(connectionKey);

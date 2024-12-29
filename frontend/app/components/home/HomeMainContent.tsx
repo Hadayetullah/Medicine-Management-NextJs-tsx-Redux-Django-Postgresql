@@ -155,7 +155,7 @@ const HomeMainContent = () => {
               <div className="w-full min-h-[60vh] max-h-[75vh] pb-5 bg-white">
                 {medicineList.length > 0 ? (
                   <div className="w-full h-full">
-                    {medicineList.map((medicine: any, index) => {
+                    {medicineList.map((medicine: any, index: number) => {
                       return (
                         <div
                           key={index}
