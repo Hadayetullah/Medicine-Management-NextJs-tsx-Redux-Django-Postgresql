@@ -1,37 +1,76 @@
-
 import { EventEmitter } from "events";
 
 export const websocketConnections: Map<string, WebSocket> = new Map();
-export const websocketEvents = new EventEmitter();
 
-export const connectWebSocket = async (connectionKey: string, url:string) => {
+class SingletonEventEmitter extends EventEmitter {}
+const instance = new SingletonEventEmitter();
+export const websocketEventEmitter = instance;
+
+// Event buffer to store recent events
+export const eventBuffer: any[] = []; // <-- Export this buffer
+
+export const connectWebSocket = async (connectionKey: string, url: string) => {
   if (websocketConnections.has(connectionKey)) {
     throw new Error(`WebSocket connection for ${connectionKey} already exists.`);
   }
 
   const socket = new WebSocket(url);
 
+  const testEvent = { connectionKey: "testKey", data: "Test emit" };
+  instance.emit("message", testEvent);
+  eventBuffer.push(testEvent);
+  console.log("Test emit fired");
+
+  const emitAndBuffer = (event: any) => {
+    console.log("Adding event to buffer:", event); // Add this
+    instance.emit("message", event);
+    eventBuffer.push(event);
+    if (eventBuffer.length > 100) eventBuffer.shift(); // Keep buffer size manageable
+  };
+
+  console.log("Current buffer size:", eventBuffer.length);
+  console.log("Buffer contents:", eventBuffer);
+
+
+  
+
   return new Promise((resolve, reject) => {
     socket.onopen = (event: any) => {
+      console.log("Connection Established");
       websocketConnections.set(connectionKey, socket);
-      resolve({ success: true, connectionKey: connectionKey, message: "Connected successfully", data: event.target.readyState });
+      resolve({
+        success: true,
+        connectionKey: connectionKey,
+        message: "Connected successfully",
+        data: event.target.readyState,
+      });
     };
 
     socket.onmessage = (event: any) => {
-      console.log("On message : ", event.data);
-      websocketEvents.emit("message", { connectionKey: connectionKey, data: event.data });
+      const messageEvent = { connectionKey, data: event.data };
+      emitAndBuffer(messageEvent);
     };
 
     socket.onerror = (error: any) => {
-      reject({ success: false, connectionKey: connectionKey, error: "WebSocket error occurred", data: error });
+      reject({
+        success: false,
+        connectionKey: connectionKey,
+        error: "WebSocket error occurred",
+        data: error,
+      });
     };
 
     socket.onclose = () => {
-      websocketEvents.emit("close", { connectionKey: connectionKey, data: {action: "closed"} });
+      instance.emit("close", {
+        connectionKey,
+        data: { action: "closed" },
+      });
       websocketConnections.delete(connectionKey);
     };
   });
 };
+
+
 
 export const sendMessageWebSocket = async (connectionKey: string, message: any) => {
   const socket = websocketConnections.get(connectionKey);
@@ -61,7 +100,13 @@ export const disconnectWebSocket = async (connectionKey: string) => {
   }
 };
 
-export const websocketEventEmitter = websocketEvents;
+// console.log("Initializing websocketEventEmitter");
+
+// class SingletonEventEmitter extends EventEmitter {}
+// const instance = new SingletonEventEmitter();
+// export const websocketEventEmitter = instance;
+// export const websocketEventEmitter = websocketEvents;
+
 
 
 

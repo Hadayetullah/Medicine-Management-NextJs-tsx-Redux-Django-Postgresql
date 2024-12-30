@@ -26,6 +26,7 @@ const HomeMainContent = () => {
   } = useAppSelector((state) => state.product);
 
   const [loading, setLoading] = useState<boolean>(true);
+  const eventSourceRef = React.useRef<EventSource | null>(null);
   const getMedicineListRef = React.useRef<boolean>();
 
   console.log("Socket MSG : ", message);
@@ -89,6 +90,33 @@ const HomeMainContent = () => {
   //     websocketEventEmitter.off("open", onOpen);
   //   };
   // }, []);
+
+  useEffect(() => {
+    console.log("first"); // This prints
+    if (!eventSourceRef.current) {
+      console.log("Second"); // This prints
+      eventSourceRef.current = new EventSource("/api/websocket-stream");
+      console.log("Third"); // This prints
+
+      eventSourceRef.current.onopen = () => {
+        console.log("EventSource state:", eventSourceRef.current?.readyState);
+        console.log("SSE connection established"); // This does not print
+      };
+
+      eventSourceRef.current.onmessage = (e) => {
+        console.log("SSE message received:", e.data);
+      };
+
+      eventSourceRef.current.onerror = () => {
+        console.error("Error connecting to SSE");
+        eventSourceRef.current?.close();
+      };
+    }
+
+    // return () => {
+    //   eventSourceRef.current?.close();
+    // };
+  }, []);
 
   useEffect(() => {
     if (medicineList.length === 0) {
