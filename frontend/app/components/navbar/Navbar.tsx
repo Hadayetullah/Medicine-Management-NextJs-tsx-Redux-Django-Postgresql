@@ -61,35 +61,35 @@ const Navbar = () => {
   //   }
   // }, [isAuthenticated, dispatch, router]);
 
-  useEffect(() => {
-    // const connectionKey = "your-unique-connection-key"; // Or generate dynamically
-    // const eventSource = new EventSource(`/api/websocket-stream?connectionKey=${connectionKey}`);
-    const eventSource = new EventSource(
-      `/api/websocket/websocket-stream?connectionKey=medicineConnection`
-    );
-    // const eventSource = new EventSource("/api/websocket-stream");
+  // useEffect(() => {
+  //   // const connectionKey = "your-unique-connection-key"; // Or generate dynamically
+  //   // const eventSource = new EventSource(`/api/websocket-stream?connectionKey=${connectionKey}`);
+  //   const eventSource = new EventSource(
+  //     `/api/websocket/websocket-stream?connectionKey=medicineConnection`
+  //   );
+  //   // const eventSource = new EventSource("/api/websocket-stream");
 
-    eventSource.onopen = () => {
-      console.log("SSE connection established");
-      // setConnected(true);
-      // setLoading(false);
-    };
+  //   eventSource.onopen = () => {
+  //     console.log("SSE connection established");
+  //     // setConnected(true);
+  //     // setLoading(false);
+  //   };
 
-    eventSource.onmessage = (e) => {
-      console.log("SSE message received: ", e.data);
-      // setEvent(JSON.parse(e.data));
-    };
+  //   eventSource.onmessage = (e) => {
+  //     console.log("SSE message received: ", e.data);
+  //     // setEvent(JSON.parse(e.data));
+  //   };
 
-    eventSource.onerror = () => {
-      console.error("Error connecting to SSE");
-      // setConnected(false);
-      eventSource.close();
-    };
+  //   eventSource.onerror = () => {
+  //     console.error("Error connecting to SSE");
+  //     // setConnected(false);
+  //     eventSource.close();
+  //   };
 
-    return () => {
-      eventSource.close();
-    };
-  }, []);
+  //   return () => {
+  //     eventSource.close();
+  //   };
+  // }, []);
 
   // useEffect(() => {
   //   // Register WebSocket event listeners
