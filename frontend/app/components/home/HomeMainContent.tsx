@@ -12,6 +12,10 @@ import Search from "./SearchMedicine";
 //   websocketEventEmitter,
 // } from "@/app/utils/websocketMiddlewareUtil";
 import { handleConnectWebSocket } from "@/app/actions/apiActions";
+import {
+  connectWebSocket,
+  websocketEventEmitter,
+} from "@/app/utils/websocketMiddlewareUtil";
 
 const HomeMainContent = () => {
   const router = useRouter();
@@ -41,9 +45,9 @@ const HomeMainContent = () => {
     if (result.success) {
       dispatch(setMedicineList(result.data));
       setLoading(false);
-      const connect: any = await handleConnectWebSocket("medicineConnection");
+      await connectWebSocket("medicineConnection");
 
-      console.log("Success Msg : ", connect);
+      // console.log("Success Msg : ", connect);
 
       // if (connect.success) {
       //   // console.log("WebSocket connection established");
@@ -92,33 +96,11 @@ const HomeMainContent = () => {
   // }, []);
 
   useEffect(() => {
-    console.log("first"); // This prints
-    if (!eventSourceRef.current) {
-      console.log("Second"); // This prints
-      eventSourceRef.current = new EventSource("/api/websocket-stream");
-      console.log("Third"); // This prints
-
-      eventSourceRef.current.onopen = () => {
-        console.log("EventSource state:", eventSourceRef.current?.readyState);
-        console.log("SSE connection established"); // This does not print
-      };
-
-      eventSourceRef.current.onmessage = (e) => {
-        console.log("SSE message received:", e.data);
-      };
-
-      eventSourceRef.current.onerror = () => {
-        console.error("Error connecting to SSE");
-        eventSourceRef.current?.close();
-      };
-    }
-
-    // return () => {
-    //   eventSourceRef.current?.close();
-    // };
-  }, []);
-
-  useEffect(() => {
+    websocketEventEmitter.on("open", ({ connectionKey, data }) => {
+      if (connectionKey === "medicineConnection" && data === 1) {
+        console.log(`Connection opened for ${connectionKey}`);
+      }
+    });
     if (medicineList.length === 0) {
       if (!getMedicineListRef.current) {
         getMedicineListRef.current = true;
