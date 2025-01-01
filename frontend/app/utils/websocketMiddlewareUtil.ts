@@ -1,15 +1,18 @@
 import { EventEmitter } from "events";
+import { getTokens } from "../actions/serverActions";
 
 export const websocketConnections: Map<string, WebSocket> = new Map();
 
 const websocketEvents = new EventEmitter();
 
-export const connectWebSocket = async (connectionKey: string, url: string) => {
+export const connectWebSocket = async (connectionKey: string) => {
   if (websocketConnections.has(connectionKey)) {
     websocketEvents.emit("error", {connectionKey, data: "The WebSocket connection already exists."});
     throw new Error(`WebSocket connection for ${connectionKey} already exists.`);
   }
 
+  const {accessToken} = await getTokens();
+  const url = `ws://localhost:8000/ws/product/medicine/?token=${accessToken}`;
   const socket = new WebSocket(url);
 
     socket.onopen = (event: any) => {
@@ -63,11 +66,6 @@ export const disconnectWebSocket = async (connectionKey: string) => {
   }
 };
 
-// console.log("Initializing websocketEventEmitter");
-
-// class SingletonEventEmitter extends EventEmitter {}
-// const instance = new SingletonEventEmitter();
-// export const websocketEventEmitter = instance;
 export const websocketEventEmitter = websocketEvents;
 
 
