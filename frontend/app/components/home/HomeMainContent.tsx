@@ -96,11 +96,6 @@ const HomeMainContent = () => {
   // }, []);
 
   useEffect(() => {
-    websocketEventEmitter.on("open", ({ connectionKey, data }) => {
-      if (connectionKey === "medicineConnection" && data === 1) {
-        console.log(`Connection opened for ${connectionKey}`);
-      }
-    });
     if (medicineList.length === 0) {
       if (!getMedicineListRef.current) {
         getMedicineListRef.current = true;

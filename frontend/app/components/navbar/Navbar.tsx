@@ -16,27 +16,12 @@ const Navbar = () => {
   // const pathName = path.split("/");
   // console.log(pathName[0] == "");
 
-  // const [event, setEvent] = useState<any>(null);
-  // const [loading, setLoading] = useState(true);
-  // const [connected, setConnected] = useState(false);
-
   const [toggleMenu, setToggleMenu] = useState<boolean>(false);
   const [toggleUser, setToggleUser] = useState<boolean>(false);
   const [isAccessTokenExpired, setIsAccessTokenExpired] =
     useState<boolean>(true);
 
   const handleLogout = async () => {
-    // const websocketResponse = await handleWebSocket("disconnect", {
-    //   connectionKey: "medicineConnection",
-    //   message: null,
-    // });
-
-    // if (websocketResponse.success) {
-    //   console.log("Websocket disconnected: ", websocketResponse.data);
-    // } else {
-    //   console.log("Websocket disconnected: ", websocketResponse.error);
-    // }
-
     const logoutResponse = await logout();
     if (logoutResponse.success) {
       console.log("Logout logoutResponse: ", logoutResponse.data);
@@ -54,68 +39,38 @@ const Navbar = () => {
     router.push("/settings");
   };
 
-  // useEffect(() => {
-  //   // setToggleMenu(false);
-  //   if (!isAuthenticated) {
-  //     router.push("/login");
-  //   }
-  // }, [isAuthenticated, dispatch, router]);
+  useEffect(() => {
+    const socketConnectionHandler = ({
+      connectionKey,
+      data,
+    }: {
+      connectionKey: string;
+      data: any;
+    }) => {
+      if (connectionKey === "medicineConnection" && data === 1) {
+        console.log(`Connection opened for ${connectionKey}`);
+      }
+    };
+    const messageHandler = ({
+      connectionKey,
+      data,
+    }: {
+      connectionKey: string;
+      data: any;
+    }) => {
+      console.log(`Message for ${connectionKey}:`, data);
+      dispatch(setMessage(data));
+    };
 
-  // useEffect(() => {
-  //   // const connectionKey = "your-unique-connection-key"; // Or generate dynamically
-  //   // const eventSource = new EventSource(`/api/websocket-stream?connectionKey=${connectionKey}`);
-  //   const eventSource = new EventSource(
-  //     `/api/websocket/websocket-stream?connectionKey=medicineConnection`
-  //   );
-  //   // const eventSource = new EventSource("/api/websocket-stream");
+    websocketEventEmitter.on("open", socketConnectionHandler);
+    websocketEventEmitter.on("message", messageHandler);
 
-  //   eventSource.onopen = () => {
-  //     console.log("SSE connection established");
-  //     // setConnected(true);
-  //     // setLoading(false);
-  //   };
-
-  //   eventSource.onmessage = (e) => {
-  //     console.log("SSE message received: ", e.data);
-  //     // setEvent(JSON.parse(e.data));
-  //   };
-
-  //   eventSource.onerror = () => {
-  //     console.error("Error connecting to SSE");
-  //     // setConnected(false);
-  //     eventSource.close();
-  //   };
-
-  //   return () => {
-  //     eventSource.close();
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   // Register WebSocket event listeners
-  //   const onMessage = ({
-  //     connectionKey,
-  //     data,
-  //   }: {
-  //     connectionKey: string;
-  //     data: any;
-  //   }) => {
-  //     dispatch(setMessage(data));
-  //   };
-
-  //   const onOpen = ({ connectionKey }: { connectionKey: string }) => {
-  //     console.log(`Connection opened for ${connectionKey}`);
-  //   };
-
-  //   websocketEventEmitter.on("message", onMessage);
-  //   websocketEventEmitter.on("open", onOpen);
-
-  //   // Cleanup listeners on unmount
-  //   return () => {
-  //     websocketEventEmitter.off("message", onMessage);
-  //     websocketEventEmitter.off("open", onOpen);
-  //   };
-  // }, []);
+    // Cleanup the listener on component unmount
+    return () => {
+      websocketEventEmitter.off("open", messageHandler);
+      websocketEventEmitter.off("message", messageHandler);
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (path !== "/login" && path !== "/signup") {
