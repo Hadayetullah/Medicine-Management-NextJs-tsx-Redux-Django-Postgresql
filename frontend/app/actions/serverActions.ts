@@ -12,6 +12,10 @@ export type tokenProps = {
 
 
 {/* Functions */}
+// A JWT consists of three parts separated by dots (.):
+// Header(Base64-encoded JSON): Contains metadata about the token, like the algorithm and type of token.
+// Payload(Base64-encoded JSON): Contains the claims (data), such as exp (expiration time), iat (issued at time), and other custom fields.
+// Signature: Ensures the token hasn’t been tampered with.
 export async function getTokens() {
     const tokens = <tokenProps>{
         accessToken: null,
