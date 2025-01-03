@@ -51,6 +51,7 @@ const Navbar = () => {
         console.log(`Connection opened for ${connectionKey}`);
       }
     };
+
     const messageHandler = ({
       connectionKey,
       data,
@@ -62,13 +63,39 @@ const Navbar = () => {
       dispatch(setMessage(data));
     };
 
+    const socketErrorHandler = ({
+      connectionKey,
+      data,
+    }: {
+      connectionKey: string;
+      data: any;
+    }) => {
+      console.log(`Error for ${connectionKey}:`, data);
+      dispatch(setMessage(data));
+    };
+
+    const socketCloseHandler = ({
+      connectionKey,
+      data,
+    }: {
+      connectionKey: string;
+      data: any;
+    }) => {
+      console.log(`Closed connection for ${connectionKey}:`, data);
+      dispatch(setMessage(data));
+    };
+
     websocketEventEmitter.on("open", socketConnectionHandler);
     websocketEventEmitter.on("message", messageHandler);
+    websocketEventEmitter.on("error", socketErrorHandler);
+    websocketEventEmitter.on("close", socketCloseHandler);
 
     // Cleanup the listener on component unmount
     return () => {
       websocketEventEmitter.off("open", messageHandler);
       websocketEventEmitter.off("message", messageHandler);
+      websocketEventEmitter.off("error", socketErrorHandler);
+      websocketEventEmitter.off("close", socketCloseHandler);
     };
   }, [dispatch]);
 
