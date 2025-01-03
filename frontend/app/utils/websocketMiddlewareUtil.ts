@@ -27,10 +27,12 @@ export const connectWebSocket = async (connectionKey: string) => {
     };
 
     socket.onerror = (error: any) => {
+      console.log("Socket error : ", error)
       websocketEvents.emit("error", {connectionKey, data: error});
     };
 
     socket.onclose = () => {
+      console.log(`Connection closed for ${connectionKey}`)
       websocketEvents.emit("close", {connectionKey, data: "Connection closed"});
       websocketConnections.delete(connectionKey);
     };
