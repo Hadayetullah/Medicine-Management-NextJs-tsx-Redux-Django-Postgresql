@@ -7,8 +7,9 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setMedicineList } from "@/lib/features/productSlice";
 import Loader from "../client/Loader";
 import Search from "./SearchMedicine";
+import { connectWebSocket } from "@/app/actions/apiActions";
 
-import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
+// import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
 
 const HomeMainContent = () => {
   const router = useRouter();
@@ -38,7 +39,13 @@ const HomeMainContent = () => {
     if (result.success) {
       dispatch(setMedicineList(result.data));
       setLoading(false);
-      await connectWebSocket("medicineConnection");
+      // await connectWebSocket("medicineConnection");
+      dispatch(
+        connectWebSocket({
+          connectionKey: "medicineConnection",
+          url: "ws://localhost:8000/ws/product/medicine/",
+        })
+      );
     } else {
       console.log(result.error);
       console.error("Error getting medicine list");

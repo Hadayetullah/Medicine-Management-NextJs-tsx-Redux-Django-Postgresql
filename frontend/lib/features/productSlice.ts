@@ -59,7 +59,7 @@ export type MedicineType = {
 interface WebSocketState {
   [connectionKey: string]: {
     connected: boolean;
-    error?: string;
+    error?: any;
     messages: any[];
   };
 }
@@ -132,8 +132,8 @@ const websocketSlice = createSlice({
     //   state.error = null;
     // },
     connect: (state, action) => {
-      const { connectionKey } = action.payload;
-      state.connections[connectionKey] = { connected: true, messages: [] };
+      const { connectionKey, connected } = action.payload;
+      state.connections[connectionKey] = { connected: connected, error: null, messages: [] };
     },
     // disconnect(state) {
     //   state.connected = false;
@@ -145,10 +145,10 @@ const websocketSlice = createSlice({
     // addMessage(state, action: PayloadAction<any>) {
     //   state.messages.push(action.payload);
     // },
-    addMessage: (state, action) => {
+    addProduct: (state, action) => {
       const { connectionKey, data } = action.payload;
       if (state.connections[connectionKey]) {
-        state.connections[connectionKey].messages.push(data);
+        state.medicineList.push(data);
       }
     },
     // setError(state, action: PayloadAction<string>) {
@@ -188,6 +188,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connect, disconnect, addMessage, setError, setMedicineList, setMessage } = websocketSlice.actions;
+export const { connect, disconnect, addProduct, setError, setMedicineList, setMessage } = websocketSlice.actions;
 
 export default websocketSlice.reducer;

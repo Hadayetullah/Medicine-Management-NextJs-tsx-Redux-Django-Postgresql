@@ -5,10 +5,10 @@ export const connectWebSocket = createAsyncThunk(
   "websocket/connectWebSocket",
   async ({ connectionKey, url }: { connectionKey: string; url: string }, { dispatch }) => {
     try {
-      const token = await getTokens();
+      const {accessToken} = await getTokens();
       dispatch({
         type: "websocket/connect",
-        payload: { connectionKey, url, token },
+        payload: { connectionKey, url, accessToken },
       });
     } catch (error) {
       console.error("Failed to retrieve token:", error);
