@@ -1,5 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { connect, disconnect, addMessage, setError } from "./features/productSlice";
+import { connect, disconnect, addProduct, setError } from "./features/productSlice";
 
 // let websocketInitialized = false;
 
@@ -11,7 +11,7 @@ export const createWebSocketMiddleware = (): Middleware => {
   return (storeAPI) => (next) => (action: any) => {
     switch (action.type) {
       case "websocket/connect": {
-        const { connectionKey, token, url } = action.payload;
+        const { connectionKey, accessToken, url } = action.payload;
 
         // if (websocketInitialized) {
         //   console.log("WebSocket connection already initialized, skipping dispatch.");
@@ -28,20 +28,20 @@ export const createWebSocketMiddleware = (): Middleware => {
         //   return;
         // }
 
-        if (!token) {
-          console.error(`Missing token for ${connectionKey}. Cannot establish WebSocket connection.`);
+        if (!accessToken) {
+          console.log(`Missing token for ${connectionKey}. Cannot establish WebSocket connection.`);
           return;
         }
 
         if (!url) {
-          console.error(`Missing URL for ${connectionKey}. Cannot establish WebSocket connection.`);
+          console.log(`Missing URL for ${connectionKey}. Cannot establish WebSocket connection.`);
           return;
         }
 
         // websocketInitialized = true;
 
         // const url = `ws://127.0.0.1:8000/ws/product/medicine/?token=${token}`;
-        const connectionUrl = `${url}?token=${token}`;
+        const connectionUrl = `${url}?token=${accessToken}`;
         const socket = new WebSocket(connectionUrl);
 
         // Add event listeners
@@ -50,7 +50,8 @@ export const createWebSocketMiddleware = (): Middleware => {
         // };
 
         socket.onopen = () => {
-          storeAPI.dispatch(connect({ connectionKey }));
+          console.log("connection established");
+          storeAPI.dispatch(connect({ connectionKey, connected: true }));
         };
 
         // socket.onmessage = (event: MessageEvent) => {
@@ -65,9 +66,10 @@ export const createWebSocketMiddleware = (): Middleware => {
         socket.onmessage = (event: MessageEvent) => {
           try {
             const data = JSON.parse(event.data);
-            storeAPI.dispatch(addMessage({ connectionKey, data }));
+            console.log("On message data: ", data);
+            // storeAPI.dispatch(addProduct({ connectionKey, data }));
           } catch (error) {
-            console.error(`Failed to parse WebSocket message for ${connectionKey}`, error);
+            console.log(`Failed to parse WebSocket message for ${connectionKey}`, error);
           }
         };
 
@@ -77,7 +79,7 @@ export const createWebSocketMiddleware = (): Middleware => {
         // };
 
         socket.onerror = (error:any) => {
-          console.error("WebSocket error occurred: ", error)
+          console.log("WebSocket error occurred: ", error)
           storeAPI.dispatch(setError({ connectionKey, error: "WebSocket error occurred" }));
         };
 

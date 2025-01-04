@@ -1,15 +1,21 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { getTokens } from "./serverActions";
 
-export async function handleConnectWebSocket(connectionKey: string): Promise<any> {
-    const response = await fetch("/api/websocket", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ action: "connect", connectionKey }),
-    });
-  
-    return response.json();
-}
+export const connectWebSocket = createAsyncThunk(
+  "websocket/connectWebSocket",
+  async ({ connectionKey, url }: { connectionKey: string; url: string }, { dispatch }) => {
+    try {
+      const {accessToken} = await getTokens();
+      dispatch({
+        type: "websocket/connect",
+        payload: { connectionKey, url, accessToken },
+      });
+    } catch (error) {
+      console.error("Failed to retrieve token:", error);
+    }
+  }
+);
+
 
 export async function logout(): Promise<any> {
     const response = await fetch("/api/auth/logout", {
