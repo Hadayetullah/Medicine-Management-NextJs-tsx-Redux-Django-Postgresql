@@ -2,8 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie"
 
-import { getTokensFromCookies } from "@/lib/globalAction";
-
 // Define the initial state of the authentication slice
 interface AuthState {
   user: {

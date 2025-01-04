@@ -29,12 +29,12 @@ export const createWebSocketMiddleware = (): Middleware => {
         // }
 
         if (!token) {
-          console.error(`Missing token for ${connectionKey}. Cannot establish WebSocket connection.`);
+          console.log(`Missing token for ${connectionKey}. Cannot establish WebSocket connection.`);
           return;
         }
 
         if (!url) {
-          console.error(`Missing URL for ${connectionKey}. Cannot establish WebSocket connection.`);
+          console.log(`Missing URL for ${connectionKey}. Cannot establish WebSocket connection.`);
           return;
         }
 
@@ -67,7 +67,7 @@ export const createWebSocketMiddleware = (): Middleware => {
             const data = JSON.parse(event.data);
             storeAPI.dispatch(addMessage({ connectionKey, data }));
           } catch (error) {
-            console.error(`Failed to parse WebSocket message for ${connectionKey}`, error);
+            console.log(`Failed to parse WebSocket message for ${connectionKey}`, error);
           }
         };
 
@@ -77,7 +77,7 @@ export const createWebSocketMiddleware = (): Middleware => {
         // };
 
         socket.onerror = (error:any) => {
-          console.error("WebSocket error occurred: ", error)
+          console.log("WebSocket error occurred: ", error)
           storeAPI.dispatch(setError({ connectionKey, error: "WebSocket error occurred" }));
         };
 
