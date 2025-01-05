@@ -1,11 +1,16 @@
 from django.db import IntegrityError
 
+from datetime import datetime, timezone
+from django.contrib.auth.models import AnonymousUser
+
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from .models import Medicine, Company, Category, DosageForm
 
 from .serializers import MedicineListSerializer
+
+from .token_auth import get_user, get_token_expiry
 
 class MedicineConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -98,16 +103,33 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
 
 
-    async def update_token(self):
-        # new_token = data.get('token')
-        # user = await get_user(new_token)
+    async def update_token(self, data):
+        new_access_token = data.get('token')
+
+        renewed_user = await get_user(new_access_token)
+        new_token_expiry = get_token_expiry(new_access_token)
+
         user = self.scope.get('user')
+        old_token_expiry = self.scope.get('token_expiry')
+
         if user.is_authenticated:
-            self.scope['user'] = user
-            self.scope['token_expiry'] = self.scope.get('token_expiry')
+            time_left = (old_token_expiry - datetime.now(timezone.utc)).total_seconds()
+            if time_left < 0:
+                await self.send({'type': 'websocket.close'})
+                return
+            
+            if isinstance(renewed_user, AnonymousUser) or not new_token_expiry:
+                # Close the WebSocket if the user is anonymous or the token is invalid/expired
+                await self.send({'type': 'websocket.close'})
+                return
+            
+            self.scope['user'] = renewed_user
+            self.scope['token_expiry'] = new_token_expiry
             await self.send(json.dumps({'success': 'Token updated'}))
+            
         else:
-            await self.send(json.dumps({'error': 'Invalid token'}))
+            # await self.send(json.dumps({'error': 'Invalid token'}))
+            await self.send({'type': 'websocket.close'})
 
 
     async def handle_add_medicine(self, event):
