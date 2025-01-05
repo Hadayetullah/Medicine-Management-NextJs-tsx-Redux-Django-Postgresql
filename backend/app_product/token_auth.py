@@ -39,9 +39,15 @@ class TokenAuthMiddleware(BaseMiddleware):
         query = dict((x.split('=') for x in scope['query_string'].decode().split('&')))
         token_key = query.get('token')
         user = await get_user(token_key)
+        token_expiry = get_token_expiry(token_key)
+
+        if isinstance(user, AnonymousUser) or not token_expiry:
+            # Close the WebSocket if the user is anonymous or the token is invalid/expired
+            await send({'type': 'websocket.close'})
+            return
 
         scope['user'] = user
-        scope['token_expiry'] = get_token_expiry(token_key)
+        scope['token_expiry'] = token_expiry
 
         asyncio.create_task(self.token_validation_loop(scope, send))
 
