@@ -49,6 +49,57 @@ export async function getTokens() {
 }
 
 
+export async function getAccessToken() {
+    let accessToken = null;
+
+    const cookieHeader = headers().get("cookie") || "";
+    const cookies = parse(cookieHeader);
+    const token = cookies.accessToken;
+
+    if (!token) {
+        return accessToken
+    }
+
+    const [, payloadBase64] = token.split(".");
+    const payload = JSON.parse(Buffer.from(payloadBase64, "base64").toString("utf-8"));
+
+    const { exp } = payload; // Extract exp field
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+
+    if (!exp || currentTime >= exp) {
+        return accessToken
+    }
+
+    return token;
+
+}
+
+export async function getRefreshToken() {
+    let refreshToken = null;
+
+    const cookieHeader = headers().get("cookie") || "";
+    const cookies = parse(cookieHeader);
+    const token = cookies.refreshToken;
+
+    if (!token) {
+        return refreshToken
+    }
+
+    const [, payloadBase64] = token.split(".");
+    const payload = JSON.parse(Buffer.from(payloadBase64, "base64").toString("utf-8"));
+
+    const { exp } = payload; // Extract exp field
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+
+    if (!exp || currentTime >= exp) {
+        return refreshToken
+    }
+
+    return token;
+
+}
+
+
 export async function resetAuthCookies() {
     cookies().set('accessToken', '');
     cookies().set('refreshToken', '');
