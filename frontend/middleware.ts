@@ -27,6 +27,15 @@ async function fetchNewAccessToken(refreshToken: string, req: NextRequest) {
 
 
 
+function decodeToken(token:any) {
+  const [, payloadBase64] = token.split(".");
+  const decodedBuffer = Buffer.from(payloadBase64, "base64");
+  const decodedString = decodedBuffer.toString("utf-8");
+  const payload = JSON.parse(decodedString);
+  return payload
+}
+
+
 export async function middleware(req: NextRequest) {
   // console.log("Middleware triggered");
 
@@ -57,11 +66,8 @@ export async function middleware(req: NextRequest) {
 
   // Decode the token manually to check expiration time
   try {
-    if (accessToken) {
-      const [, payloadBase64] = accessToken.split(".");
-      const decodedBuffer = Buffer.from(payloadBase64, "base64");
-      const decodedString = decodedBuffer.toString("utf-8");
-      const payload = JSON.parse(decodedString);
+    const payload = decodeToken(accessToken);
+    if (payload && payload.exp) {
       const { exp } = payload;
       const currentTime = Math.floor(Date.now() / 1000);
 
