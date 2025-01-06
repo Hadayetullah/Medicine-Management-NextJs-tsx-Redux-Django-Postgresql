@@ -96,7 +96,7 @@ export async function middleware(req: NextRequest) {
       return response;
 
     } else {
-      return NextResponse.redirect(new URL("/login?expired=true", req.url));
+      return NextResponse.redirect(new URL("/?error=ECONNABORTED", req.url));
     }
   } catch (error) {
     return NextResponse.redirect(new URL("/login?error=invalid-token", req.url));
