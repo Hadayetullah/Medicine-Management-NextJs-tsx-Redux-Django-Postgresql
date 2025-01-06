@@ -66,9 +66,9 @@ export async function middleware(req: NextRequest) {
 
   // Decode the token manually to check expiration time
   try {
-    const payload = decodeToken(accessToken);
-    if (payload && payload.exp) {
-      const { exp } = payload;
+    const oldAccessTokenPayload = decodeToken(accessToken);
+    if (oldAccessTokenPayload && oldAccessTokenPayload.exp) {
+      const { exp } = oldAccessTokenPayload;
       const currentTime = Math.floor(Date.now() / 1000);
 
       if (exp && currentTime < exp) {
@@ -78,10 +78,23 @@ export async function middleware(req: NextRequest) {
 
     // Access token is either absent or expired, fetch a new one
     const newAccessToken = await fetchNewAccessToken(refreshToken, req);
+
     if (newAccessToken) {
+
+      const newAccessTokenPayload = decodeToken(newAccessToken);
+
       const response = NextResponse.next();
-      response.cookies.set('accessToken', newAccessToken, { httpOnly: true, secure: true });
+  
+      const maxAge = newAccessTokenPayload.exp - Math.floor(Date.now() / 1000) - 30; // Convert to seconds and subtract 30
+
+      response.cookies.set('accessToken', newAccessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: maxAge > 0 ? maxAge : 0, // Ensure maxAge is not negative
+      });
+      
       return response;
+
     } else {
       return NextResponse.redirect(new URL("/login?expired=true", req.url));
     }
