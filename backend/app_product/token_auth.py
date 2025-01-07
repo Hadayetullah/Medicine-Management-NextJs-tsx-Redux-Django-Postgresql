@@ -73,7 +73,7 @@ class TokenAuthMiddleware(BaseMiddleware):
                 await send({'type': 'websocket.close'})
                 break
 
-            if time_left < 15:  # 30 seconds threshold for token renewal
+            if time_left < 30:  # 30 seconds threshold for token renewal
                 # Request token renewal from the client
                 await send({
                     'type': 'websocket.send',
