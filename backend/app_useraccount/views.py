@@ -118,15 +118,38 @@ class RefreshBothTokensUnauthUser(APIView):
             return Response({
                 'refreshToken': new_tokens['refreshToken'],
                 'accessToken': new_tokens['accessToken'],
-                'msg': 'Token refreshed successfully'
+                'msg': 'Tokens refreshed successfully'
             }, status=status.HTTP_200_OK)
         
         except TokenError as e:
-            return Response({"error": "Invalid refresh token or token has been blacklisted."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid token or token has been blacklisted."}, status=status.HTTP_400_BAD_REQUEST)
         
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+class RefreshAccessTokenUnauthUser(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):        
+        try:
+            refresh_token = request.data.get("refresh_token")
+            
+            # Validate and parse the refresh token
+            refresh = RefreshToken(refresh_token)
+            
+            return Response({
+                'accessToken': str(refresh.access_token),
+                'msg': 'Access token refreshed successfully'
+            }, status=status.HTTP_200_OK)
+        
+        except TokenError as e:
+            return Response({"error": "Invalid token or token has been blacklisted."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
 
 
 
@@ -153,11 +176,34 @@ class RefreshBothTokensAuthUser(APIView):
             return Response({
                 'refreshToken': new_tokens['refreshToken'],
                 'accessToken': new_tokens['accessToken'],
-                'msg': 'Token updated successfully'
+                'msg': 'Tokens refreshed successfully'
             }, status=status.HTTP_200_OK)
         
         except TokenError as e:
-            return Response({"error": "Invalid access/refresh token or token has been blacklisted."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid token or token has been blacklisted."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class RefreshAccessTokenAuthUser(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):        
+        try:
+            refresh_token = request.data.get("refresh_token")
+            
+            # Validate and parse the refresh token
+            refresh = RefreshToken(refresh_token)
+            
+            return Response({
+                'accessToken': str(refresh.access_token),
+                'msg': 'Access token refreshed successfully'
+            }, status=status.HTTP_200_OK)
+        
+        except TokenError as e:
+            return Response({"error": "Invalid token or token has been blacklisted."}, status=status.HTTP_400_BAD_REQUEST)
         
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
