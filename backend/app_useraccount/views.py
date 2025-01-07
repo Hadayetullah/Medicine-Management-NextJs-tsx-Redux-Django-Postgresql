@@ -81,6 +81,8 @@ class LoginView(APIView):
     
 
 class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         try:
             refresh_token = request.data.get("refresh_token")
@@ -93,7 +95,7 @@ class LogoutView(APIView):
 
 
 
-class TokenRefresh(APIView):
+class RefreshBothTokensUnauthUser(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):        
@@ -128,7 +130,7 @@ class TokenRefresh(APIView):
 
 
 
-class UpdateTokensAuthUser(APIView):
+class RefreshBothTokensAuthUser(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):        
