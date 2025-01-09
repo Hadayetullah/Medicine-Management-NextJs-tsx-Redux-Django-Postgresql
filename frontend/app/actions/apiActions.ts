@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getTokens } from "./serverActions";
+import { getAccessToken } from "./serverActions";
 
 export const connectWebSocket = createAsyncThunk(
   "websocket/connectWebSocket",
   async ({ connectionKey, url }: { connectionKey: string; url: string }, { dispatch }) => {
     try {
-      const {accessToken} = await getTokens();
+      const accessToken = await getAccessToken();
       dispatch({
         type: "websocket/connect",
         payload: { connectionKey, url, accessToken },
