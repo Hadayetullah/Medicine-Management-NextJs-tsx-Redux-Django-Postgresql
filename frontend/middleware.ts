@@ -1,17 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parse } from "cookie";
-
-
-function decodeToken(token:any) {
-  if (!token) {
-    return null
-  }
-  const [, payloadBase64] = token.split(".");
-  const decodedBuffer = Buffer.from(payloadBase64, "base64");
-  const decodedString = decodedBuffer.toString("utf-8");
-  const payload = JSON.parse(decodedString);
-  return payload
-}
+import { decodeToken } from "./app/actions/serverActions";
 
 
 export async function middleware(req: NextRequest) {
@@ -26,7 +15,7 @@ export async function middleware(req: NextRequest) {
   }
 
 
-  const decodedRefreshToken = decodeToken(accessToken);
+  const decodedRefreshToken = await decodeToken(accessToken);
   if (decodedRefreshToken && decodedRefreshToken.exp) {
     const { exp } = decodedRefreshToken;
     const currentTime = Math.floor(Date.now() / 1000);

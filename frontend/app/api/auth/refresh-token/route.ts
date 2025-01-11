@@ -1,17 +1,6 @@
 import { NextResponse } from "next/server";
-import { getRefreshToken } from "@/app/actions/serverActions";
+import { decodeToken, getRefreshToken } from "@/app/actions/serverActions";
 
-
-function decodeToken(token:any) {
-  if (!token) {
-    return null
-  }
-  const [, payloadBase64] = token.split(".");
-  const decodedBuffer = Buffer.from(payloadBase64, "base64");
-  const decodedString = decodedBuffer.toString("utf-8");
-  const payload = JSON.parse(decodedString);
-  return payload
-}
 
 export async function POST(request: Request) {
     // const { refreshToken } = await request.json();
@@ -33,7 +22,7 @@ export async function POST(request: Request) {
       //   const { message, data } = responseData; 
       const newAccessToken = responseData.accessToken
 
-      const payload = decodeToken(newAccessToken);
+      const payload = await decodeToken(newAccessToken);
       const currentTime = Math.floor(Date.now() / 1000);
       const maxAge = payload.exp - currentTime;
 
