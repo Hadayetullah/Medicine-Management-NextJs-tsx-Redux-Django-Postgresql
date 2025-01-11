@@ -12,6 +12,7 @@ import { connectWebSocket } from "@/app/actions/apiActions";
 // import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
 
 const HomeMainContent = () => {
+  const connectionNames = ["medicineConnection"];
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -29,34 +30,97 @@ const HomeMainContent = () => {
 
   console.log("Socket MSG : ", message);
 
-  const getMedicineList = async () => {
-    const res = await fetch("/api/product/", {
-      method: "GET",
+  const getMedicineList = async (connectionKeys: any) => {
+    const authResponse = await fetch("/api/auth/refresh-token/", {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
     });
 
-    const result = await res.json();
-    if (result.success) {
-      dispatch(setMedicineList(result.data));
-      setLoading(false);
-      // await connectWebSocket("medicineConnection");
-      dispatch(
-        connectWebSocket({
-          connectionKey: "medicineConnection",
-          url: "ws://localhost:8000/ws/product/medicine/",
-        })
-      );
+    const authResponseResult = await authResponse.json();
+    if (authResponseResult.success) {
+      console.log("authResponseResult : ", authResponseResult.success);
+
+      const res = await fetch("/api/product/", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        dispatch(setMedicineList(result.data));
+        setLoading(false);
+        // await connectWebSocket("medicineConnection");
+        for (let connection in connectionKeys) {
+          if (connections[connection].connected != true) {
+            if (connection === "medicineConnection") {
+              dispatch(
+                connectWebSocket({
+                  connectionKey: `${connection}`,
+                  url: "ws://localhost:8000/ws/product/medicine/",
+                })
+              );
+            }
+          }
+        }
+      } else {
+        console.log(result.error);
+        console.error("Error getting medicine list");
+      }
     } else {
-      console.log(result.error);
-      console.error("Error getting medicine list");
+      console.log("authResponseResult error : ", authResponseResult.error);
     }
   };
 
   useEffect(() => {
-    if (medicineList.length === 0) {
+    const connectionKeys = Object.keys(connections);
+    console.log("connectionKeys : ", connectionKeys);
+
+    if (connectionKeys.length < 1 && medicineList.length < 1) {
       if (!getMedicineListRef.current) {
         getMedicineListRef.current = true;
-        getMedicineList();
+        getMedicineList(connectionKeys);
+      } else {
+        setLoading(false);
+      }
+    } else if (
+      connectionKeys.length != connectionNames.length &&
+      medicineList.length < 1
+    ) {
+      if (!getMedicineListRef.current) {
+        getMedicineListRef.current = true;
+        getMedicineList(connectionKeys);
+      } else {
+        setLoading(false);
+      }
+    } else if (
+      connectionKeys.length === connectionNames.length &&
+      medicineList.length > 0
+    ) {
+      for (let connection in connectionKeys) {
+        if (connections[connection].connected != true) {
+          if (connection === "medicineConnection") {
+            dispatch(
+              connectWebSocket({
+                connectionKey: `${connection}`,
+                url: "ws://localhost:8000/ws/product/medicine/",
+              })
+            );
+          }
+        }
+      }
+    } else if (
+      connectionKeys.length < connectionNames.length &&
+      medicineList.length > 0
+    ) {
+      for (let connection in connectionNames) {
+        if (connection === "medicineConnection") {
+          dispatch(
+            connectWebSocket({
+              connectionKey: `${connection}`,
+              url: "ws://localhost:8000/ws/product/medicine/",
+            })
+          );
+        }
       }
     } else {
       setLoading(false);

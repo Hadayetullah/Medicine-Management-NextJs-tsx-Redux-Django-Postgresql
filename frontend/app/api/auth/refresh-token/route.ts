@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
-import { decodeToken, getRefreshToken } from "@/app/actions/serverActions";
+import { decodeToken, getAccessToken, getRefreshToken } from "@/app/actions/serverActions";
 
 
 export async function POST(request: Request) {
     // const { refreshToken } = await request.json();
+    const accessToken = await getAccessToken();
+    if (accessToken != null) {
+      return NextResponse.json({ success: true })
+    }
+
     const refreshToken = await getRefreshToken();
+    if (refreshToken === null) {
+      return NextResponse.json({ success: false, error: "Invalid refresh token"})
+    }
 
   const apiBaseUrl = process.env.BACKEND_API_BASE_URL;
 
@@ -26,7 +34,7 @@ export async function POST(request: Request) {
       const currentTime = Math.floor(Date.now() / 1000);
       const maxAge = payload.exp - currentTime;
 
-      const nextResponse = NextResponse.json({ success: true, data: responseData });
+      const nextResponse = NextResponse.json({ success: true });
 
       nextResponse.cookies.set('accessToken', newAccessToken, {
         httpOnly: true,
