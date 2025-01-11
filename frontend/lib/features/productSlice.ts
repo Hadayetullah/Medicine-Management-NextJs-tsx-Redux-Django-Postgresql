@@ -131,9 +131,10 @@ const websocketSlice = createSlice({
     //   state.connected = true;
     //   state.error = null;
     // },
-    connect: (state, action) => {
+    connect: (state, action: PayloadAction<{ connectionKey: string; connected: boolean }>) => {
       const { connectionKey, connected } = action.payload;
-      state.connections[connectionKey] = { connected: connected, error: null, messages: [] };
+      state.connections[connectionKey] = { ...state.connections[connectionKey], connected: connected };
+      // state.connections[connectionKey] = { ...state.connections[connectionKey], connected: connected, error: null, messages: [] };
     },
     // disconnect(state) {
     //   state.connected = false;

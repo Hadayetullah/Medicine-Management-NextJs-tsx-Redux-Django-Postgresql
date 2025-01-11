@@ -104,3 +104,15 @@ export async function resetAuthCookies() {
     cookies().set('accessToken', '');
     cookies().set('refreshToken', '');
 }
+
+
+export async function decodeToken(token:any) {
+    if (!token) {
+      return null
+    }
+    const [, payloadBase64] = token.split(".");
+    const decodedBuffer = Buffer.from(payloadBase64, "base64");
+    const decodedString = decodedBuffer.toString("utf-8");
+    const payload = JSON.parse(decodedString);
+    return payload
+  }
