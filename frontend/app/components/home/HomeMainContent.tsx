@@ -30,7 +30,7 @@ const HomeMainContent = () => {
 
   console.log("Socket MSG : ", message);
 
-  const getMedicineList = async (connectionKeys: any) => {
+  const getMedicineList = async () => {
     const authResponse = await fetch("/api/auth/refresh-token/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -50,18 +50,12 @@ const HomeMainContent = () => {
         dispatch(setMedicineList(result.data));
         setLoading(false);
         // await connectWebSocket("medicineConnection");
-        for (let connection in connectionKeys) {
-          if (connections[connection].connected != true) {
-            if (connection === "medicineConnection") {
-              dispatch(
-                connectWebSocket({
-                  connectionKey: `${connection}`,
-                  url: "ws://localhost:8000/ws/product/medicine/",
-                })
-              );
-            }
-          }
-        }
+        dispatch(
+          connectWebSocket({
+            connectionKey: `medicineConnection`,
+            url: "ws://localhost:8000/ws/product/medicine/",
+          })
+        );
       } else {
         console.log(result.error);
         console.error("Error getting medicine list");
@@ -73,35 +67,38 @@ const HomeMainContent = () => {
 
   useEffect(() => {
     const connectionKeys = Object.keys(connections);
-    console.log("connectionKeys : ", connectionKeys);
 
     if (connectionKeys.length < 1 && medicineList.length < 1) {
-      if (!getMedicineListRef.current) {
-        getMedicineListRef.current = true;
-        getMedicineList(connectionKeys);
-      } else {
-        setLoading(false);
-      }
+      // if (!getMedicineListRef.current) {
+      //   getMedicineListRef.current = true;
+      //   getMedicineList();
+      // } else {
+      //   setLoading(false);
+      // }
+
+      getMedicineList();
     } else if (
       connectionKeys.length != connectionNames.length &&
       medicineList.length < 1
     ) {
-      if (!getMedicineListRef.current) {
-        getMedicineListRef.current = true;
-        getMedicineList(connectionKeys);
-      } else {
-        setLoading(false);
-      }
+      // if (!getMedicineListRef.current) {
+      //   getMedicineListRef.current = true;
+      //   getMedicineList();
+      // } else {
+      //   setLoading(false);
+      // }
+      getMedicineList();
     } else if (
       connectionKeys.length === connectionNames.length &&
+      connectionKeys.length > 0 &&
       medicineList.length > 0
     ) {
       for (let connection in connectionKeys) {
-        if (connections[connection].connected != true) {
-          if (connection === "medicineConnection") {
+        if (connections[connectionKeys[connection]].connected != true) {
+          if (connectionKeys[connection] === "medicineConnection") {
             dispatch(
               connectWebSocket({
-                connectionKey: `${connection}`,
+                connectionKey: `medicineConnection`,
                 url: "ws://localhost:8000/ws/product/medicine/",
               })
             );
@@ -113,10 +110,10 @@ const HomeMainContent = () => {
       medicineList.length > 0
     ) {
       for (let connection in connectionNames) {
-        if (connection === "medicineConnection") {
+        if (connectionKeys[connection] === "medicineConnection") {
           dispatch(
             connectWebSocket({
-              connectionKey: `${connection}`,
+              connectionKey: `medicineConnection`,
               url: "ws://localhost:8000/ws/product/medicine/",
             })
           );
@@ -125,7 +122,7 @@ const HomeMainContent = () => {
     } else {
       setLoading(false);
     }
-  }, []);
+  }, [connections]);
 
   if (productLoading || loading) {
     return <Loader />;
