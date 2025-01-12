@@ -141,7 +141,7 @@ const websocketSlice = createSlice({
       // }
       // state.connections[connectionKey] = { ...state.connections[connectionKey], connected: connected, error: null, messages: [] };
     },
-    
+
     // disconnect(state) {
     //   state.connected = false;
     // },
@@ -177,7 +177,15 @@ const websocketSlice = createSlice({
 
     setMessage: (state, action) => {
       state.message = action.payload;
-    }
+    },
+
+    resetProductSliceState: (state) => {
+      state.message = null;
+      state.error = null;
+      state.loading = false;
+      state.connections = {};
+      state.medicineList = [];
+    },
   },
 
 //   extraReducers: (builder) => {
@@ -195,6 +203,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connectSocket, disconnect, addProduct, setError, setMedicineList, setMessage } = websocketSlice.actions;
+export const { connectSocket, disconnect, addProduct, setError, setMedicineList, setMessage, resetProductSliceState } = websocketSlice.actions;
 
 export default websocketSlice.reducer;
