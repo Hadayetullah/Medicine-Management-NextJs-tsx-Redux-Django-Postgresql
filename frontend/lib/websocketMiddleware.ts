@@ -1,5 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { connect, disconnect, addProduct, setError } from "./features/productSlice";
+import { connectSocket, disconnect, addProduct, setError } from "./features/productSlice";
 
 // let websocketInitialized = false;
 
@@ -51,7 +51,7 @@ export const createWebSocketMiddleware = (): Middleware => {
 
         socket.onopen = () => {
           console.log("connection established");
-          storeAPI.dispatch(connect({ connectionKey, connected: true }));
+          storeAPI.dispatch(connectSocket({ connectionKey, connected: true }));
         };
 
         // socket.onmessage = (event: MessageEvent) => {

@@ -60,7 +60,7 @@ interface WebSocketState {
   [connectionKey: string]: {
     connected: boolean;
     error?: any;
-    messages: any[];
+    messages: any;
   };
 }
 
@@ -131,11 +131,17 @@ const websocketSlice = createSlice({
     //   state.connected = true;
     //   state.error = null;
     // },
-    connect: (state, action: PayloadAction<{ connectionKey: string; connected: boolean }>) => {
+    connectSocket: (state, action: PayloadAction<{ connectionKey: string; connected: boolean }>) => {
       const { connectionKey, connected } = action.payload;
       state.connections[connectionKey] = { ...state.connections[connectionKey], connected: connected };
+      // if(state.connections[connectionKey]) {
+      // } else {
+      //   const connectionObj = { connected: connected, error: null, messages: null }
+      //   state.connections = {...state.connections, [connectionKey]: connectionObj}
+      // }
       // state.connections[connectionKey] = { ...state.connections[connectionKey], connected: connected, error: null, messages: [] };
     },
+
     // disconnect(state) {
     //   state.connected = false;
     // },
@@ -171,7 +177,15 @@ const websocketSlice = createSlice({
 
     setMessage: (state, action) => {
       state.message = action.payload;
-    }
+    },
+
+    resetProductSliceState: (state) => {
+      state.message = null;
+      state.error = null;
+      state.loading = false;
+      state.connections = {};
+      state.medicineList = [];
+    },
   },
 
 //   extraReducers: (builder) => {
@@ -189,6 +203,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connect, disconnect, addProduct, setError, setMedicineList, setMessage } = websocketSlice.actions;
+export const { connectSocket, disconnect, addProduct, setError, setMedicineList, setMessage, resetProductSliceState } = websocketSlice.actions;
 
 export default websocketSlice.reducer;

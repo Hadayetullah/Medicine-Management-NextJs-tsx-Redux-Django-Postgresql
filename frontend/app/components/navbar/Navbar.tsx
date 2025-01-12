@@ -5,7 +5,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { logout } from "@/app/actions/apiActions";
 import { websocketEventEmitter } from "@/app/utils/websocketMiddlewareUtil";
-import { setMessage } from "@/lib/features/productSlice";
+import {
+  resetProductSliceState,
+  setMessage,
+} from "@/lib/features/productSlice";
 import Authenticated from "./Authenticated";
 import UnAuthenticated from "./UnAuthenticated";
 
@@ -25,10 +28,12 @@ const Navbar = () => {
     const logoutResponse = await logout();
     if (logoutResponse.success) {
       console.log("Logout logoutResponse: ", logoutResponse.data);
+      dispatch(resetProductSliceState());
       setToggleUser(false);
       router.push("/login");
     } else {
       console.log("Logout logoutResponse: ", logoutResponse.error);
+      dispatch(resetProductSliceState());
       setToggleUser(false);
       router.push("/login");
     }
@@ -38,66 +43,6 @@ const Navbar = () => {
     setToggleUser(false);
     router.push("/settings");
   };
-
-  useEffect(() => {
-    const socketConnectionHandler = ({
-      connectionKey,
-      data,
-    }: {
-      connectionKey: string;
-      data: any;
-    }) => {
-      if (connectionKey === "medicineConnection" && data === 1) {
-        console.log(`Connection opened for ${connectionKey}`);
-      }
-    };
-
-    const messageHandler = ({
-      connectionKey,
-      data,
-    }: {
-      connectionKey: string;
-      data: any;
-    }) => {
-      console.log(`Message for ${connectionKey}:`, data);
-      dispatch(setMessage(data));
-    };
-
-    const socketErrorHandler = ({
-      connectionKey,
-      data,
-    }: {
-      connectionKey: string;
-      data: any;
-    }) => {
-      console.log(`Error for ${connectionKey}:`, data);
-      dispatch(setMessage(data));
-    };
-
-    const socketCloseHandler = ({
-      connectionKey,
-      data,
-    }: {
-      connectionKey: string;
-      data: any;
-    }) => {
-      console.log(`Closed connection for ${connectionKey}:`, data);
-      dispatch(setMessage(data));
-    };
-
-    websocketEventEmitter.on("open", socketConnectionHandler);
-    websocketEventEmitter.on("message", messageHandler);
-    websocketEventEmitter.on("error", socketErrorHandler);
-    websocketEventEmitter.on("close", socketCloseHandler);
-
-    // Cleanup the listener on component unmount
-    return () => {
-      websocketEventEmitter.off("open", messageHandler);
-      websocketEventEmitter.off("message", messageHandler);
-      websocketEventEmitter.off("error", socketErrorHandler);
-      websocketEventEmitter.off("close", socketCloseHandler);
-    };
-  }, [dispatch]);
 
   useEffect(() => {
     if (path !== "/login" && path !== "/signup") {

@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
-import { getTokens, resetAuthCookies } from "@/app/actions/serverActions";
+import { headers } from "next/headers";
+import { parse } from "cookie";
+
+import { resetAuthCookies } from "@/app/actions/serverActions";
 
 export async function POST() {
-    const {accessToken} = await getTokens();
+    const cookieHeader = headers().get("cookie") || "";
+    const cookies = parse(cookieHeader);
+    const token = cookies.refreshToken;
 
-    if (!accessToken) {
+    if (!token) {
         await resetAuthCookies();
         return NextResponse.json({ success: false, redirectTo: "/login", error: "Invalid token" });
     }
@@ -17,8 +22,8 @@ export async function POST() {
       headers: { 
         'Accept': 'Application/json',
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${accessToken}`
-        }
+        },
+        body: JSON.stringify({ "refresh_token": token })
     });
 
     if (response.ok) {
