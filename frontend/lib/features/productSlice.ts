@@ -64,7 +64,13 @@ interface WebSocketState {
   };
 }
 
+interface connectionDetailsType {
+  connectionKey: string;
+  connectionUrl: string;
+}
+
 interface MainStateType {
+  connectionDetails: connectionDetailsType[];
   message: any;
   loading: boolean;
   error: any;
@@ -73,6 +79,12 @@ interface MainStateType {
 }
 
 const initialState: MainStateType = {
+  connectionDetails: [
+    {
+      connectionKey: "medicineConnection",
+      connectionUrl: "product/medicine",
+    },
+  ],
   message: null,
   error: null,
   loading: false,

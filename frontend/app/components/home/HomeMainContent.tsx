@@ -12,17 +12,18 @@ import { connectWebSocket } from "@/app/actions/apiActions";
 // import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
 
 const HomeMainContent = () => {
-  const connectionDetails = [
-    {
-      connectionKey: "medicineConnection",
-      connectionUrl: "product/medicine",
-    },
-  ];
+  // const connectionDetails = [
+  //   {
+  //     connectionKey: "medicineConnection",
+  //     connectionUrl: "product/medicine",
+  //   },
+  // ];
 
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const {
+    connectionDetails,
     loading: productLoading,
     message,
     error: productError,
@@ -38,6 +39,7 @@ const HomeMainContent = () => {
   console.log("Socket MSG : ", message);
 
   const getMedicineList = async () => {
+    setLoading(true);
     const authResponse = await fetch("/api/auth/refresh-token/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -59,10 +61,13 @@ const HomeMainContent = () => {
         }
 
         if (!result.success) {
+          setLoading(false);
           console.log(result.error);
           console.error("Error getting medicine list");
         }
       }
+
+      setLoading(false);
 
       const connectionKeys = Object.keys(connections);
 
@@ -99,6 +104,7 @@ const HomeMainContent = () => {
         });
       }
     } else {
+      setLoading(false);
       console.log("authResponseResult error : ", authResponseResult.error);
     }
   };

@@ -109,6 +109,7 @@ export const createWebSocketMiddleware = (): Middleware => {
         // storeAPI.dispatch(disconnect());
 
         if (socket) {
+          console.log("connectionKey : ", connectionKey)
           socket.close();
           websocketConnections.delete(connectionKey);
           storeAPI.dispatch(disconnect({ connectionKey }));
