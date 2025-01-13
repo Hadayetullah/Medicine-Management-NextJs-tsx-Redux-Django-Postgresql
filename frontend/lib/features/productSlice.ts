@@ -157,7 +157,7 @@ const websocketSlice = createSlice({
     // disconnect(state) {
     //   state.connected = false;
     // },
-    disconnect: (state, action) => {
+    disconnectSocket: (state, action) => {
       const { connectionKey } = action.payload;
       delete state.connections[connectionKey];
     },
@@ -215,6 +215,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connectSocket, disconnect, addProduct, setError, setMedicineList, setMessage, resetProductSliceState } = websocketSlice.actions;
+export const { connectSocket, disconnectSocket, addProduct, setError, setMedicineList, setMessage, resetProductSliceState } = websocketSlice.actions;
 
 export default websocketSlice.reducer;

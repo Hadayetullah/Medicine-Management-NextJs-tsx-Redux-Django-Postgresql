@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setMedicineList } from "@/lib/features/productSlice";
 import Loader from "../client/Loader";
 import Search from "./SearchMedicine";
-import { connectWebSocket } from "@/app/actions/apiActions";
+import { connectWebSockets } from "@/app/actions/apiActions";
 
 // import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
 
@@ -82,7 +82,7 @@ const HomeMainContent = () => {
             const connectionInfo = connections[connectionName];
             if (connectionInfo && connectionInfo.connected === false) {
               dispatch(
-                connectWebSocket({
+                connectWebSockets({
                   connectionKey: `${connectionName}`,
                   url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
                 })
@@ -96,7 +96,7 @@ const HomeMainContent = () => {
         connectionDetails.forEach((connection) => {
           const connectionName = connection.connectionKey;
           dispatch(
-            connectWebSocket({
+            connectWebSockets({
               connectionKey: `${connectionName}`,
               url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
             })
