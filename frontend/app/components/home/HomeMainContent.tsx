@@ -7,22 +7,23 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setMedicineList } from "@/lib/features/productSlice";
 import Loader from "../client/Loader";
 import Search from "./SearchMedicine";
-import { connectWebSocket } from "@/app/actions/apiActions";
+import { connectWebSockets } from "@/app/actions/apiActions";
 
 // import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
 
 const HomeMainContent = () => {
-  const connectionDetails = [
-    {
-      connectionKey: "medicineConnection",
-      connectionUrl: "product/medicine",
-    },
-  ];
+  // const connectionDetails = [
+  //   {
+  //     connectionKey: "medicineConnection",
+  //     connectionUrl: "product/medicine",
+  //   },
+  // ];
 
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const {
+    connectionDetails,
     loading: productLoading,
     message,
     error: productError,
@@ -38,6 +39,7 @@ const HomeMainContent = () => {
   console.log("Socket MSG : ", message);
 
   const getMedicineList = async () => {
+    setLoading(true);
     const authResponse = await fetch("/api/auth/refresh-token/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -59,10 +61,13 @@ const HomeMainContent = () => {
         }
 
         if (!result.success) {
+          setLoading(false);
           console.log(result.error);
           console.error("Error getting medicine list");
         }
       }
+
+      setLoading(false);
 
       const connectionKeys = Object.keys(connections);
 
@@ -77,7 +82,7 @@ const HomeMainContent = () => {
             const connectionInfo = connections[connectionName];
             if (connectionInfo && connectionInfo.connected === false) {
               dispatch(
-                connectWebSocket({
+                connectWebSockets({
                   connectionKey: `${connectionName}`,
                   url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
                 })
@@ -91,7 +96,7 @@ const HomeMainContent = () => {
         connectionDetails.forEach((connection) => {
           const connectionName = connection.connectionKey;
           dispatch(
-            connectWebSocket({
+            connectWebSockets({
               connectionKey: `${connectionName}`,
               url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
             })
@@ -99,6 +104,7 @@ const HomeMainContent = () => {
         });
       }
     } else {
+      setLoading(false);
       console.log("authResponseResult error : ", authResponseResult.error);
     }
   };

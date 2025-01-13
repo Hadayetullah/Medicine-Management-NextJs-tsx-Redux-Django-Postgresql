@@ -1,5 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { connectSocket, disconnect, addProduct, setError } from "./features/productSlice";
+import { connectSocket, disconnectSocket, addProduct, setError } from "./features/productSlice";
 
 // let websocketInitialized = false;
 
@@ -88,7 +88,7 @@ export const createWebSocketMiddleware = (): Middleware => {
         // };
 
         socket.onclose = () => {
-          storeAPI.dispatch(disconnect({ connectionKey }));
+          storeAPI.dispatch(disconnectSocket({ connectionKey }));
           websocketConnections.delete(connectionKey);
         };
 
@@ -109,9 +109,10 @@ export const createWebSocketMiddleware = (): Middleware => {
         // storeAPI.dispatch(disconnect());
 
         if (socket) {
+          console.log("websocket/disconnect -> connectionKey : ", connectionKey)
           socket.close();
+          storeAPI.dispatch(disconnectSocket({ connectionKey }));
           websocketConnections.delete(connectionKey);
-          storeAPI.dispatch(disconnect({ connectionKey }));
         }
 
         break;

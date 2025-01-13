@@ -64,7 +64,13 @@ interface WebSocketState {
   };
 }
 
+interface connectionDetailsType {
+  connectionKey: string;
+  connectionUrl: string;
+}
+
 interface MainStateType {
+  connectionDetails: connectionDetailsType[];
   message: any;
   loading: boolean;
   error: any;
@@ -73,6 +79,12 @@ interface MainStateType {
 }
 
 const initialState: MainStateType = {
+  connectionDetails: [
+    {
+      connectionKey: "medicineConnection",
+      connectionUrl: "product/medicine",
+    },
+  ],
   message: null,
   error: null,
   loading: false,
@@ -145,7 +157,7 @@ const websocketSlice = createSlice({
     // disconnect(state) {
     //   state.connected = false;
     // },
-    disconnect: (state, action) => {
+    disconnectSocket: (state, action) => {
       const { connectionKey } = action.payload;
       delete state.connections[connectionKey];
     },
@@ -203,6 +215,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connectSocket, disconnect, addProduct, setError, setMedicineList, setMessage, resetProductSliceState } = websocketSlice.actions;
+export const { connectSocket, disconnectSocket, addProduct, setError, setMedicineList, setMessage, resetProductSliceState } = websocketSlice.actions;
 
 export default websocketSlice.reducer;

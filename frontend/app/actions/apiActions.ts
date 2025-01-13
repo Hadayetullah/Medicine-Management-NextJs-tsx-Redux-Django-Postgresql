@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getAccessToken } from "./serverActions";
 
-export const connectWebSocket = createAsyncThunk(
+export const connectWebSockets = createAsyncThunk(
   "websocket/connectWebSocket",
   async ({ connectionKey, url }: { connectionKey: string; url: string }, { dispatch }) => {
     try {
@@ -13,6 +13,17 @@ export const connectWebSocket = createAsyncThunk(
     } catch (error) {
       console.error("Failed to retrieve token:", error);
     }
+  }
+);
+
+
+export const disconnectWebSockets = createAsyncThunk(
+  "websocket/disconnectWebSocket",
+  async ({ connectionKey }: { connectionKey: string }, { dispatch }) => {
+    dispatch({
+      type: "websocket/disconnect",
+      payload: { connectionKey },
+    });
   }
 );
 

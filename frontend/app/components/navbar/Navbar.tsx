@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { logout } from "@/app/actions/apiActions";
+import { disconnectWebSockets, logout } from "@/app/actions/apiActions";
 import { websocketEventEmitter } from "@/app/utils/websocketMiddlewareUtil";
 import {
   resetProductSliceState,
@@ -13,6 +13,10 @@ import Authenticated from "./Authenticated";
 import UnAuthenticated from "./UnAuthenticated";
 
 const Navbar = () => {
+  const { connectionDetails, connections } = useAppSelector(
+    (state) => state.product
+  );
+
   const path = usePathname();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -25,6 +29,18 @@ const Navbar = () => {
     useState<boolean>(true);
 
   const handleLogout = async () => {
+    const connectionKeys = Object.keys(connections);
+    connectionDetails.forEach((connection) => {
+      const connectionName = connection.connectionKey;
+      if (connectionKeys.includes(connectionName)) {
+        dispatch(
+          disconnectWebSockets({
+            connectionKey: `${connectionName}`,
+          })
+        );
+      }
+    });
+
     const logoutResponse = await logout();
     if (logoutResponse.success) {
       console.log("Logout logoutResponse: ", logoutResponse.data);
