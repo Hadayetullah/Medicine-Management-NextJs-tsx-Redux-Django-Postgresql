@@ -13,7 +13,7 @@ import Authenticated from "./Authenticated";
 import UnAuthenticated from "./UnAuthenticated";
 
 const Navbar = () => {
-  const { connectionDetails, connections } = useAppSelector(
+  const { connectionDetails, connections, error } = useAppSelector(
     (state) => state.product
   );
 

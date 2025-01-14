@@ -36,11 +36,9 @@ const HomeMainContent = () => {
   const getMedicineListRef = React.useRef<boolean>();
   const [errorFetchingProduct, setErrorFetchingProduct] = useState<any>(null);
 
-  console.log("Socket MSG : ", message);
-
   const getMedicineList = async () => {
     setLoading(true);
-    const authResponse = await fetch("/api/auth/refresh-token/", {
+    const authResponse = await fetch("/api/auth/check-refresh-token/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     });
