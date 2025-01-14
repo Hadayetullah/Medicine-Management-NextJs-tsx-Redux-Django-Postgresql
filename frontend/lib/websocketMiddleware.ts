@@ -67,7 +67,8 @@ export const createWebSocketMiddleware = (): Middleware => {
         socket.onmessage = async (event: MessageEvent) => {
           try {
             const data = JSON.parse(event.data);
-            if (data.action === "renew_token") {
+            console.log("socket onmessage data : ", data)
+            if (data && data.action && data.action === "renew_token") {
               try {
                 const response = await fetch("/api/auth/refresh-token/", {
                   method: "POST",
@@ -78,6 +79,11 @@ export const createWebSocketMiddleware = (): Middleware => {
         
                 if (result.success) {
                   console.log("renew_token result : ", result.data)
+                  storeAPI.dispatch({
+                    type: "websocket/sendMessage",
+                    payload: { connectionKey: "medicineConnection", message: { action: "update_token", token: result.data }
+                  },
+                  });
                   // dispatch({ type: 'TOKEN_RENEWED', payload: tokenData });
                 } else {
                   console.log('Failed to renew token:', result.error);
@@ -87,10 +93,12 @@ export const createWebSocketMiddleware = (): Middleware => {
                 console.log('Error making API call:', apiError);
                 storeAPI.dispatch(setError({apiError: "Something went wrong. Please check your internet connection"}))
               }
+            } else {
+              console.log("Else data : ", event.data)
             }
           } catch (error) {
             console.log(`Failed to parse WebSocket message for ${connectionKey}`, error);
-            storeAPI.dispatch(setError({apiError: error}))
+            storeAPI.dispatch(setError({apiError: `Failed to parse WebSocket message for ${connectionKey}`}))
 
           }
         };
@@ -151,7 +159,8 @@ export const createWebSocketMiddleware = (): Middleware => {
         // }
 
         const socket = websocketConnections.get(connectionKey);
-        if (socket && socket.readyState === WebSocket.OPEN) {
+        console.log("ReadyState : ", socket?.readyState)
+        if (socket && socket.readyState === 1) {
           socket.send(JSON.stringify(message));
         }
 

@@ -27,7 +27,7 @@ export async function POST(request: Request) {
         const currentTime = Math.floor(Date.now() / 1000);
         const maxAge = payload.exp - currentTime;
 
-        const nextResponse = NextResponse.json({ success: true });
+        const nextResponse = NextResponse.json({ success: true, data: newAccessToken });
 
         nextResponse.cookies.set("accessToken", newAccessToken, {
             httpOnly: true,
