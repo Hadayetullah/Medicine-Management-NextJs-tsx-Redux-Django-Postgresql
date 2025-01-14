@@ -111,7 +111,7 @@ const HomeMainContent = () => {
 
   useEffect(() => {
     getMedicineList();
-  }, [connections]);
+  }, []);
 
   if (productLoading || loading) {
     return <Loader />;

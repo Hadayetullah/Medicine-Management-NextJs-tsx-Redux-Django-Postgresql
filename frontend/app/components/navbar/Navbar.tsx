@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { disconnectWebSockets, logout } from "@/app/actions/apiActions";
-import { websocketEventEmitter } from "@/app/utils/websocketMiddlewareUtil";
+
 import {
   resetProductSliceState,
   setMessage,
@@ -29,26 +29,35 @@ const Navbar = () => {
     useState<boolean>(true);
 
   const handleLogout = async () => {
-    const connectionKeys = Object.keys(connections);
-    connectionDetails.forEach((connection) => {
-      const connectionName = connection.connectionKey;
-      if (connectionKeys.includes(connectionName)) {
-        dispatch(
-          disconnectWebSockets({
-            connectionKey: `${connectionName}`,
-          })
-        );
-      }
-    });
-
     const logoutResponse = await logout();
     if (logoutResponse.success) {
-      console.log("Logout logoutResponse: ", logoutResponse.data);
+      const connectionKeys = Object.keys(connections);
+      connectionDetails.forEach((connection) => {
+        const connectionName = connection.connectionKey;
+        if (connectionKeys.includes(connectionName)) {
+          dispatch(
+            disconnectWebSockets({
+              connectionKey: `${connectionName}`,
+            })
+          );
+        }
+      });
+
       dispatch(resetProductSliceState());
       setToggleUser(false);
       router.push("/login");
     } else {
-      console.log("Logout logoutResponse: ", logoutResponse.error);
+      const connectionKeys = Object.keys(connections);
+      connectionDetails.forEach((connection) => {
+        const connectionName = connection.connectionKey;
+        if (connectionKeys.includes(connectionName)) {
+          dispatch(
+            disconnectWebSockets({
+              connectionKey: `${connectionName}`,
+            })
+          );
+        }
+      });
       dispatch(resetProductSliceState());
       setToggleUser(false);
       router.push("/login");

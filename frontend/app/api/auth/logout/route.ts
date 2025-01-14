@@ -27,13 +27,15 @@ export async function POST() {
     });
 
     if (response.ok) {
-      const responseData = await response.json();
+      // console.log("Logout response data : ", response)
+      // const responseData = await response.json();
     //   const { message, data } = responseData;
       await resetAuthCookies();
-      return NextResponse.json({ success: true, redirectTo: "/login", data: responseData });
+      return NextResponse.json({ success: true, redirectTo: "/login", data: "Logout successful" });
     }
     
   } catch (error) {
+    console.log("Logout error : ", error)
     await resetAuthCookies();
     return NextResponse.json({ success: false, redirectTo: "/login", error: error });
   }
