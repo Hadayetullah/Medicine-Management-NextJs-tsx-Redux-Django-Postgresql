@@ -88,8 +88,11 @@ export const createWebSocketMiddleware = (): Middleware => {
         // };
 
         socket.onclose = () => {
-          storeAPI.dispatch(disconnectSocket({ connectionKey }));
-          websocketConnections.delete(connectionKey);
+          if(connectionKey) {
+            console.log("Onclose connectionKey: ", connectionKey)
+            storeAPI.dispatch(disconnectSocket({ connectionKey }));
+            websocketConnections.delete(connectionKey);
+          }
         };
 
         // Store the connection
