@@ -193,13 +193,16 @@ const websocketSlice = createSlice({
     },
 
     resetProductSliceState: (state) => {
-      state = {...state, message: null, error: null, loading: false, connections: {}, medicineList: []}
-      // state.message = null;
-      // state.error = null;
-      // state.loading = false;
-      // state.connections = {};
-      // state.medicineList = [];
+      state.message = null;
+      state.error = null;
+      state.loading = false;
+      state.connections = {};
+      state.medicineList = [];
     },
+
+    setError: (state, action: PayloadAction<{ apiError: any }>) => {
+      state.error = action.payload.apiError;
+    }
   },
 
 //   extraReducers: (builder) => {
@@ -217,6 +220,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connectSocket, disconnectSocket, addProduct, setSocketError, setMedicineList, setMessage, resetProductSliceState } = websocketSlice.actions;
+export const { connectSocket, disconnectSocket, addProduct, setSocketError, setMedicineList, setMessage, resetProductSliceState, setError } = websocketSlice.actions;
 
 export default websocketSlice.reducer;
