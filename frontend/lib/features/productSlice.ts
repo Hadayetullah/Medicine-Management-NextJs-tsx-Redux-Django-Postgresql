@@ -173,10 +173,11 @@ const websocketSlice = createSlice({
     // setError(state, action: PayloadAction<string>) {
     //   state.error = action.payload;
     // },
-    setError: (state, action) => {
+    setSocketError: (state, action) => {
       const { connectionKey, error } = action.payload;
       if (state.connections[connectionKey]) {
-        state.connections[connectionKey].error = error;
+        // state.connections[connectionKey].error = error;
+        state.connections[connectionKey] = { ...state.connections[connectionKey], error: error };
       }
     },
 
@@ -192,11 +193,12 @@ const websocketSlice = createSlice({
     },
 
     resetProductSliceState: (state) => {
-      state.message = null;
-      state.error = null;
-      state.loading = false;
-      state.connections = {};
-      state.medicineList = [];
+      state = {...state, message: null, error: null, loading: false, connections: {}, medicineList: []}
+      // state.message = null;
+      // state.error = null;
+      // state.loading = false;
+      // state.connections = {};
+      // state.medicineList = [];
     },
   },
 
@@ -215,6 +217,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connectSocket, disconnectSocket, addProduct, setError, setMedicineList, setMessage, resetProductSliceState } = websocketSlice.actions;
+export const { connectSocket, disconnectSocket, addProduct, setSocketError, setMedicineList, setMessage, resetProductSliceState } = websocketSlice.actions;
 
 export default websocketSlice.reducer;

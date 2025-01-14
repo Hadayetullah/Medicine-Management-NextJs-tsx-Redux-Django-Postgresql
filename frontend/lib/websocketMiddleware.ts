@@ -1,5 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { connectSocket, disconnectSocket, addProduct, setError } from "./features/productSlice";
+import { connectSocket, disconnectSocket, addProduct, setSocketError } from "./features/productSlice";
 
 // let websocketInitialized = false;
 
@@ -80,7 +80,7 @@ export const createWebSocketMiddleware = (): Middleware => {
 
         socket.onerror = (error:any) => {
           console.log("WebSocket error occurred: ", error)
-          storeAPI.dispatch(setError({ connectionKey, error: "WebSocket error occurred" }));
+          storeAPI.dispatch(setSocketError({ connectionKey, error: error }));
         };
 
         // socket.onclose = () => {
