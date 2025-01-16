@@ -112,14 +112,14 @@ class MedicineConsumer(AsyncWebsocketConsumer):
         user = self.scope.get('user')
         old_token_expiry = self.scope.get('token_expiry')
 
+        if isinstance(renewed_user, AnonymousUser) or not new_token_expiry:
+                # Close the WebSocket if the user is anonymous or the token is invalid/expired
+                await self.send({'type': 'websocket.close'})
+                return
+
         if user.is_authenticated:
             time_left = (old_token_expiry - datetime.now(timezone.utc)).total_seconds()
             if time_left < 0:
-                await self.send({'type': 'websocket.close'})
-                return
-            
-            if isinstance(renewed_user, AnonymousUser) or not new_token_expiry:
-                # Close the WebSocket if the user is anonymous or the token is invalid/expired
                 await self.send({'type': 'websocket.close'})
                 return
             
