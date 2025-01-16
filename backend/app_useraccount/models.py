@@ -75,6 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.name
     
 
+# For additional security (Future work)
 class Device(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     device_id = models.CharField(max_length=255, null=True, blank=True)
