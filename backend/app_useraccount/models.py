@@ -73,3 +73,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         
     def __str__(self):
         return self.name
+    
+
+# For additional security (Future work)
+class Device(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    device_id = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
