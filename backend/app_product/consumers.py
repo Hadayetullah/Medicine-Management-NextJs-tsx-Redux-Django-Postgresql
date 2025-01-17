@@ -42,7 +42,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
             response = await self.add_medicine()
         elif action == 'update_token':
             # Fetch medicines
-            response = await self.update_token()
+            response = await self.update_token(data)
         else:
             response = {'error': 'Invalid action'}
 
