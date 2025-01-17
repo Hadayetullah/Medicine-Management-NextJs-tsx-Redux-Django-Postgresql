@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 
-from datetime import datetime, timezone
-from django.contrib.auth.models import AnonymousUser
+# from datetime import datetime, timezone
+# from django.contrib.auth.models import AnonymousUser
 
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -10,7 +10,7 @@ from .models import Medicine, Company, Category, DosageForm
 
 from .serializers import MedicineListSerializer
 
-from .token_auth import get_user, get_token_expiry
+# from .token_auth import get_user, get_token_expiry
 
 class MedicineConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -40,9 +40,8 @@ class MedicineConsumer(AsyncWebsocketConsumer):
         if action == 'add_medicine':
             # Add a new medicine
             response = await self.add_medicine()
-        elif action == 'update_token':
-            # Fetch medicines
-            response = await self.update_token()
+        # elif action == 'update_token':
+        #     response = await self.update_token(data)
         else:
             response = {'error': 'Invalid action'}
 
@@ -103,33 +102,33 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
 
 
-    async def update_token(self, data):
-        new_access_token = data.get('token')
+    # async def update_token(self, data):
+    #     new_access_token = data.get('token')
 
-        renewed_user = await get_user(new_access_token)
-        new_token_expiry = get_token_expiry(new_access_token)
+    #     renewed_user = await get_user(new_access_token)
+    #     new_token_expiry = get_token_expiry(new_access_token)
 
-        user = self.scope.get('user')
-        old_token_expiry = self.scope.get('token_expiry')
+    #     user = self.scope.get('user')
+    #     old_token_expiry = self.scope.get('token_expiry')
 
-        if isinstance(renewed_user, AnonymousUser) or not new_token_expiry:
-                # Close the WebSocket if the user is anonymous or the token is invalid/expired
-                await self.send({'type': 'websocket.close'})
-                return
+    #     if isinstance(renewed_user, AnonymousUser) or not new_token_expiry:
+    #             # Close the WebSocket if the user is anonymous or the token is invalid/expired
+    #             await self.send({'type': 'websocket.close'})
+    #             return
 
-        if user.is_authenticated:
-            time_left = (old_token_expiry - datetime.now(timezone.utc)).total_seconds()
-            if time_left < 0:
-                await self.send({'type': 'websocket.close'})
-                return
+    #     if user.is_authenticated:
+    #         time_left = (old_token_expiry - datetime.now(timezone.utc)).total_seconds()
+    #         if time_left < 0:
+    #             await self.send({'type': 'websocket.close'})
+    #             return
             
-            self.scope['user'] = renewed_user
-            self.scope['token_expiry'] = new_token_expiry
-            await self.send(json.dumps({'success': 'Token updated'}))
+    #         self.scope['user'] = renewed_user
+    #         self.scope['token_expiry'] = new_token_expiry
+    #         await self.send(json.dumps({'success': 'Token updated'}))
             
-        else:
-            # await self.send(json.dumps({'error': 'Invalid token'}))
-            await self.send({'type': 'websocket.close'})
+    #     else:
+    #         # await self.send(json.dumps({'error': 'Invalid token'}))
+    #         await self.send({'type': 'websocket.close'})
 
 
     async def handle_add_medicine(self, event):
