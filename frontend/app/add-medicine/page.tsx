@@ -1,5 +1,5 @@
-// "use client";
-// import { useEffect, useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 // import { usePathname, useRouter } from "next/navigation";
 // import { validateAccessTokenLife, validateRefreshTokenLife } from "@/actions";
 // import { RootState, useAppDispatch } from "@/lib/store";
@@ -12,27 +12,29 @@ export default function AddMedicine() {
   // );
 
   // const dispatch = useAppDispatch();
-  // const [formData, setFormData] = useState({
-  //   company: "",
-  //   category: "",
-  //   dosage_form: "",
-  //   price: "",
-  //   power: "",
-  //   shelf_no: "",
-  // });
+  const [formData, setFormData] = useState({
+    action: "add_medicine",
+    company: "",
+    category: "",
+    dosage_form: "",
+    price: "",
+    power: "",
+    shelf_no: "",
+  });
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setFormData({
-  //     ...formData,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   const result = dispatch(addMedicine(formData));
-  //   // result.then((response) => console.log(response));
-  // };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form data : ", formData);
+    // const result = dispatch(addMedicine(formData));
+    // result.then((response) => console.log(response));
+  };
 
   // useEffect(() => {
   //   console.log("State Medicine : ", medicineList);
@@ -40,8 +42,7 @@ export default function AddMedicine() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      Add Medicine
-      {/* <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-lg mt-16">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-lg mt-16">
         <h2 className="text-2xl font-bold text-center text-gray-900">
           Add Medicine
         </h2>
@@ -155,7 +156,7 @@ export default function AddMedicine() {
             Add
           </button>
         </form>
-      </div> */}
+      </div>
     </div>
   );
 }
