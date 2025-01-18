@@ -41,19 +41,26 @@ class TokenAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         query = dict((x.split('=') for x in scope['query_string'].decode().split('&')))
         token = query.get('token')
-        device_id = query.get('device_id')
+        # device_id = query.get('device_id')
         # token_key = query.get('token')
         # user = await get_user(token_key)
         # token_expiry = get_token_expiry(token_key)
 
-        if not token or not device_id:
+        # if not token or not device_id:
+        #     await self.close(send)
+        #     return
+
+        if not token:
             await self.close(send)
             return
         
         auth = DeviceBindingAuthentication()
 
         try:
-            user, _ = await sync_to_async(auth.authenticate_credentials)((token, device_id))
+            # user, _ = await sync_to_async(auth.authenticate_credentials)((token, device_id))
+
+            # For testing
+            user, _ = await sync_to_async(auth.authenticate_credential)((token))
         except AuthenticationFailed:
             await self.close(send)
             return

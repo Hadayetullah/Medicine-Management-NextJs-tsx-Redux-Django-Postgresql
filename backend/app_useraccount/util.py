@@ -50,6 +50,19 @@ class DeviceBindingAuthentication(BaseAuthentication):
             raise AuthenticationFailed('User not found')
 
         return user, None
+    
+
+    def authenticate_credential(self, token_str):
+        try:
+            token = AccessToken(token_str)
+        except TokenError:
+            raise AuthenticationFailed('Invalid token')
+
+        user = async_to_sync(self.get_user_from_token)(token)
+        if not user:
+            raise AuthenticationFailed('User not found')
+
+        return user, None
 
 
     async def get_user_from_token(self, token):
