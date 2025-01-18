@@ -17,6 +17,16 @@ export const connectWebSockets = createAsyncThunk(
 );
 
 
+export const sendWebSocketMessages = createAsyncThunk(
+  "websocket/connectWebSocket",
+  async ({ connectionKey, url }: { connectionKey: string; url: string }, { dispatch }) =>
+    dispatch({
+      type: "websocket/connect",
+      payload: { connectionKey, url },
+    })
+);
+
+
 export const disconnectWebSockets = createAsyncThunk(
   "websocket/disconnectWebSocket",
   async ({ connectionKey }: { connectionKey: string }, { dispatch }) => {
