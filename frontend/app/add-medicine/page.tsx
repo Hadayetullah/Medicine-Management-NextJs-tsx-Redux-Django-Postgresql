@@ -1,17 +1,16 @@
 "use client";
+
 import { useEffect, useState } from "react";
+import { sendWebSocketMessages } from "../actions/apiActions";
+import { useAppDispatch } from "@/lib/hooks";
 // import { usePathname, useRouter } from "next/navigation";
-// import { validateAccessTokenLife, validateRefreshTokenLife } from "@/actions";
-// import { RootState, useAppDispatch } from "@/lib/store";
-// import { useSelector } from "react-redux";
-// import { addMedicine } from "@/lib/features/employeeSlice";
 
 export default function AddMedicine() {
   // const { loading, error, medicineList } = useSelector(
   //   (state: RootState) => state.employee
   // );
 
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     action: "add_medicine",
     company: "",
@@ -32,6 +31,13 @@ export default function AddMedicine() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form data : ", formData);
+
+    dispatch(
+      sendWebSocketMessages({
+        connectionKey: "medicineConnection",
+        url: "ws://localhost:8000/ws/product/medicine/",
+      })
+    );
     // const result = dispatch(addMedicine(formData));
     // result.then((response) => console.log(response));
   };
