@@ -39,7 +39,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
         if action == 'add_medicine':
             # Add a new medicine
-            response = await self.add_medicine()
+            response = await self.add_medicine(data)
         # elif action == 'update_token':
         #     response = await self.update_token(data)
         else:
