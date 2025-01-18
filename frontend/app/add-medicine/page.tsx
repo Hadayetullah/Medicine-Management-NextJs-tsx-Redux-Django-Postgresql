@@ -13,9 +13,10 @@ export default function AddMedicine() {
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     action: "add_medicine",
-    company: "",
-    category: "",
-    dosage_form: "",
+    name: "",
+    company_name: "",
+    category_name: "",
+    dosage_form_name: "",
     price: "",
     power: "",
     shelf_no: "",
@@ -35,7 +36,7 @@ export default function AddMedicine() {
     dispatch(
       sendWebSocketMessages({
         connectionKey: "medicineConnection",
-        url: "ws://localhost:8000/ws/product/medicine/",
+        message: formData,
       })
     );
     // const result = dispatch(addMedicine(formData));
@@ -55,15 +56,32 @@ export default function AddMedicine() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
-              htmlFor="company"
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Medicine Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="company_name"
               className="block text-sm font-medium text-gray-700"
             >
               Company Name
             </label>
             <input
               type="text"
-              name="company"
-              value={formData.company}
+              name="company_name"
+              value={formData.company_name}
               onChange={handleChange}
               required
               className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -72,15 +90,15 @@ export default function AddMedicine() {
 
           <div>
             <label
-              htmlFor="category"
+              htmlFor="category_name"
               className="block text-sm font-medium text-gray-700"
             >
               Category/Brand
             </label>
             <input
               type="text"
-              name="category"
-              value={formData.category}
+              name="category_name"
+              value={formData.category_name}
               onChange={handleChange}
               required
               className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -89,15 +107,15 @@ export default function AddMedicine() {
 
           <div>
             <label
-              htmlFor="dosage_form"
+              htmlFor="dosage_form_name"
               className="block text-sm font-medium text-gray-700"
             >
               Dosage Form
             </label>
             <input
               type="text"
-              name="dosage_form"
-              value={formData.dosage_form}
+              name="dosage_form_name"
+              value={formData.dosage_form_name}
               onChange={handleChange}
               required
               className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
