@@ -1,3 +1,4 @@
+from uuid import UUID
 from rest_framework import serializers
 
 from app_useraccount.models import User
@@ -46,6 +47,7 @@ class MedicineSerializer(serializers.ModelSerializer):
         ]
 
 
+
 class MedicineListSerializer(serializers.ModelSerializer):
     # Use nested serializers for GET responses
     company = CompanySerializer()
@@ -55,6 +57,14 @@ class MedicineListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medicine
         fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # Convert UUID fields to strings
+        for key, value in representation.items():
+            if isinstance(value, UUID):
+                representation[key] = str(value)
+        return representation
 
 
 
