@@ -2,15 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { sendWebSocketMessages } from "../actions/apiActions";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { FetchMedicinesHandleSockets } from "../actions/clientActions";
+import Loader from "../components/client/Loader";
 // import { usePathname, useRouter } from "next/navigation";
 
 export default function AddMedicine() {
-  // const { loading, error, medicineList } = useSelector(
-  //   (state: RootState) => state.employee
-  // );
+  const {
+    connectionDetails,
+    loading: productLoading,
+    message,
+    error: productError,
+    connections,
+    medicineList,
+  } = useAppSelector((state) => state.product);
 
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     action: "add_medicine",
     name: "",
@@ -46,6 +54,27 @@ export default function AddMedicine() {
   // useEffect(() => {
   //   console.log("State Medicine : ", medicineList);
   // }, [dispatch, medicineList]);
+
+  useEffect(() => {
+    const handleFetchMedicinesHandleSockets = async () => {
+      if (medicineList.length < 1) {
+        setLoading(true);
+        const isLoading = await FetchMedicinesHandleSockets({
+          dispatch,
+          medicineList,
+          connections,
+          connectionDetails,
+        });
+        setLoading(isLoading); // Update the state with the returned value
+      }
+    };
+
+    handleFetchMedicinesHandleSockets();
+  }, []);
+
+  if (productLoading || loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

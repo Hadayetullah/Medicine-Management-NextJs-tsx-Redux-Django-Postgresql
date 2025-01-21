@@ -8,6 +8,7 @@ import { setMedicineList } from "@/lib/features/productSlice";
 import Loader from "../client/Loader";
 import Search from "./SearchMedicine";
 import { connectWebSockets } from "@/app/actions/apiActions";
+import { FetchMedicinesHandleSockets } from "@/app/actions/clientActions";
 
 // import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
 
@@ -108,7 +109,18 @@ const HomeMainContent = () => {
   };
 
   useEffect(() => {
-    getMedicineList();
+    // getMedicineList();
+    const handleFetchMedicinesHandleSockets = async () => {
+      const isLoading = await FetchMedicinesHandleSockets({
+        dispatch,
+        medicineList,
+        connections,
+        connectionDetails,
+      });
+      setLoading(isLoading); // Update the state with the returned value
+    };
+
+    handleFetchMedicinesHandleSockets();
   }, []);
 
   if (productLoading || loading) {

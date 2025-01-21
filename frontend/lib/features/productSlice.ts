@@ -56,7 +56,7 @@ export type MedicineType = {
     created_at: Date;
 }
 
-interface WebSocketState {
+export type WebSocketState = {
   [connectionKey: string]: {
     connected: boolean;
     error?: any;
@@ -64,7 +64,7 @@ interface WebSocketState {
   };
 }
 
-interface connectionDetailsType {
+export type connectionDetailsType = {
   connectionKey: string;
   connectionUrl: string;
 }
