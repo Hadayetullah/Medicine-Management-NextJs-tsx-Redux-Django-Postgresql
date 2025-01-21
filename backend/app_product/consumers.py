@@ -85,6 +85,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'handle_add_medicine',
+                    'action': 'new_medicine',
                     'message': f"New medicine added: {medicine.category.name}",
                     'medicine': medicine_data  # Include the serialized medicine object
                 }
@@ -133,10 +134,12 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
     async def handle_add_medicine(self, event):
         """Handles broadcasting updates to all WebSocket connections."""
+        action = event['action']
         message = event['message']
         medicine = event['medicine']  # Get the serialized medicine object
         
         await self.send(text_data=json.dumps({
+            'action': action,
             'message': message,
             'medicine': medicine
         }))
