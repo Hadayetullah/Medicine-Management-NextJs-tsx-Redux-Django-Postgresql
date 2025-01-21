@@ -4,7 +4,7 @@ import { decodeToken } from "./app/actions/serverActions";
 
 
 export async function middleware(req: NextRequest) {
-
+  console.log("Middleware called");
   const cookieHeader = req.headers.get("cookie") || "";
   const cookies = parse(cookieHeader);
   const accessToken = cookies.accessToken;
@@ -31,5 +31,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/protected/:path*"], // Adjust as needed
+  matcher: ["/", "/add-medicine", "/protected/:path*"], // Adjust as needed
 };
