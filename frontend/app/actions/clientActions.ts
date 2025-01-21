@@ -16,7 +16,6 @@ export async function FetchMedicinesHandleSockets({
     connections,
     connectionDetails,
   }: FetchMedicinesHandleSocketsProps): Promise<boolean> {
-    let isLoading = false;
     const authResponse = await fetch("/api/auth/check-refresh-token/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -76,9 +75,10 @@ export async function FetchMedicinesHandleSockets({
             );
             });
         }
-        } else {
-    
-        console.error("authResponseResult error:", authResponseResult.error);
-        }
-    return isLoading;
+
+    } else {
+    console.error("authResponseResult error:", authResponseResult.error);
+    }
+
+    return false;
 };
