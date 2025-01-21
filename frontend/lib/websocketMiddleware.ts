@@ -67,33 +67,38 @@ export const createWebSocketMiddleware = (): Middleware => {
         socket.onmessage = async (event: MessageEvent) => {
           try {
             const data = JSON.parse(event.data);
-            console.log("socket onmessage data : ", data)
-            if (data && data.action && data.action === "renew_token") {
-              try {
-                const response = await fetch("/api/auth/refresh-token/", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                });
+            // console.log("socket onmessage data : ", data)
+            if (data && data.action && data.action === "new_medicine") {
+              storeAPI.dispatch(addProduct({connectionKey: "medicineConnection", data: data.medicine}));
+            }
+            // if (data && data.action && data.action === "renew_token") {
+            //   try {
+            //     const response = await fetch("/api/auth/refresh-token/", {
+            //       method: "POST",
+            //       headers: { "Content-Type": "application/json" },
+            //     });
 
-                const result = await response.json();
+            //     const result = await response.json();
         
-                if (result.success) {
-                  console.log("renew_token result : ", result.data)
-                  storeAPI.dispatch({
-                    type: "websocket/sendMessage",
-                    payload: { connectionKey: "medicineConnection", message: { action: "update_token", token: result.data }
-                  },
-                  });
-                  // dispatch({ type: 'TOKEN_RENEWED', payload: tokenData });
-                } else {
-                  console.log('Failed to renew token:', result.error);
-                  storeAPI.dispatch(setError({apiError: result.error}))
-                }
-              } catch (apiError:any) {
-                console.log('Error making API call:', apiError);
-                storeAPI.dispatch(setError({apiError: "Something went wrong. Please check your internet connection"}))
-              }
-            } else {
+            //     if (result.success) {
+            //       console.log("renew_token result : ", result.data)
+            //       storeAPI.dispatch({
+            //         type: "websocket/sendMessage",
+            //         payload: { connectionKey: "medicineConnection", message: { action: "update_token", token: result.data }
+            //       },
+            //       });
+            //       // dispatch({ type: 'TOKEN_RENEWED', payload: tokenData });
+            //     } else {
+            //       console.log('Failed to renew token:', result.error);
+            //       storeAPI.dispatch(setError({apiError: result.error}))
+            //     }
+            //   } catch (apiError:any) {
+            //     console.log('Error making API call:', apiError);
+            //     storeAPI.dispatch(setError({apiError: "Something went wrong. Please check your internet connection"}))
+            //   }
+            // } 
+            
+            else {
               console.log("Else data : ", event.data)
             }
           } catch (error) {
