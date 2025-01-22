@@ -21,7 +21,7 @@ const Authenticated: React.FC<AuthenticatedProps> = ({
   handleLogout,
 }) => {
   return (
-    <div className="container mx-auto flex items-center flex-row justify-between">
+    <div className="container mx-auto max-w-[1400px] flex items-center flex-row justify-between">
       <div className="flex items-center justify-evenly w-full flex-row-reverse sm:flex-row sm:justify-between">
         <div className="w-full flex items-left sm:items-center pl-[6%] sm:pl-0">
           <Link href={"/"} className="text-white">

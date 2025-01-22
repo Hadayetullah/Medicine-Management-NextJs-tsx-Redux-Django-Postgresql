@@ -128,7 +128,7 @@ const HomeMainContent = () => {
   }
 
   return (
-    <>
+    <div className="max-w-[1400px] mx-auto">
       <Search />
       <div className="w-full mt-10 mb-5">
         <div
@@ -166,7 +166,7 @@ const HomeMainContent = () => {
               </div>
 
               <div className="w-[13%] h-full flex items-center justify-center pl-1">
-                <h4>View Detail</h4>
+                <h4>Detail</h4>
               </div>
             </div>
 
@@ -215,17 +215,19 @@ const HomeMainContent = () => {
 
                           <div className="w-[13%] h-full flex my-1 flex-col pl-1 items-center gap-[3px]">
                             <button
-                              className="w-full text-gray-900 bg-green-500 mr-1 rounded-md hover:bg-green-600"
-                              // onClick={() => handleEditForm(medicine)}
+                              className="w-full text-gray-100 bg-[#095959] mr-1 rounded-md hover:bg-[#0b8484] hover:text-white transition-colors duration-300"
+                              onClick={() =>
+                                router.push(`/detail/${medicine.name}`)
+                              }
                             >
-                              Edit
+                              Detail
                             </button>
-                            <button
+                            {/* <button
                               className="w-full text-white bg-red-600 mr-1 rounded-md hover:bg-red-700"
                               // onClick={() => handleDelete(medicine.id)}
                             >
-                              Delete
-                            </button>
+                              Modify
+                            </button> */}
                           </div>
                         </div>
                       );
@@ -243,7 +245,7 @@ const HomeMainContent = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

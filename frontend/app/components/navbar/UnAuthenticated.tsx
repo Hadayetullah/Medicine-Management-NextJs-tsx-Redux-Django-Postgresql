@@ -13,7 +13,7 @@ const UnAuthenticated: React.FC<UnAuthenticatedProps> = ({
   path,
 }) => {
   return (
-    <div className="container mx-auto w-full flex items-center flex-row justify-between p-0 sm:px-[5%]">
+    <div className="container mx-auto max-w-[1400px] flex items-center flex-row justify-between p-0 sm:px-[5%]">
       <div className="w-full flex items-left sm:items-center">
         <Link href={"/"} className="text-white">
           LOGO
