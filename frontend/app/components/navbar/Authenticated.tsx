@@ -59,6 +59,17 @@ const Authenticated: React.FC<AuthenticatedProps> = ({
 
             <li className="flex items-center justify-center">
               <Link
+                href="/update-and-detail"
+                className={`hover:bg-indigo-700 py-1 px-2 rounded-md ${
+                  path === "/update-and-detail" ? "bg-indigo-700" : ""
+                }`}
+              >
+                Update & View Detail
+              </Link>
+            </li>
+
+            <li className="flex items-center justify-center">
+              <Link
                 href="/add-medicine"
                 className={`hover:bg-indigo-700 py-1 px-2 rounded-md ${
                   path === "/add-medicine" ? "bg-indigo-700" : ""

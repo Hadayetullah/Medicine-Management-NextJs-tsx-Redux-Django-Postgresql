@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setMedicineList } from "@/lib/features/productSlice";
-import Loader from "../client/Loader";
-import Search from "./SearchMedicine";
 import { connectWebSockets } from "@/app/actions/apiActions";
 import { FetchMedicinesHandleSockets } from "@/app/actions/clientActions";
+import Loader from "../components/client/Loader";
+import Search from "../components/home/SearchMedicine";
 
 // import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
 
-const HomeMainContent = () => {
+export default function UpdateAndDetail() {
   // const connectionDetails = [
   //   {
   //     connectionKey: "medicineConnection",
@@ -248,6 +248,4 @@ const HomeMainContent = () => {
       </div>
     </div>
   );
-};
-
-export default HomeMainContent;
+}
