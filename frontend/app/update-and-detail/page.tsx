@@ -9,10 +9,11 @@ import { connectWebSockets } from "@/app/actions/apiActions";
 import { FetchMedicinesHandleSockets } from "@/app/actions/clientActions";
 import Loader from "../components/client/Loader";
 import Search from "../components/home/SearchMedicine";
+import UpdateAndDetail from "../components/update-and-detail/UpdateAndDetail";
 
 // import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
 
-export default function UpdateAndDetail() {
+export default function UpdateAndDetailPage() {
   // const connectionDetails = [
   //   {
   //     connectionKey: "medicineConnection",
@@ -33,6 +34,7 @@ export default function UpdateAndDetail() {
   } = useAppSelector((state) => state.product);
 
   const [loading, setLoading] = useState<boolean>(true);
+  const [updateDetailModal, setUpdateDetailModal] = useState<boolean>(false);
   const eventSourceRef = React.useRef<EventSource | null>(null);
   const getMedicineListRef = React.useRef<boolean>();
   const [errorFetchingProduct, setErrorFetchingProduct] = useState<any>(null);
@@ -216,7 +218,7 @@ export default function UpdateAndDetail() {
                           <div className="w-[13%] h-full flex my-1 flex-col pl-1 items-center gap-[3px]">
                             <button
                               className="w-full text-black bg-[#fcb900] mr-1 rounded-md hover:bg-[#c99402]"
-                              // onClick={() => handleDelete(medicine.id)}
+                              onClick={() => setUpdateDetailModal(true)}
                             >
                               Update
                             </button>
@@ -246,6 +248,8 @@ export default function UpdateAndDetail() {
           </div>
         </div>
       </div>
+
+      {updateDetailModal && <UpdateAndDetail />}
     </div>
   );
 }
