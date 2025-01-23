@@ -37,7 +37,7 @@ const Search = () => {
         type="text"
         placeholder="Search by Medicine Name"
         value={searchQuery}
-        className="w-full max-w-lg p-2 border border-gray-300 rounded-md absolute h-full z-10"
+        className="w-full max-w-lg p-2 border border-gray-300 rounded-md absolute h-full z-[10]"
         id="search-input"
         onChange={() => handleSearchChange()}
         onFocus={handleFocus}
