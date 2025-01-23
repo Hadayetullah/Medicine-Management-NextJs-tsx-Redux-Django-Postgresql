@@ -11,6 +11,7 @@ export default function MedicineDetail() {
           <div className="flex flex-row">
             <Image
               alt={`tablet icon`}
+              title="tablet icon"
               src={`/assets/image/tablet.png`}
               width={21}
               height={21}
@@ -101,7 +102,16 @@ export default function MedicineDetail() {
             </Link>
           </div>
         </div>
-        <div className="w-full flex justify-center">right</div>
+        <div className="w-full flex justify-center">
+          <Image
+            alt={`Medicine Image`}
+            title="Medicine Image"
+            src={`/assets/image/monocast-10.jpg`}
+            width={400}
+            height={400}
+            style={{ objectFit: "contain" }}
+          />
+        </div>
       </div>
     </div>
   );

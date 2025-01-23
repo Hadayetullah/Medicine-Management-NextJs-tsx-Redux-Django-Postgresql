@@ -1,5 +1,3 @@
-import HomeMainContent from "./components/home/HomeMainContent";
-
 export default async function HomePage() {
-  return <HomeMainContent />;
+  return <div className="max-w-[1400px] mx-auto mt-[70px]">HomePage</div>;
 }
