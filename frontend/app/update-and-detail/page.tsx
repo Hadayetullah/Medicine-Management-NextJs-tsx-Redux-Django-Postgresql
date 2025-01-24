@@ -9,7 +9,7 @@ import { connectWebSockets } from "@/app/actions/apiActions";
 import { FetchMedicinesHandleSockets } from "@/app/actions/clientActions";
 import Loader from "../components/client/Loader";
 import Search from "../components/home/SearchMedicine";
-import UpdateAndDetail from "../components/update-and-detail/UpdateAndDetail";
+import UpdateAndDetail from "../components/update-detail/UpdateAndDetail";
 
 // import { connectWebSocket } from "@/app/utils/websocketMiddlewareUtil";
 
@@ -249,7 +249,9 @@ export default function UpdateAndDetailPage() {
         </div>
       </div>
 
-      {updateDetailModal && <UpdateAndDetail />}
+      {updateDetailModal && (
+        <UpdateAndDetail setUpdateDetailModal={setUpdateDetailModal} />
+      )}
     </div>
   );
 }
