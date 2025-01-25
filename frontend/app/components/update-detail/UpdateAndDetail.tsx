@@ -3,6 +3,11 @@
 import { useAppDispatch } from "@/lib/hooks";
 import React, { useState } from "react";
 
+interface DataProps {
+  isDisabled: boolean;
+  isProcessing: boolean;
+}
+
 interface UpdateAndDetailProps {
   setUpdateDetailModal: (e: boolean) => void;
 }
@@ -22,7 +27,40 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
     shelf_no: "",
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [quantityLoading, setQuantityLoading] = useState<DataProps>({
+    isDisabled: true,
+    isProcessing: false,
+  });
+  const [nameLoading, setNameLoading] = useState<DataProps>({
+    isDisabled: true,
+    isProcessing: false,
+  });
+  const [companyNameLoading, setCompanyNameLoading] = useState<DataProps>({
+    isDisabled: true,
+    isProcessing: false,
+  });
+  const [categoryNameLoading, setCategoryNameLoading] = useState<DataProps>({
+    isDisabled: true,
+    isProcessing: false,
+  });
+  const [dosageFormNameLoading, setDosageFormNameLoading] = useState<DataProps>(
+    {
+      isDisabled: true,
+      isProcessing: false,
+    }
+  );
+  const [priceLoading, setPriceLoading] = useState<DataProps>({
+    isDisabled: true,
+    isProcessing: false,
+  });
+  const [powerLoading, setPowerLoading] = useState<DataProps>({
+    isDisabled: true,
+    isProcessing: false,
+  });
+  const [selfNoLoading, setSelfNoLoading] = useState<DataProps>({
+    isDisabled: true,
+    isProcessing: false,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -85,14 +123,17 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
                   />
 
                   <button
+                    title="Please update the quantity first"
                     onClick={(e) => handleSubmit(e)}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      loading ? "opacity-50 cursor-not-allowed" : ""
+                      quantityLoading.isDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                     }`}
-                    disabled={loading}
+                    disabled={quantityLoading.isDisabled}
                   >
-                    {loading ? "Updating..." : "Update"}
+                    {quantityLoading.isProcessing ? "Updating..." : "Update"}
                   </button>
                 </div>
               </form>
@@ -116,14 +157,17 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
                   />
 
                   <button
+                    title="Please modify the medicine name first"
                     onClick={(e) => handleSubmit(e)}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      loading ? "opacity-50 cursor-not-allowed" : ""
+                      nameLoading.isDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                     }`}
-                    disabled={loading}
+                    disabled={nameLoading.isDisabled}
                   >
-                    {loading ? "Modifying..." : "Modify"}
+                    {nameLoading.isProcessing ? "Modifying..." : "Modify"}
                   </button>
                 </div>
               </form>
@@ -147,14 +191,19 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
                   />
 
                   <button
+                    title="Please modify the company name first"
                     onClick={(e) => handleSubmit(e)}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      loading ? "opacity-50 cursor-not-allowed" : ""
+                      companyNameLoading.isDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                     }`}
-                    disabled={loading}
+                    disabled={companyNameLoading.isDisabled}
                   >
-                    {loading ? "Modifying..." : "Modify"}
+                    {companyNameLoading.isProcessing
+                      ? "Modifying..."
+                      : "Modify"}
                   </button>
                 </div>
               </form>
@@ -178,14 +227,19 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
                   />
 
                   <button
+                    title="Please modify the dosage form first"
                     onClick={(e) => handleSubmit(e)}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      loading ? "opacity-50 cursor-not-allowed" : ""
+                      dosageFormNameLoading.isDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                     }`}
-                    disabled={loading}
+                    disabled={dosageFormNameLoading.isDisabled}
                   >
-                    {loading ? "Modifying..." : "Modify"}
+                    {dosageFormNameLoading.isProcessing
+                      ? "Modifying..."
+                      : "Modify"}
                   </button>
                 </div>
               </form>
@@ -209,14 +263,17 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
                   />
 
                   <button
+                    title="Please update the price first"
                     onClick={(e) => handleSubmit(e)}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      loading ? "opacity-50 cursor-not-allowed" : ""
+                      priceLoading.isDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                     }`}
-                    disabled={loading}
+                    disabled={priceLoading.isDisabled}
                   >
-                    {loading ? "Updating..." : "Update"}
+                    {priceLoading.isProcessing ? "Updating..." : "Update"}
                   </button>
                 </div>
               </form>
@@ -240,14 +297,17 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
                   />
 
                   <button
+                    title="Please modify the power first"
                     onClick={(e) => handleSubmit(e)}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      loading ? "opacity-50 cursor-not-allowed" : ""
+                      powerLoading.isDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                     }`}
-                    disabled={loading}
+                    disabled={powerLoading.isDisabled}
                   >
-                    {loading ? "Modifying..." : "Modify"}
+                    {powerLoading.isProcessing ? "Modifying..." : "Modify"}
                   </button>
                 </div>
               </form>
@@ -271,14 +331,17 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
                   />
 
                   <button
+                    title="Please update the shelf number first"
                     onClick={(e) => handleSubmit(e)}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      loading ? "opacity-50 cursor-not-allowed" : ""
+                      selfNoLoading.isDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                     }`}
-                    disabled={loading}
+                    disabled={selfNoLoading.isDisabled}
                   >
-                    {loading ? "Updating..." : "Update"}
+                    {selfNoLoading.isProcessing ? "Updating..." : "Update"}
                   </button>
                 </div>
               </form>
@@ -302,14 +365,19 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
                   />
 
                   <button
+                    title="Please update the category name first"
                     onClick={(e) => handleSubmit(e)}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      loading ? "opacity-50 cursor-not-allowed" : ""
+                      categoryNameLoading.isDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                     }`}
-                    disabled={loading}
+                    disabled={categoryNameLoading.isDisabled}
                   >
-                    {loading ? "Updating..." : "Update"}
+                    {categoryNameLoading.isProcessing
+                      ? "Updating..."
+                      : "Update"}
                   </button>
                 </div>
               </form>
