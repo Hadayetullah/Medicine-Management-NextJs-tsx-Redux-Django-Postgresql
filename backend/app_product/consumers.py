@@ -37,11 +37,20 @@ class MedicineConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         action = data.get('action')
 
-        if action == 'add_medicine':
+        # Ensure the user is authenticated
+        user = self.scope.get('user')
+        if not user or not user.is_authenticated:
+            # await self.send(text_data=json.dumps({'error': 'User is not authenticated'}))
+            # return {'error': 'User is not authenticated'}
+            response = {'error': 'User is not authenticated'}
+
+        elif action == 'add_medicine':
             # Add a new medicine
             response = await self.add_medicine(data)
-        # elif action == 'update_token':
-        #     response = await self.update_token(data)
+
+        # elif action == 'update_medicine':
+        #     response = await self.update_medicine(data)
+
         else:
             response = {'error': 'Invalid action'}
 
@@ -51,13 +60,6 @@ class MedicineConsumer(AsyncWebsocketConsumer):
     async def add_medicine(self, data):
         """Adds a new medicine to the database."""
         try:
-
-            # Ensure the user is authenticated
-            user = self.scope.get('user')
-            if not user or not user.is_authenticated:
-                return {'error': 'User is not authenticated'}
-        
-
             # Fetch or create the related objects using their names
             company, _ = await sync_to_async(Company.objects.get_or_create)(name=data['company_name'])
             category, _ = await sync_to_async(Category.objects.get_or_create)(name=data['category_name'])
