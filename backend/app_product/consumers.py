@@ -119,6 +119,53 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
     async def update_medicine(self, data):
         """Updates an existing medicine entry in the database."""
+
+        def validate_fields(data_entry):
+            errors = {}
+            
+            # Validate price (float, must be > 0)
+            price = data_entry.get('price')
+            if price is not None:
+                try:
+                    price = float(price)
+                    if price <= 0:
+                        errors['price'] = "Price must be greater than 0."
+                except ValueError:
+                    errors['price'] = "Price must be a valid number."
+
+            # Validate power (float, must be > 0)
+            power = data_entry.get('power')
+            if power is not None:
+                try:
+                    power = float(power)
+                    if power <= 0:
+                        errors['power'] = "Power must be greater than 0."
+                except ValueError:
+                    errors['power'] = "Power must be a valid number."
+
+            # Validate quantity (integer, must be >= 0)
+            quantity = data_entry.get('quantity')
+            if quantity is not None:
+                try:
+                    quantity = int(quantity)
+                    if quantity < 0:
+                        errors['quantity'] = "Quantity must be a non-negative integer."
+                except ValueError:
+                    errors['quantity'] = "Quantity must be a valid integer."
+
+            # Validate shelf_no (integer, must be > 0)
+            shelf_no = data_entry.get('shelf_no')
+            if shelf_no is not None:
+                try:
+                    shelf_no = int(shelf_no)
+                    if shelf_no <= 0:
+                        errors['shelf_no'] = "Shelf number must be greater than 0."
+                except ValueError:
+                    errors['shelf_no'] = "Shelf number must be a valid integer."
+
+            return errors
+
+
         ACTION_FIELD_MAP = {
             'name': 'name',
             'company': 'company',
@@ -136,6 +183,11 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
         if action not in ACTION_FIELD_MAP:
             return {'error': f"Invalid action: {action}"}
+        
+        errors = validate_fields(data)
+        if errors:
+            return {'error': errors}
+
 
         try:
             # Fetch the medicine instance
