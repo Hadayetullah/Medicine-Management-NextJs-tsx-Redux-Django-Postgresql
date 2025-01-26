@@ -4,6 +4,8 @@ from django.db import IntegrityError
 # from django.contrib.auth.models import AnonymousUser
 
 import json
+from json import JSONDecodeError
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from .models import Medicine, Company, Category, DosageForm
@@ -32,30 +34,43 @@ class MedicineConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         """
         Handles messages from the WebSocket. 
-        Expected actions: `add_medicine`, `update_token`
+        Expected actions: `add_medicine`, `update_medicine`.
         """
-        data = json.loads(text_data)
-        action = data.get('action')
+        try:
+            # Parse the incoming data
+            data = json.loads(text_data)
+            action = data.get('action')
 
-        # Ensure the user is authenticated
-        user = self.scope.get('user')
-        if not user or not user.is_authenticated:
-            # await self.send(text_data=json.dumps({'error': 'User is not authenticated'}))
-            # return {'error': 'User is not authenticated'}
-            response = {'error': 'User is not authenticated'}
+            # Ensure the user is authenticated
+            user = self.scope.get('user')
+            if not user or not user.is_authenticated:
+                # await self.send(text_data=json.dumps({'error': 'User is not authenticated'}))
+                # return {'error': 'User is not authenticated'}
+                response = {'error': 'User is not authenticated'}
 
-        elif action == 'add_medicine':
-            # Add a new medicine
-            response = await self.add_medicine(data)
+            elif action == 'add_medicine':
+                # Add a new medicine
+                response = await self.add_medicine(data)
 
-        # elif action == 'update_medicine':
-        #     response = await self.update_medicine(data)
+            elif action == 'update_medicine':
+                data_obj = data.get('data')
+                if not data_obj:
+                    response = {'error': 'No data provided for update_medicine'}
+                else:
+                    response = await self.update_medicine(data_obj)
 
-        else:
-            response = {'error': 'Invalid action'}
+            else:
+                response = {'error': 'Invalid action'}
+
+        except JSONDecodeError:
+            response = {'error': 'Invalid JSON format'}
+        except Exception as e:
+            # Log the error if necessary
+            response = {'error': f"An unexpected error occurred: {str(e)}"}
 
         # Send response to WebSocket
         await self.send(text_data=json.dumps(response))
+
 
     async def add_medicine(self, data):
         """Adds a new medicine to the database."""
@@ -88,7 +103,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'handle_add_medicine',
                     'action': 'new_medicine',
-                    'message': f"New medicine added: {medicine.category.name}",
+                    'message': f"New medicine added: {medicine.name}",
                     'medicine': medicine_data  # Include the serialized medicine object
                 }
             )
@@ -102,6 +117,63 @@ class MedicineConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             return {'error': f"An unexpected error occurred: {str(e)}"}
 
+    async def update_medicine(self, data):
+        """Updates an existing medicine entry in the database."""
+        ACTION_FIELD_MAP = {
+            'name': 'name',
+            'company': 'company',
+            'category': 'category',
+            'dosage_form': 'dosage_form',
+            'price': 'price',
+            'power': 'power',
+            'shelf_no': 'shelf_no',
+            'quantity': 'quantity',
+        }
+
+        id = data.get('id')
+        action = data.get('action')
+        value = data.get('value')
+
+        if action not in ACTION_FIELD_MAP:
+            return {'error': f"Invalid action: {action}"}
+
+        try:
+            # Fetch the medicine instance
+            medicine = await sync_to_async(Medicine.objects.get)(pk=id)
+            field_name = ACTION_FIELD_MAP[action]
+
+            # Handle related fields
+            if action == 'company':
+                value, _ = await sync_to_async(Company.objects.get_or_create)(name=value)
+            elif action == 'category':
+                value, _ = await sync_to_async(Category.objects.get_or_create)(name=value)
+            elif action == 'dosage_form':
+                value, _ = await sync_to_async(DosageForm.objects.get_or_create)(name=value)
+
+            # Update the field
+            setattr(medicine, field_name, value)
+            await sync_to_async(medicine.save)(update_fields=[field_name])
+
+            # Serialize and broadcast the updated medicine
+            medicine_data = MedicineListSerializer(medicine).data
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'handle_update_medicine',
+                    'action': 'update_medicine',
+                    'message': f"Medicine updated: {medicine.name}",
+                    'medicine': medicine_data,
+                }
+            )
+
+            return {'success': "Medicine updated successfully!", 'medicine': medicine_data}
+
+        except Medicine.DoesNotExist:
+            return {'error': f"Medicine with ID {id} does not exist."}
+        except IntegrityError as e:
+            return {'error': f"Integrity error occurred: {str(e)}"}
+        except Exception as e:
+            return {'error': f"An unexpected error occurred: {str(e)}"}
 
 
 
@@ -135,6 +207,19 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
 
     async def handle_add_medicine(self, event):
+        """Handles broadcasting updates to all WebSocket connections."""
+        action = event['action']
+        message = event['message']
+        medicine = event['medicine']  # Get the serialized medicine object
+        
+        await self.send(text_data=json.dumps({
+            'action': action,
+            'message': message,
+            'medicine': medicine
+        }))
+
+
+    async def handle_update_medicine(self, event):
         """Handles broadcasting updates to all WebSocket connections."""
         action = event['action']
         message = event['message']
