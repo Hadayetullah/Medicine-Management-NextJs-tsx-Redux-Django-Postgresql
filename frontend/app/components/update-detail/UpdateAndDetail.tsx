@@ -1,17 +1,20 @@
 "use client";
 
+import { sendWebSocketMessages } from "@/app/actions/apiActions";
 import { useAppDispatch } from "@/lib/hooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface UpdateAndDetailProps {
+  selectedMedicine: any;
   setUpdateDetailModal: (e: boolean) => void;
 }
 
 const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
+  selectedMedicine,
   setUpdateDetailModal,
 }) => {
   const dispatch = useAppDispatch();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     quantity: "",
     name: "",
     company: "",
@@ -25,6 +28,19 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<string>("");
 
+  useEffect(() => {
+    setFormData({
+      quantity: selectedMedicine?.quantity || "",
+      name: selectedMedicine?.name || "",
+      company: selectedMedicine?.company?.name || "",
+      category: selectedMedicine?.category?.name || "",
+      dosage_form: selectedMedicine?.dosage_form?.name || "",
+      price: selectedMedicine?.price || "",
+      power: selectedMedicine?.power || "",
+      shelf_no: selectedMedicine?.shelf_no || "",
+    });
+  }, [selectedMedicine]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -36,6 +52,22 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
     e.preventDefault();
 
     setIsProcessing(field);
+
+    const dataObj = {
+      action: "update_medicine",
+      data: {
+        id: selectedMedicine.id,
+        action: field,
+        value: formData[field],
+      },
+    };
+
+    dispatch(
+      sendWebSocketMessages({
+        connectionKey: "medicineConnection",
+        message: dataObj,
+      })
+    );
 
     console.log("Field : ", field);
   };

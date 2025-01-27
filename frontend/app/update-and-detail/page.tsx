@@ -38,6 +38,12 @@ export default function UpdateAndDetailPage() {
   const eventSourceRef = React.useRef<EventSource | null>(null);
   const getMedicineListRef = React.useRef<boolean>();
   const [errorFetchingProduct, setErrorFetchingProduct] = useState<any>(null);
+  const [selectedMedicine, setSelectedMedicine] = useState<any>(null);
+
+  const handleUpdateDetail = (data: any, modalStatus: boolean) => {
+    setSelectedMedicine(data);
+    setUpdateDetailModal(modalStatus);
+  };
 
   const getMedicineList = async () => {
     setLoading(true);
@@ -218,7 +224,7 @@ export default function UpdateAndDetailPage() {
                           <div className="w-[13%] h-full flex my-1 flex-col pl-1 items-center gap-[3px]">
                             <button
                               className="w-full text-black bg-[#fcb900] mr-1 rounded-md hover:bg-[#c99402]"
-                              onClick={() => setUpdateDetailModal(true)}
+                              onClick={() => handleUpdateDetail(medicine, true)}
                             >
                               Update
                             </button>
@@ -250,7 +256,10 @@ export default function UpdateAndDetailPage() {
       </div>
 
       {updateDetailModal && (
-        <UpdateAndDetail setUpdateDetailModal={setUpdateDetailModal} />
+        <UpdateAndDetail
+          selectedMedicine={selectedMedicine}
+          setUpdateDetailModal={setUpdateDetailModal}
+        />
       )}
     </div>
   );
