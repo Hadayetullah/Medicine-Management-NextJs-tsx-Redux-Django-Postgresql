@@ -3,11 +3,6 @@
 import { useAppDispatch } from "@/lib/hooks";
 import React, { useState } from "react";
 
-interface DataProps {
-  isDisabled: boolean;
-  isProcessing: boolean;
-}
-
 interface UpdateAndDetailProps {
   setUpdateDetailModal: (e: boolean) => void;
 }
@@ -19,48 +14,16 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
   const [formData, setFormData] = useState({
     quantity: "",
     name: "",
-    company_name: "",
-    category_name: "",
-    dosage_form_name: "",
+    company: "",
+    category: "",
+    dosage_form: "",
     price: "",
     power: "",
     shelf_no: "",
   });
 
-  const [quantityLoading, setQuantityLoading] = useState<DataProps>({
-    isDisabled: true,
-    isProcessing: false,
-  });
-  const [nameLoading, setNameLoading] = useState<DataProps>({
-    isDisabled: true,
-    isProcessing: false,
-  });
-  const [companyNameLoading, setCompanyNameLoading] = useState<DataProps>({
-    isDisabled: true,
-    isProcessing: false,
-  });
-  const [categoryNameLoading, setCategoryNameLoading] = useState<DataProps>({
-    isDisabled: true,
-    isProcessing: false,
-  });
-  const [dosageFormNameLoading, setDosageFormNameLoading] = useState<DataProps>(
-    {
-      isDisabled: true,
-      isProcessing: false,
-    }
-  );
-  const [priceLoading, setPriceLoading] = useState<DataProps>({
-    isDisabled: true,
-    isProcessing: false,
-  });
-  const [powerLoading, setPowerLoading] = useState<DataProps>({
-    isDisabled: true,
-    isProcessing: false,
-  });
-  const [selfNoLoading, setSelfNoLoading] = useState<DataProps>({
-    isDisabled: true,
-    isProcessing: false,
-  });
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -69,8 +32,12 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent, field: string) => {
     e.preventDefault();
+
+    setIsProcessing(field);
+
+    console.log("Field : ", field);
   };
 
   return (
@@ -104,7 +71,10 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
           <div className="w-full h-full pb-5 overflow-hidden">
             <div className="w-full h-full pb-5 overflow-y-scroll">
-              <form onSubmit={handleSubmit} className="flex flex-col mb-[20px]">
+              <form
+                onSubmit={(e) => handleSubmit(e, "quantity")}
+                className="flex flex-col mb-[20px]"
+              >
                 <label
                   htmlFor="quantity"
                   className="block text-sm font-medium text-gray-700"
@@ -114,6 +84,7 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                 <div className="flex gap-x-[10px] gap-y-[5px] flex-wrap">
                   <input
+                    onFocus={() => setFocusedField("quantity")}
                     type="text"
                     name="quantity"
                     value={formData.quantity}
@@ -124,21 +95,26 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please update the quantity first"
-                    onClick={(e) => handleSubmit(e)}
+                    onClick={(e) => handleSubmit(e, "quantity")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      quantityLoading.isDisabled
+                      focusedField != "quantity" || isProcessing === "quantity"
                         ? "opacity-50 cursor-not-allowed"
                         : ""
                     }`}
-                    disabled={quantityLoading.isDisabled}
+                    disabled={
+                      focusedField != "quantity" || isProcessing === "quantity"
+                    }
                   >
-                    {quantityLoading.isProcessing ? "Updating..." : "Update"}
+                    {isProcessing === "quantity" ? "Updating..." : "Update"}
                   </button>
                 </div>
               </form>
 
-              <form onSubmit={handleSubmit} className="flex flex-col mb-[20px]">
+              <form
+                onSubmit={(e) => handleSubmit(e, "name")}
+                className="flex flex-col mb-[20px]"
+              >
                 <label
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-700"
@@ -148,6 +124,7 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                 <div className="flex gap-x-[10px] gap-y-[5px] flex-wrap">
                   <input
+                    onFocus={() => setFocusedField("name")}
                     type="text"
                     name="name"
                     value={formData.name}
@@ -158,23 +135,26 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please modify the medicine name first"
-                    onClick={(e) => handleSubmit(e)}
+                    onClick={(e) => handleSubmit(e, "name")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      nameLoading.isDisabled
+                      focusedField != "name" || isProcessing === "name"
                         ? "opacity-50 cursor-not-allowed"
                         : ""
                     }`}
-                    disabled={nameLoading.isDisabled}
+                    disabled={focusedField != "name" || isProcessing === "name"}
                   >
-                    {nameLoading.isProcessing ? "Modifying..." : "Modify"}
+                    {isProcessing === "name" ? "Modifying..." : "Modify"}
                   </button>
                 </div>
               </form>
 
-              <form onSubmit={handleSubmit} className="flex flex-col mb-[20px]">
+              <form
+                onSubmit={(e) => handleSubmit(e, "company")}
+                className="flex flex-col mb-[20px]"
+              >
                 <label
-                  htmlFor="company_name"
+                  htmlFor="company"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Modify Company Name
@@ -182,9 +162,10 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                 <div className="flex gap-x-[10px] gap-y-[5px] flex-wrap">
                   <input
+                    onFocus={() => setFocusedField("company")}
                     type="text"
-                    name="company_name"
-                    value={formData.company_name}
+                    name="company"
+                    value={formData.company}
                     onChange={handleChange}
                     required
                     className="w-full sm:w-[400px] px-3 py-2 h-[40px] border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -192,25 +173,28 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please modify the company name first"
-                    onClick={(e) => handleSubmit(e)}
+                    onClick={(e) => handleSubmit(e, "company")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      companyNameLoading.isDisabled
+                      focusedField != "company" || isProcessing === "company"
                         ? "opacity-50 cursor-not-allowed"
                         : ""
                     }`}
-                    disabled={companyNameLoading.isDisabled}
+                    disabled={
+                      focusedField != "company" || isProcessing === "company"
+                    }
                   >
-                    {companyNameLoading.isProcessing
-                      ? "Modifying..."
-                      : "Modify"}
+                    {isProcessing === "company" ? "Modifying..." : "Modify"}
                   </button>
                 </div>
               </form>
 
-              <form onSubmit={handleSubmit} className="flex flex-col mb-[20px]">
+              <form
+                onSubmit={(e) => handleSubmit(e, "dosage_form")}
+                className="flex flex-col mb-[20px]"
+              >
                 <label
-                  htmlFor="dosage_form_name"
+                  htmlFor="dosage_form"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Modify Dosage Form
@@ -218,9 +202,10 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                 <div className="flex gap-x-[10px] gap-y-[5px] flex-wrap">
                   <input
+                    onFocus={() => setFocusedField("dosage_form")}
                     type="text"
-                    name="dosage_form_name"
-                    value={formData.dosage_form_name}
+                    name="dosage_form"
+                    value={formData.dosage_form}
                     onChange={handleChange}
                     required
                     className="w-full sm:w-[400px] px-3 py-2 h-[40px] border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -228,23 +213,28 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please modify the dosage form first"
-                    onClick={(e) => handleSubmit(e)}
+                    onClick={(e) => handleSubmit(e, "dosage_form")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      dosageFormNameLoading.isDisabled
+                      focusedField != "dosage_form" ||
+                      isProcessing === "dosage_form"
                         ? "opacity-50 cursor-not-allowed"
                         : ""
                     }`}
-                    disabled={dosageFormNameLoading.isDisabled}
+                    disabled={
+                      focusedField != "dosage_form" ||
+                      isProcessing === "dosage_form"
+                    }
                   >
-                    {dosageFormNameLoading.isProcessing
-                      ? "Modifying..."
-                      : "Modify"}
+                    {isProcessing === "dosage_form" ? "Modifying..." : "Modify"}
                   </button>
                 </div>
               </form>
 
-              <form onSubmit={handleSubmit} className="flex flex-col mb-[20px]">
+              <form
+                onSubmit={(e) => handleSubmit(e, "price")}
+                className="flex flex-col mb-[20px]"
+              >
                 <label
                   htmlFor="price"
                   className="block text-sm font-medium text-gray-700"
@@ -254,6 +244,7 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                 <div className="flex gap-x-[10px] gap-y-[5px] flex-wrap">
                   <input
+                    onFocus={() => setFocusedField("price")}
                     type="text"
                     name="price"
                     value={formData.price}
@@ -264,21 +255,26 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please update the price first"
-                    onClick={(e) => handleSubmit(e)}
+                    onClick={(e) => handleSubmit(e, "price")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      priceLoading.isDisabled
+                      focusedField != "price" || isProcessing === "price"
                         ? "opacity-50 cursor-not-allowed"
                         : ""
                     }`}
-                    disabled={priceLoading.isDisabled}
+                    disabled={
+                      focusedField != "price" || isProcessing === "price"
+                    }
                   >
-                    {priceLoading.isProcessing ? "Updating..." : "Update"}
+                    {isProcessing === "price" ? "Updating..." : "Update"}
                   </button>
                 </div>
               </form>
 
-              <form onSubmit={handleSubmit} className="flex flex-col mb-[20px]">
+              <form
+                onSubmit={(e) => handleSubmit(e, "power")}
+                className="flex flex-col mb-[20px]"
+              >
                 <label
                   htmlFor="power"
                   className="block text-sm font-medium text-gray-700"
@@ -288,6 +284,7 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                 <div className="flex gap-x-[10px] gap-y-[5px] flex-wrap">
                   <input
+                    onFocus={() => setFocusedField("power")}
                     type="text"
                     name="power"
                     value={formData.power}
@@ -298,21 +295,26 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please modify the power first"
-                    onClick={(e) => handleSubmit(e)}
+                    onClick={(e) => handleSubmit(e, "power")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      powerLoading.isDisabled
+                      focusedField != "power" || isProcessing === "power"
                         ? "opacity-50 cursor-not-allowed"
                         : ""
                     }`}
-                    disabled={powerLoading.isDisabled}
+                    disabled={
+                      focusedField != "power" || isProcessing === "power"
+                    }
                   >
-                    {powerLoading.isProcessing ? "Modifying..." : "Modify"}
+                    {isProcessing === "power" ? "Modifying..." : "Modify"}
                   </button>
                 </div>
               </form>
 
-              <form onSubmit={handleSubmit} className="flex flex-col mb-[20px]">
+              <form
+                onSubmit={(e) => handleSubmit(e, "shelf_no")}
+                className="flex flex-col mb-[20px]"
+              >
                 <label
                   htmlFor="shelf_no"
                   className="block text-sm font-medium text-gray-700"
@@ -322,6 +324,7 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                 <div className="flex gap-x-[10px] gap-y-[5px] flex-wrap">
                   <input
+                    onFocus={() => setFocusedField("shelf_no")}
                     type="text"
                     name="shelf_no"
                     value={formData.shelf_no}
@@ -332,23 +335,28 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please update the shelf number first"
-                    onClick={(e) => handleSubmit(e)}
+                    onClick={(e) => handleSubmit(e, "shelf_no")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      selfNoLoading.isDisabled
+                      focusedField != "shelf_no" || isProcessing === "shelf_no"
                         ? "opacity-50 cursor-not-allowed"
                         : ""
                     }`}
-                    disabled={selfNoLoading.isDisabled}
+                    disabled={
+                      focusedField != "shelf_no" || isProcessing === "shelf_no"
+                    }
                   >
-                    {selfNoLoading.isProcessing ? "Updating..." : "Update"}
+                    {isProcessing === "shelf_no" ? "Updating..." : "Update"}
                   </button>
                 </div>
               </form>
 
-              <form onSubmit={handleSubmit} className="flex flex-col mb-[20px]">
+              <form
+                onSubmit={(e) => handleSubmit(e, "category")}
+                className="flex flex-col mb-[20px]"
+              >
                 <label
-                  htmlFor="category_name"
+                  htmlFor="category"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Update Category/Brand Name
@@ -356,9 +364,10 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                 <div className="flex gap-x-[10px] gap-y-[5px] flex-wrap">
                   <input
+                    onFocus={() => setFocusedField("category")}
                     type="text"
-                    name="category_name"
-                    value={formData.category_name}
+                    name="category"
+                    value={formData.category}
                     onChange={handleChange}
                     required
                     className="w-full sm:w-[400px] px-3 py-2 h-[40px] border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -366,18 +375,18 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please update the category name first"
-                    onClick={(e) => handleSubmit(e)}
+                    onClick={(e) => handleSubmit(e, "category")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
-                      categoryNameLoading.isDisabled
+                      focusedField != "category" || isProcessing === "category"
                         ? "opacity-50 cursor-not-allowed"
                         : ""
                     }`}
-                    disabled={categoryNameLoading.isDisabled}
+                    disabled={
+                      focusedField != "category" || isProcessing === "category"
+                    }
                   >
-                    {categoryNameLoading.isProcessing
-                      ? "Updating..."
-                      : "Update"}
+                    {isProcessing === "category" ? "Updating..." : "Update"}
                   </button>
                 </div>
               </form>

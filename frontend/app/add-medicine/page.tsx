@@ -27,6 +27,7 @@ export default function AddMedicine() {
     dosage_form_name: "",
     price: "",
     power: "",
+    quantity: "",
     shelf_no: "",
   });
 
@@ -179,6 +180,23 @@ export default function AddMedicine() {
               type="text"
               name="power"
               value={formData.power}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="quantity"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Quantity
+            </label>
+            <input
+              type="text"
+              name="quantity"
+              value={formData.quantity}
               onChange={handleChange}
               required
               className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
