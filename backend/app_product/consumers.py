@@ -152,16 +152,16 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
         try:
             # Fetch the medicine instance
-            medicine = await sync_to_async(Medicine.objects.get)(pk=id)
+            medicine = await sync_to_async(Medicine.objects.select_related('company', 'category', 'dosage_form').get)(pk=id)
             field_name = ACTION_FIELD_MAP[action]
 
             # Handle related fields
             if action == 'company':
-                value, _ = await sync_to_async(Company.objects.get_or_create)(name=value)
+                value, _ = await sync_to_async(Company.objects.get)(name=value)
             elif action == 'category':
-                value, _ = await sync_to_async(Category.objects.get_or_create)(name=value)
+                value, _ = await sync_to_async(Category.objects.get)(name=value)
             elif action == 'dosage_form':
-                value, _ = await sync_to_async(DosageForm.objects.get_or_create)(name=value)
+                value, _ = await sync_to_async(DosageForm.objects.get)(name=value)
 
             # Update the field
             setattr(medicine, field_name, value)
