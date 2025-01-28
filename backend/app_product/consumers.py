@@ -152,20 +152,27 @@ class MedicineConsumer(AsyncWebsocketConsumer):
 
         try:
             # Fetch the medicine instance
-            medicine = await sync_to_async(Medicine.objects.get)(pk=id)
+            medicine = await sync_to_async(Medicine.objects.select_related('company', 'category', 'dosage_form').get)(pk=id)
             field_name = ACTION_FIELD_MAP[action]
 
-            # Handle related fields
+            # Handle related fields: update the `name` field of the foreign key object
             if action == 'company':
-                value, _ = await sync_to_async(Company.objects.get_or_create)(name=value)
+                related_obj = medicine.company
             elif action == 'category':
-                value, _ = await sync_to_async(Category.objects.get_or_create)(name=value)
+                related_obj = medicine.category
             elif action == 'dosage_form':
-                value, _ = await sync_to_async(DosageForm.objects.get_or_create)(name=value)
+                related_obj = medicine.dosage_form
+            else:
+                related_obj = None
 
-            # Update the field
-            setattr(medicine, field_name, value)
-            await sync_to_async(medicine.save)(update_fields=[field_name])
+            if related_obj:
+                setattr(related_obj, 'name', value)  # Update the name field
+                await sync_to_async(related_obj.save)()  # Save the updated object
+
+            else:
+                # Update the direct field of the Medicine instance
+                setattr(medicine, field_name, value)
+                await sync_to_async(medicine.save)(update_fields=[field_name])
 
             # Serialize and broadcast the updated medicine
             medicine_data = MedicineListSerializer(medicine).data
