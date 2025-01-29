@@ -191,7 +191,7 @@ const websocketSlice = createSlice({
     },
 
     setMessage: (state, action) => {
-      state.message = action.payload;
+      state.message = action.payload.message;
     },
 
     resetProductSliceState: (state) => {

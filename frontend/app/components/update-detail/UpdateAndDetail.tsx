@@ -3,6 +3,7 @@
 import { sendWebSocketMessages } from "@/app/actions/apiActions";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import React, { useEffect, useState } from "react";
+import DisplayMsg from "../common/DisplayMsg";
 
 interface UpdateAndDetailProps {
   selectedMedicine: any;
@@ -13,7 +14,7 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
   selectedMedicine,
   setUpdateDetailModal,
 }) => {
-  const { subAction } = useAppSelector((state) => state.product);
+  const { message, subAction } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<any>({
     quantity: "",
@@ -28,6 +29,17 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<string>("");
+  const [msgModal, setMsgModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (message != null) {
+      setMsgModal(true);
+      setTimeout(() => {
+        setMsgModal(false);
+        dispatch({ type: "websocket/setMessage", payload: { message: null } });
+      }, 5000);
+    }
+  }, [message]);
 
   useEffect(() => {
     if (subAction != "") {
@@ -83,7 +95,7 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
   return (
     <div className="fixed w-full h-full top-0 left-0 right-0 bottom-0 flex justify-center bg-black bg-opacity-50 z-[11]">
       <div className="relative w-[700px] h-full flex justify-center">
-        <div className="relative py-6 px-1 w-full h-[85%] sm:p-8 my-[70px] bg-white rounded shadow-lg">
+        <div className="relative py-6 px-1 w-full h-[95%] sm:p-8 my-[70px] bg-white rounded shadow-lg">
           <button
             onClick={() => setUpdateDetailModal(false)}
             className="absolute top-[5px] right-[15px] w-[30px] h-[30px]"
@@ -109,7 +121,9 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
             Update / Modify
           </h2>
 
-          <div className="w-full h-full pb-5 overflow-hidden">
+          {msgModal && <DisplayMsg setMsgModal={setMsgModal} />}
+
+          <div className="w-full h-full pb-[120px] overflow-hidden">
             <div className="w-full h-full pb-5 overflow-y-scroll">
               <form
                 onSubmit={(e) => handleSubmit(e, "quantity")}
