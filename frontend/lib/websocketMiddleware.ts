@@ -1,5 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { connectSocket, disconnectSocket, addProduct, setSocketError, setError } from "./features/productSlice";
+import { connectSocket, disconnectSocket, addProduct, setSocketError, setError, setSubAction } from "./features/productSlice";
 import axios from "axios";
 
 // let websocketInitialized = false;
@@ -70,6 +70,11 @@ export const createWebSocketMiddleware = (): Middleware => {
             // console.log("socket onmessage data : ", data)
             if (data && data.action && data.action === "new_medicine") {
               storeAPI.dispatch(addProduct({connectionKey: "medicineConnection", data: data.medicine}));
+            }
+
+            if (data && data.action && data.action === "update_medicine") {
+              // console.log("Data: ", data)
+              storeAPI.dispatch(setSubAction({subAction: data.sub_action}));
             }
             // if (data && data.action && data.action === "renew_token") {
             //   try {
@@ -164,7 +169,7 @@ export const createWebSocketMiddleware = (): Middleware => {
         // }
 
         const socket = websocketConnections.get(connectionKey);
-        console.log("ReadyState : ", socket?.readyState)
+        // console.log("ReadyState : ", socket?.readyState)
         if (socket && socket.readyState === 1) {
           socket.send(JSON.stringify(message));
         }
