@@ -1,7 +1,7 @@
 "use client";
 
 import { sendWebSocketMessages } from "@/app/actions/apiActions";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import React, { useEffect, useState } from "react";
 
 interface UpdateAndDetailProps {
@@ -13,6 +13,7 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
   selectedMedicine,
   setUpdateDetailModal,
 }) => {
+  const { subAction } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<any>({
     quantity: "",
@@ -27,6 +28,13 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<string>("");
+
+  useEffect(() => {
+    if (subAction != "") {
+      setIsProcessing("");
+      dispatch({ type: "websocket/setSubAction", payload: { subAction: "" } });
+    }
+  }, [subAction]);
 
   useEffect(() => {
     setFormData({

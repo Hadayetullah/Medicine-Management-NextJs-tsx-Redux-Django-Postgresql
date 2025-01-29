@@ -71,6 +71,7 @@ export type connectionDetailsType = {
 
 interface MainStateType {
   connectionDetails: connectionDetailsType[];
+  subAction: string;
   message: any;
   loading: boolean;
   error: any;
@@ -85,6 +86,7 @@ const initialState: MainStateType = {
       connectionUrl: "product/medicine",
     },
   ],
+  subAction: "",
   message: null,
   error: null,
   loading: false,
@@ -202,6 +204,11 @@ const websocketSlice = createSlice({
 
     setError: (state, action: PayloadAction<{ apiError: any }>) => {
       state.error = action.payload.apiError;
+    }, 
+
+    setSubAction: (state, action) => {
+      // console.log("subAction Payload: ", action.payload)
+      state.subAction = action.payload.subAction;
     }
   },
 
@@ -220,6 +227,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connectSocket, disconnectSocket, addProduct, setSocketError, setMedicineList, setMessage, resetProductSliceState, setError } = websocketSlice.actions;
+export const { connectSocket, disconnectSocket, addProduct, setSocketError, setMedicineList, setMessage, resetProductSliceState, setError, setSubAction } = websocketSlice.actions;
 
 export default websocketSlice.reducer;
