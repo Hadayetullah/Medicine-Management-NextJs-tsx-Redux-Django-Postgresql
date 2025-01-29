@@ -186,7 +186,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-            return {'success': "Medicine updated successfully!", 'medicine': medicine_data}
+            return {'success': "Medicine updated successfully!", 'action': 'update_medicine', 'sub_action': action, 'medicine': medicine_data}
 
         except Medicine.DoesNotExist:
             return {'error': f"Medicine with ID {id} does not exist."}
