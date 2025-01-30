@@ -1,13 +1,42 @@
 "use client";
 
+import { MedicineType } from "@/lib/features/productSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const Search = () => {
+interface SearchMedicinesProps {
+  medicineList: MedicineType[];
+  setMedicineListState: (e: any) => void;
+}
+
+const SearchMedicine: React.FC<SearchMedicinesProps> = ({
+  medicineList,
+  setMedicineListState,
+}) => {
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
-  const { medicineList } = useAppSelector((state) => state.product);
+  console.log("searchQuery : ", searchQuery);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  const filteredMedicines = useMemo(() => {
+    if (medicineList && medicineList.length > 0) {
+      return medicineList.filter((medicine: MedicineType) =>
+        medicine.name?.toLowerCase().includes(debouncedQuery.toLowerCase())
+      );
+    }
+  }, [medicineList, debouncedQuery]);
+
+  console.log("filteredMedicines : ", filteredMedicines);
+
+  useEffect(() => {
+    setMedicineListState(filteredMedicines);
+  }, [filteredMedicines]);
 
   const handleIconClick = () => {
     const input = document.getElementById("search-input");
@@ -39,7 +68,7 @@ const Search = () => {
         value={searchQuery}
         className="w-full max-w-lg p-2 border border-gray-300 rounded-md absolute h-full z-[10]"
         id="search-input"
-        onChange={() => handleSearchChange()}
+        onChange={(e) => setSearchQuery(e.target.value)}
         onFocus={handleFocus}
       />
 
@@ -59,4 +88,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default SearchMedicine;

@@ -27,6 +27,7 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
     shelf_no: "",
   });
 
+  console.log("Quantity : ", selectedMedicine.quantity);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<string>("");
   const [msgModal, setMsgModal] = useState<boolean>(false);
@@ -50,7 +51,7 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
 
   useEffect(() => {
     setFormData({
-      quantity: selectedMedicine?.quantity || "",
+      quantity: String(selectedMedicine?.quantity) || "",
       name: selectedMedicine?.name || "",
       company: selectedMedicine?.company?.name || "",
       category: selectedMedicine?.category?.name || "",
