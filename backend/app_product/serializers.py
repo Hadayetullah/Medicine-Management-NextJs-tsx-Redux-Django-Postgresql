@@ -43,7 +43,7 @@ class MedicineSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'company', 'category', 'dosage_form', 
             'company_id', 'category_id', 'dosage_form_id',
-            'price', 'power', 'shelf_no', 'image', 'created_by', 'created_at'
+            'price', 'power', 'quantity', 'shelf_no', 'image', 'created_by', 'created_at'
         ]
 
 
