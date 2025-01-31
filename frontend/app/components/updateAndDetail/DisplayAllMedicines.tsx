@@ -13,6 +13,7 @@ const DisplayAllMedicines: React.FC<DisplayAllMedicinesProps> = ({
   handleUpdateDetail,
 }) => {
   const router = useRouter();
+
   return (
     <>
       {medicineList.map((medicine: any, index: number) => {
