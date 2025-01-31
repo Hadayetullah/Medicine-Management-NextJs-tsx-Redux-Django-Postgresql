@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
@@ -8,8 +8,8 @@ import { MedicineType, setMedicineList } from "@/lib/features/productSlice";
 import { connectWebSockets } from "@/app/actions/apiActions";
 import { FetchMedicinesHandleSockets } from "@/app/actions/clientActions";
 import Loader from "../components/client/Loader";
-import SearchMedicine from "../components/home/SearchMedicine";
-import UpdateAndDetail from "../components/updateAndDetail/UpdateAndDetail";
+import SearchMedicine from "../components/common/SearchMedicine";
+import Update from "../components/updateAndDetail/Update";
 import DisplayAllMedicines from "../components/updateAndDetail/DisplayAllMedicines";
 import DisplaySearchedMedicines from "../components/updateAndDetail/DisplaySearchedMedicines";
 
@@ -46,7 +46,8 @@ export default function UpdateAndDetailPage() {
     []
   );
 
-  console.log("medicineListState : ", medicineListState);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
   const handleUpdateDetail = (data: any, modalStatus: boolean) => {
     setSelectedMedicine(data);
@@ -139,6 +140,22 @@ export default function UpdateAndDetailPage() {
     handleFetchMedicinesHandleSockets();
   }, []);
 
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedQuery(searchQuery), 200);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  const filteredMedicines = useMemo(() => {
+    if (medicineList && medicineList.length > 0) {
+      return medicineList.filter((medicine: MedicineType) =>
+        medicine.name?.toLowerCase().includes(debouncedQuery.toLowerCase())
+      );
+    } else {
+      return [];
+    }
+  }, [medicineList, debouncedQuery]);
+
+  // Display Loader
   if (productLoading || loading) {
     return <Loader />;
   }
@@ -146,8 +163,8 @@ export default function UpdateAndDetailPage() {
   return (
     <div className="max-w-[1400px] mx-auto">
       <SearchMedicine
-        medicineList={medicineList}
-        setMedicineListState={setMedicineListState}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
       <div className="w-full mt-10 mb-5">
         <div
@@ -196,9 +213,9 @@ export default function UpdateAndDetailPage() {
               <div className="w-full min-h-[60vh] max-h-[75vh] pb-5 bg-white">
                 {medicineList.length > 0 ? (
                   <div className="w-full h-full">
-                    {medicineListState.length > 0 ? (
+                    {filteredMedicines.length > 0 ? (
                       <DisplaySearchedMedicines
-                        medicineListState={medicineListState}
+                        filteredMedicines={filteredMedicines}
                         handleUpdateDetail={handleUpdateDetail}
                       />
                     ) : (
@@ -222,7 +239,7 @@ export default function UpdateAndDetailPage() {
       </div>
 
       {updateDetailModal && (
-        <UpdateAndDetail
+        <Update
           selectedMedicine={selectedMedicine}
           setUpdateDetailModal={setUpdateDetailModal}
         />

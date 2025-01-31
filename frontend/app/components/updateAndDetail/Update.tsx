@@ -10,7 +10,7 @@ interface UpdateAndDetailProps {
   setUpdateDetailModal: (e: boolean) => void;
 }
 
-const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
+const Update: React.FC<UpdateAndDetailProps> = ({
   selectedMedicine,
   setUpdateDetailModal,
 }) => {
@@ -27,7 +27,6 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
     shelf_no: "",
   });
 
-  console.log("Quantity : ", selectedMedicine.quantity);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<string>("");
   const [msgModal, setMsgModal] = useState<boolean>(false);
@@ -453,4 +452,4 @@ const UpdateAndDetail: React.FC<UpdateAndDetailProps> = ({
   );
 };
 
-export default UpdateAndDetail;
+export default Update;

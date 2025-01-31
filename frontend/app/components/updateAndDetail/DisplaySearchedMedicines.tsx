@@ -3,18 +3,19 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 interface DisplaySearchedMedicinesProps {
-  medicineListState: MedicineType[];
+  filteredMedicines: MedicineType[];
   handleUpdateDetail: (data: any, modalStatus: boolean) => void;
 }
 
 const DisplaySearchedMedicines: React.FC<DisplaySearchedMedicinesProps> = ({
-  medicineListState,
+  filteredMedicines,
   handleUpdateDetail,
 }) => {
   const router = useRouter();
+
   return (
     <>
-      {medicineListState.map((medicine: any, index: number) => {
+      {filteredMedicines.map((medicine: any, index: number) => {
         return (
           <div
             key={index}
