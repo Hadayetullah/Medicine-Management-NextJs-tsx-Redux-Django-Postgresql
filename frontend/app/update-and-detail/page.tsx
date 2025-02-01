@@ -35,7 +35,7 @@ export default function UpdateAndDetailPage() {
     medicineList,
   } = useAppSelector((state) => state.product);
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [updateDetailModal, setUpdateDetailModal] = useState<boolean>(false);
   const eventSourceRef = React.useRef<EventSource | null>(null);
   const getMedicineListRef = React.useRef<boolean>();
@@ -54,87 +54,92 @@ export default function UpdateAndDetailPage() {
     setUpdateDetailModal(modalStatus);
   };
 
-  const getMedicineList = async () => {
-    setLoading(true);
-    const authResponse = await fetch("/api/auth/check-refresh-token/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
+  // const getMedicineList = async () => {
+  //   setLoading(true);
+  //   const authResponse = await fetch("/api/auth/check-refresh-token/", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //   });
 
-    const authResponseResult = await authResponse.json();
-    if (authResponseResult.success) {
-      if (medicineList.length < 1) {
-        const res = await fetch("/api/product/", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
+  //   const authResponseResult = await authResponse.json();
+  //   if (authResponseResult.success) {
+  //     if (medicineList.length < 1) {
+  //       const res = await fetch("/api/product/", {
+  //         method: "GET",
+  //         headers: { "Content-Type": "application/json" },
+  //       });
 
-        const result = await res.json();
-        if (result.success) {
-          dispatch(setMedicineList(result.data));
-          setLoading(false);
-          // await connectWebSocket("medicineConnection");
-        }
+  //       const result = await res.json();
+  //       if (result.success) {
+  //         dispatch(setMedicineList(result.data));
+  //         setLoading(false);
+  //         // await connectWebSocket("medicineConnection");
+  //       }
 
-        if (!result.success) {
-          setLoading(false);
-          console.log(result.error);
-          console.error("Error getting medicine list");
-        }
-      }
+  //       if (!result.success) {
+  //         setLoading(false);
+  //         console.log(result.error);
+  //         console.error("Error getting medicine list");
+  //       }
+  //     }
 
-      setLoading(false);
+  //     setLoading(false);
 
-      const connectionKeys = Object.keys(connections);
+  //     const connectionKeys = Object.keys(connections);
 
-      if (
-        connectionKeys &&
-        connectionKeys.length > 0 &&
-        connectionKeys.length === connectionDetails.length
-      ) {
-        connectionDetails.forEach((connection) => {
-          const connectionName = connection.connectionKey;
-          if (connectionKeys.includes(connectionName)) {
-            const connectionInfo = connections[connectionName];
-            if (connectionInfo && connectionInfo.connected === false) {
-              dispatch(
-                connectWebSockets({
-                  connectionKey: `${connectionName}`,
-                  url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
-                })
-              );
-            }
-          }
-        });
-      }
+  //     if (
+  //       connectionKeys &&
+  //       connectionKeys.length > 0 &&
+  //       connectionKeys.length === connectionDetails.length
+  //     ) {
+  //       connectionDetails.forEach((connection) => {
+  //         const connectionName = connection.connectionKey;
+  //         if (connectionKeys.includes(connectionName)) {
+  //           const connectionInfo = connections[connectionName];
+  //           if (connectionInfo && connectionInfo.connected === false) {
+  //             dispatch(
+  //               connectWebSockets({
+  //                 connectionKey: `${connectionName}`,
+  //                 url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
+  //               })
+  //             );
+  //           }
+  //         }
+  //       });
+  //     }
 
-      if (connectionKeys && connectionKeys.length < 1) {
-        connectionDetails.forEach((connection) => {
-          const connectionName = connection.connectionKey;
-          dispatch(
-            connectWebSockets({
-              connectionKey: `${connectionName}`,
-              url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
-            })
-          );
-        });
-      }
-    } else {
-      setLoading(false);
-      console.log("authResponseResult error : ", authResponseResult.error);
-    }
-  };
+  //     if (connectionKeys && connectionKeys.length < 1) {
+  //       connectionDetails.forEach((connection) => {
+  //         const connectionName = connection.connectionKey;
+  //         dispatch(
+  //           connectWebSockets({
+  //             connectionKey: `${connectionName}`,
+  //             url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
+  //           })
+  //         );
+  //       });
+  //     }
+  //   } else {
+  //     setLoading(false);
+  //     console.log("authResponseResult error : ", authResponseResult.error);
+  //   }
+  // };
 
   useEffect(() => {
     // getMedicineList();
     const handleFetchMedicinesHandleSockets = async () => {
-      const isLoading = await FetchMedicinesHandleSockets({
-        dispatch,
-        medicineList,
-        connections,
-        connectionDetails,
-      });
-      setLoading(isLoading); // Update the state with the returned value
+      if (medicineList === undefined || medicineList.length < 1) {
+        setLoading(true);
+        const medicineListLength = medicineList.length;
+        const connectionKeys = Object.keys(connections);
+        const isLoading = await FetchMedicinesHandleSockets({
+          dispatch,
+          medicineListLength,
+          connections,
+          connectionDetails,
+        });
+        setLoading(isLoading); // Update the state with the returned value
+      }
     };
 
     handleFetchMedicinesHandleSockets();

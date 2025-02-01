@@ -22,18 +22,22 @@ export default function HomePage() {
     medicineList,
   } = useAppSelector((state) => state.product);
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     // getMedicineList();
     const handleFetchMedicinesHandleSockets = async () => {
-      const isLoading = await FetchMedicinesHandleSockets({
-        dispatch,
-        medicineList,
-        connections,
-        connectionDetails,
-      });
-      setLoading(isLoading); // Update the state with the returned value
+      if (medicineList === undefined || medicineList.length < 1) {
+        setLoading(true);
+        const medicineListLength = medicineList.length;
+        const isLoading = await FetchMedicinesHandleSockets({
+          dispatch,
+          medicineListLength,
+          connections,
+          connectionDetails,
+        });
+        setLoading(isLoading); // Update the state with the returned value
+      }
     };
 
     handleFetchMedicinesHandleSockets();
@@ -44,7 +48,9 @@ export default function HomePage() {
   }
   return (
     <div className="max-w-[1400px] mx-auto mt-[70px]">
-      This Home page is under development. Please visit other pages
+      <h1 className="text-2xl">
+        This Home page is under development. Please visit other pages
+      </h1>
     </div>
   );
 }

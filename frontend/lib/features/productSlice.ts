@@ -77,6 +77,7 @@ interface MainStateType {
   error: any;
   connections: WebSocketState;
   medicineList: MedicineType[];
+  medicineMap: Record<string, MedicineType>;
 }
 
 const initialState: MainStateType = {
@@ -92,6 +93,7 @@ const initialState: MainStateType = {
   loading: false,
   connections: {},
   medicineList: [],
+  medicineMap: {},
 };
 
 
@@ -183,7 +185,7 @@ const websocketSlice = createSlice({
       }
     },
 
-    setMedicineList: (state, action) => {
+    setMedicineList: (state, action: PayloadAction<{message: string, data: MedicineType[]}>) => {
       const {message, data} = action.payload;
       state.message = message;
       state.medicineList = data;
@@ -209,7 +211,19 @@ const websocketSlice = createSlice({
     setSubAction: (state, action) => {
       // console.log("subAction Payload: ", action.payload)
       state.subAction = action.payload.subAction;
+    },
+
+    createMedicineMap: (state, action: PayloadAction<{ data: MedicineType[] }>) => {
+      state.medicineMap = action.payload.data.reduce((acc, medicine) => {
+        acc[medicine.id] = medicine;
+        return acc;
+      }, {} as Record<string, MedicineType>);
+    },
+
+    addOrUpdateMedicine: (state, action: PayloadAction<{ data: MedicineType }>) => {
+      state.medicineMap[action.payload.data.id] = action.payload.data;
     }
+    
   },
 
 //   extraReducers: (builder) => {
@@ -227,6 +241,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connectSocket, disconnectSocket, addProduct, setSocketError, setMedicineList, setMessage, resetProductSliceState, setError, setSubAction } = websocketSlice.actions;
+export const { connectSocket, disconnectSocket, addProduct, setSocketError, setMedicineList, setMessage, resetProductSliceState, setError, setSubAction, createMedicineMap, addOrUpdateMedicine } = websocketSlice.actions;
 
 export default websocketSlice.reducer;

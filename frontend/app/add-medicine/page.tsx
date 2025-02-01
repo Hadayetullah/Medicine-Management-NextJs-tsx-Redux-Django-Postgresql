@@ -7,7 +7,7 @@ import { FetchMedicinesHandleSockets } from "../actions/clientActions";
 import Loader from "../components/client/Loader";
 // import { usePathname, useRouter } from "next/navigation";
 
-export default function AddMedicine() {
+export default function AddMedicinePage() {
   const {
     connectionDetails,
     loading: productLoading,
@@ -58,11 +58,12 @@ export default function AddMedicine() {
 
   useEffect(() => {
     const handleFetchMedicinesHandleSockets = async () => {
-      if (medicineList.length < 1) {
+      if (medicineList === undefined || medicineList.length < 1) {
+        const medicineListLength = medicineList.length;
         setLoading(true);
         const isLoading = await FetchMedicinesHandleSockets({
           dispatch,
-          medicineList,
+          medicineListLength,
           connections,
           connectionDetails,
         });
