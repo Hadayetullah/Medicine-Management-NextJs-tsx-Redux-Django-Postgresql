@@ -77,7 +77,6 @@ interface MainStateType {
   error: any;
   connections: WebSocketState;
   medicineList: MedicineType[];
-  medicineMap: Record<string, MedicineType>;
 }
 
 const initialState: MainStateType = {
@@ -93,7 +92,6 @@ const initialState: MainStateType = {
   loading: false,
   connections: {},
   medicineList: [],
-  medicineMap: {},
 };
 
 
@@ -187,7 +185,7 @@ const websocketSlice = createSlice({
 
     setMedicineList: (state, action: PayloadAction<{message: string, data: MedicineType[]}>) => {
       const {message, data} = action.payload;
-      state.message = message;
+      // state.message = message;
       state.medicineList = data;
       state.loading = false;
     },
@@ -213,16 +211,14 @@ const websocketSlice = createSlice({
       state.subAction = action.payload.subAction;
     },
 
-    createMedicineMap: (state, action: PayloadAction<{ data: MedicineType[] }>) => {
-      state.medicineMap = action.payload.data.reduce((acc, medicine) => {
-        acc[medicine.id] = medicine;
-        return acc;
-      }, {} as Record<string, MedicineType>);
+    updateMedicine: (state, action: PayloadAction<{ data: MedicineType, message: string }>) => {
+      const index = state.medicineList.findIndex(medicine => medicine.id === action.payload.data.id);
+      
+      if (index !== -1) {
+        state.medicineList[index] = action.payload.data; // Directly mutating inside Immer
+        state.message = action.payload.message
+      }
     },
-
-    addOrUpdateMedicine: (state, action: PayloadAction<{ data: MedicineType }>) => {
-      state.medicineMap[action.payload.data.id] = action.payload.data;
-    }
     
   },
 
@@ -241,6 +237,6 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connectSocket, disconnectSocket, addProduct, setSocketError, setMedicineList, setMessage, resetProductSliceState, setError, setSubAction, createMedicineMap, addOrUpdateMedicine } = websocketSlice.actions;
+export const { connectSocket, disconnectSocket, addProduct, setSocketError, setMedicineList, setMessage, resetProductSliceState, setError, setSubAction, updateMedicine } = websocketSlice.actions;
 
 export default websocketSlice.reducer;

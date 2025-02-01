@@ -24,23 +24,27 @@ const DisplayAllMedicines: React.FC<DisplayAllMedicinesProps> = ({
               index % 2 === 1 ? "bg-gray-100" : "bg-white"
             }`}
           >
-            <div className="w-[15%] h-full flex my-1 items-center pl-2">
+            <div className="w-[14%] h-full flex my-1 items-center pl-2">
               <h4>{medicine.name}</h4>
             </div>
 
-            <div className="w-[15%] h-full flex my-1 items-center pl-1">
+            <div className="w-[14%] h-full flex my-1 items-center pl-1">
               <h4>{medicine.company?.name}</h4>
             </div>
 
-            <div className="w-[14%] h-full flex my-1 items-center pl-1">
+            <div className="w-[13%] h-full flex my-1 items-center pl-1">
               <h4>{medicine.category?.name}</h4>
             </div>
 
-            <div className="w-[14%] h-full flex my-1 items-center pl-1">
+            <div className="w-[13%] h-full flex my-1 items-center pl-1">
               <h4>{medicine.dosage_form?.name}</h4>
             </div>
 
-            <div className="w-[12%] h-full flex my-1 items-center justify-center pl-1">
+            <div className="w-[8%] h-full flex my-1 items-center justify-center pl-1">
+              <h4>{medicine.quantity}</h4>
+            </div>
+
+            <div className="w-[11%] h-full flex my-1 items-center justify-center pl-1">
               <h4>{medicine.power}</h4>
             </div>
 
@@ -48,11 +52,11 @@ const DisplayAllMedicines: React.FC<DisplayAllMedicinesProps> = ({
               <h4>{medicine.price}</h4>
             </div>
 
-            <div className="w-[10%] h-full flex my-1 ml-1 pl-[1%]">
+            <div className="w-[8%] h-full flex my-1 ml-1 pl-[1%]">
               <h4>{medicine.quantity}</h4>
             </div>
 
-            <div className="w-[13%] h-full flex my-1 flex-col pl-1 items-center gap-[3px]">
+            <div className="w-[12%] h-full flex my-1 flex-col pl-1 items-center gap-[3px]">
               <button
                 className="w-full text-black bg-[#fcb900] mr-1 rounded-md hover:bg-[#c99402]"
                 onClick={() => handleUpdateDetail(medicine, true)}

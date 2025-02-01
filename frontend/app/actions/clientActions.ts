@@ -1,4 +1,4 @@
-import { createMedicineMap, setMedicineList } from "@/lib/features/productSlice";
+import { setMedicineList } from "@/lib/features/productSlice";
 import { connectWebSockets } from "./apiActions";
 
 import { connectionDetailsType, MedicineType, WebSocketState } from "@/lib/features/productSlice";
@@ -32,7 +32,6 @@ export async function FetchMedicinesHandleSockets({
             const result = await res.json();
             if (result.success) {
                 dispatch(setMedicineList(result.data));
-                dispatch(createMedicineMap(result.data))
             
             } else {
             

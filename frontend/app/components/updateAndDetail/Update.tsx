@@ -32,13 +32,22 @@ const Update: React.FC<UpdateAndDetailProps> = ({
   const [msgModal, setMsgModal] = useState<boolean>(false);
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
     if (message != null) {
       setMsgModal(true);
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setMsgModal(false);
         dispatch({ type: "websocket/setMessage", payload: { message: null } });
       }, 5000);
     }
+
+    // Cleanup function to clear the timeout
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [message]);
 
   useEffect(() => {
@@ -55,9 +64,9 @@ const Update: React.FC<UpdateAndDetailProps> = ({
       company: selectedMedicine?.company?.name || "",
       category: selectedMedicine?.category?.name || "",
       dosage_form: selectedMedicine?.dosage_form?.name || "",
-      price: selectedMedicine?.price || "",
-      power: selectedMedicine?.power || "",
-      shelf_no: selectedMedicine?.shelf_no || "",
+      price: String(selectedMedicine?.price || ""),
+      power: String(selectedMedicine?.power || ""),
+      shelf_no: String(selectedMedicine?.shelf_no || ""),
     });
   }, [selectedMedicine]);
 
@@ -68,17 +77,30 @@ const Update: React.FC<UpdateAndDetailProps> = ({
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent, field: string) => {
+  const handleSubmit = async (
+    e: React.FormEvent,
+    field: string,
+    dataType: string
+  ) => {
     e.preventDefault();
 
     setIsProcessing(field);
+
+    let formField = formData[field];
+
+    let value =
+      dataType === "string"
+        ? formField
+        : dataType === "integer"
+        ? parseInt(formField)
+        : parseFloat(formField);
 
     const dataObj = {
       action: "update_medicine",
       data: {
         id: selectedMedicine.id,
         action: field,
-        value: formData[field],
+        value: value,
       },
     };
 
@@ -88,8 +110,6 @@ const Update: React.FC<UpdateAndDetailProps> = ({
         message: dataObj,
       })
     );
-
-    console.log("Field : ", field);
   };
 
   return (
@@ -121,12 +141,14 @@ const Update: React.FC<UpdateAndDetailProps> = ({
             Update / Modify
           </h2>
 
-          {msgModal && <DisplayMsg setMsgModal={setMsgModal} />}
+          {msgModal && (
+            <DisplayMsg setMsgModal={setMsgModal} message={message} />
+          )}
 
           <div className="w-full h-full pb-[120px] overflow-hidden">
             <div className="w-full h-full pb-5 overflow-y-scroll">
               <form
-                onSubmit={(e) => handleSubmit(e, "quantity")}
+                onSubmit={(e) => handleSubmit(e, "quantity", "integer")}
                 className="flex flex-col mb-[20px]"
               >
                 <label
@@ -149,7 +171,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please update the quantity first"
-                    onClick={(e) => handleSubmit(e, "quantity")}
+                    onClick={(e) => handleSubmit(e, "quantity", "integer")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
                       focusedField != "quantity" || isProcessing === "quantity"
@@ -166,7 +188,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
               </form>
 
               <form
-                onSubmit={(e) => handleSubmit(e, "name")}
+                onSubmit={(e) => handleSubmit(e, "name", "string")}
                 className="flex flex-col mb-[20px]"
               >
                 <label
@@ -189,7 +211,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please modify the medicine name first"
-                    onClick={(e) => handleSubmit(e, "name")}
+                    onClick={(e) => handleSubmit(e, "name", "string")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
                       focusedField != "name" || isProcessing === "name"
@@ -204,7 +226,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
               </form>
 
               <form
-                onSubmit={(e) => handleSubmit(e, "company")}
+                onSubmit={(e) => handleSubmit(e, "company", "string")}
                 className="flex flex-col mb-[20px]"
               >
                 <label
@@ -227,7 +249,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please modify the company name first"
-                    onClick={(e) => handleSubmit(e, "company")}
+                    onClick={(e) => handleSubmit(e, "company", "string")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
                       focusedField != "company" || isProcessing === "company"
@@ -244,7 +266,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
               </form>
 
               <form
-                onSubmit={(e) => handleSubmit(e, "dosage_form")}
+                onSubmit={(e) => handleSubmit(e, "dosage_form", "string")}
                 className="flex flex-col mb-[20px]"
               >
                 <label
@@ -267,7 +289,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please modify the dosage form first"
-                    onClick={(e) => handleSubmit(e, "dosage_form")}
+                    onClick={(e) => handleSubmit(e, "dosage_form", "string")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
                       focusedField != "dosage_form" ||
@@ -286,7 +308,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
               </form>
 
               <form
-                onSubmit={(e) => handleSubmit(e, "price")}
+                onSubmit={(e) => handleSubmit(e, "price", "float")}
                 className="flex flex-col mb-[20px]"
               >
                 <label
@@ -309,7 +331,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please update the price first"
-                    onClick={(e) => handleSubmit(e, "price")}
+                    onClick={(e) => handleSubmit(e, "price", "float")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
                       focusedField != "price" || isProcessing === "price"
@@ -326,7 +348,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
               </form>
 
               <form
-                onSubmit={(e) => handleSubmit(e, "power")}
+                onSubmit={(e) => handleSubmit(e, "power", "float")}
                 className="flex flex-col mb-[20px]"
               >
                 <label
@@ -349,7 +371,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please modify the power first"
-                    onClick={(e) => handleSubmit(e, "power")}
+                    onClick={(e) => handleSubmit(e, "power", "float")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
                       focusedField != "power" || isProcessing === "power"
@@ -366,7 +388,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
               </form>
 
               <form
-                onSubmit={(e) => handleSubmit(e, "shelf_no")}
+                onSubmit={(e) => handleSubmit(e, "shelf_no", "integer")}
                 className="flex flex-col mb-[20px]"
               >
                 <label
@@ -389,7 +411,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please update the shelf number first"
-                    onClick={(e) => handleSubmit(e, "shelf_no")}
+                    onClick={(e) => handleSubmit(e, "shelf_no", "integer")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
                       focusedField != "shelf_no" || isProcessing === "shelf_no"
@@ -406,7 +428,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
               </form>
 
               <form
-                onSubmit={(e) => handleSubmit(e, "category")}
+                onSubmit={(e) => handleSubmit(e, "category", "string")}
                 className="flex flex-col mb-[20px]"
               >
                 <label
@@ -429,7 +451,7 @@ const Update: React.FC<UpdateAndDetailProps> = ({
 
                   <button
                     title="Please update the category name first"
-                    onClick={(e) => handleSubmit(e, "category")}
+                    onClick={(e) => handleSubmit(e, "category", "string")}
                     type="submit"
                     className={`w-[200px] px-4 py-2 h-[40px] text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${
                       focusedField != "category" || isProcessing === "category"
