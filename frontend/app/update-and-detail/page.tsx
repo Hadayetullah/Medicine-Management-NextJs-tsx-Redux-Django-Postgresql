@@ -37,17 +37,12 @@ export default function UpdateAndDetailPage() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [updateDetailModal, setUpdateDetailModal] = useState<boolean>(false);
-  const eventSourceRef = React.useRef<EventSource | null>(null);
-  const getMedicineListRef = React.useRef<boolean>();
+
   const [errorFetchingProduct, setErrorFetchingProduct] = useState<any>(null);
   const [selectedMedicine, setSelectedMedicine] = useState<any>(null);
 
-  const [medicineListState, setMedicineListState] = useState<MedicineType[]>(
-    []
-  );
-
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  // const [debouncedQuery, setDebouncedQuery] = useState("");
 
   const handleUpdateDetail = (data: any, modalStatus: boolean) => {
     setSelectedMedicine(data);
@@ -127,6 +122,7 @@ export default function UpdateAndDetailPage() {
 
   useEffect(() => {
     // getMedicineList();
+
     const handleFetchMedicinesHandleSockets = async () => {
       if (medicineList === undefined || medicineList.length < 1) {
         setLoading(true);
@@ -145,20 +141,20 @@ export default function UpdateAndDetailPage() {
     handleFetchMedicinesHandleSockets();
   }, []);
 
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedQuery(searchQuery), 200);
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
+  // useEffect(() => {
+  //   const handler = setTimeout(() => setDebouncedQuery(searchQuery), 200);
+  //   return () => clearTimeout(handler);
+  // }, [searchQuery]);
 
   const filteredMedicines = useMemo(() => {
     if (medicineList && medicineList.length > 0) {
       return medicineList.filter((medicine: MedicineType) =>
-        medicine.name?.toLowerCase().includes(debouncedQuery.toLowerCase())
+        medicine.name?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     } else {
       return [];
     }
-  }, [medicineList, debouncedQuery]);
+  }, [medicineList, searchQuery]);
 
   // Display Loader
   if (productLoading || loading) {
@@ -166,7 +162,7 @@ export default function UpdateAndDetailPage() {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto">
+    <div className="max-w-[1450px] mx-auto">
       <SearchMedicine
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -176,25 +172,29 @@ export default function UpdateAndDetailPage() {
           className="overflow-x-auto overflow-y-hidden w-full h-full"
           style={{ scrollbarWidth: "thin", zIndex: "-1" }}
         >
-          <div className="min-w-[900px] max-w-full">
+          <div className="min-w-[1100px] max-w-full">
             <div className="h-[40px] w-full bg-gray-100 font-bold text-xs md:text-sm text-gray-500 flex flex-row pl-1 sm:pl-2.5 pr-4">
-              <div className="w-[15%] h-full flex items-center pl-2">
+              <div className="w-[14%] h-full flex items-center pl-2">
                 <h4>Name</h4>
               </div>
 
-              <div className="w-[15%] h-full flex items-center pl-1">
+              <div className="w-[14%] h-full flex items-center pl-1">
                 <h4>Company</h4>
               </div>
 
-              <div className="w-[14%] h-full flex items-center pl-1">
+              <div className="w-[13%] h-full flex items-center pl-1">
                 <h4>Brand/Category</h4>
               </div>
 
-              <div className="w-[14%] h-full flex items-center pl-1">
+              <div className="w-[13%] h-full flex items-center pl-1">
                 <h4>Dosage Form</h4>
               </div>
 
-              <div className="w-[12%] h-full flex items-center justify-center pl-1">
+              <div className="w-[8%] h-full flex items-center justify-center pl-1">
+                <h4>Qauntity</h4>
+              </div>
+
+              <div className="w-[11%] h-full flex items-center justify-center pl-1">
                 <h4>Power/Strenght</h4>
               </div>
 
@@ -202,11 +202,11 @@ export default function UpdateAndDetailPage() {
                 <h4>Price</h4>
               </div>
 
-              <div className="w-[10%] h-full flex items-center pl-1">
+              <div className="w-[8%] h-full flex items-center pl-1">
                 <h4>Qauntity</h4>
               </div>
 
-              <div className="w-[13%] h-full flex items-center justify-center pl-1">
+              <div className="w-[12%] h-full flex items-center justify-center pl-1">
                 <h4>Update/Detail</h4>
               </div>
             </div>

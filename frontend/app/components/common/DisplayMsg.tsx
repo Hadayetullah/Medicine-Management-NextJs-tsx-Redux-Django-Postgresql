@@ -1,9 +1,15 @@
 import React from "react";
 
-const DisplayMsg = ({ setMsgModal }: { setMsgModal: (e: any) => void }) => {
+const DisplayMsg = ({
+  setMsgModal,
+  message,
+}: {
+  setMsgModal: (e: any) => void;
+  message: string;
+}) => {
   return (
     <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4 flex justify-between items-center">
-      <p>This is a message</p>
+      <p>{message}</p>
       <div
         onClick={() => setMsgModal(false)}
         className="hover:text-white hover:bg-green-400 rounded-full cursor-pointer transition-colors"
