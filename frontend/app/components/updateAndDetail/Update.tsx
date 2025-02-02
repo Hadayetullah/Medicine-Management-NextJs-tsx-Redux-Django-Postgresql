@@ -112,12 +112,18 @@ const Update: React.FC<UpdateAndDetailProps> = ({
     );
   };
 
+  const handleModal = (e: boolean) => {
+    dispatch({ type: "websocket/setMessage", payload: { message: null } });
+    setMsgModal(false);
+    setUpdateDetailModal(e);
+  };
+
   return (
     <div className="fixed w-full h-full top-0 left-0 right-0 bottom-0 flex justify-center bg-black bg-opacity-50 z-[11]">
       <div className="relative w-[700px] h-full flex justify-center">
         <div className="relative py-6 px-1 w-full h-[95%] sm:p-8 my-[70px] bg-white rounded shadow-lg">
           <button
-            onClick={() => setUpdateDetailModal(false)}
+            onClick={() => handleModal(false)}
             className="absolute top-[5px] right-[15px] w-[30px] h-[30px]"
           >
             <svg
