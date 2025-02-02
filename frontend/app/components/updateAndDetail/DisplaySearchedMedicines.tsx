@@ -40,7 +40,7 @@ const DisplaySearchedMedicines: React.FC<DisplaySearchedMedicinesProps> = ({
             </div>
 
             <div className="w-[8%] h-full flex my-1 items-center justify-center pl-1">
-              <h4>{medicine.quantity}</h4>
+              <h4>{medicine.shelf_no}</h4>
             </div>
 
             <div className="w-[11%] h-full flex my-1 items-center justify-center pl-1">

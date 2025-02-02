@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
         const payload = await decodeToken(newAccessToken);
         const currentTime = Math.floor(Date.now() / 1000);
-        const maxAge = payload.exp - currentTime;
+        const maxAge = payload.exp - currentTime - 30;
 
         const nextResponse = NextResponse.json({ success: true, data: newAccessToken });
 

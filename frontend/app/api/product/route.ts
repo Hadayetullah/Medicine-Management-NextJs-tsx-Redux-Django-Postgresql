@@ -1,13 +1,56 @@
 import { NextResponse } from "next/server";
-import { getTokens } from "@/app/actions/serverActions";
+import { decodeToken, getAccessToken, getRefreshToken } from "@/app/actions/serverActions";
 
 export async function GET() {
-    const {accessToken} = await getTokens();
-
-    if (!accessToken) {
-        return NextResponse.json({ success: false, redirectTo: "/login", error: "Invalid token" });
-    }
   const apiBaseUrl = process.env.BACKEND_API_BASE_URL;
+
+  let authResponse = null;
+  let accessToken = await getAccessToken();
+
+  if (!accessToken) {
+
+    const refreshToken = await getRefreshToken();
+    if (!refreshToken) {
+      authResponse = NextResponse.json({ success: false, redirectTo: "/login", error: "Invalid refresh token"})
+    } else {
+      const response: any = await fetch(`${apiBaseUrl}/api/auth/refresh-token/`, {
+        method: "POST",
+        headers: { 'Accept': 'application/json', "Content-Type": "application/json" },
+        body: JSON.stringify({ "refresh_token": refreshToken }),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+    
+        const newAccessToken = responseData.accessToken
+  
+        const payload = await decodeToken(newAccessToken);
+        const currentTime = Math.floor(Date.now() / 1000);
+        const maxAge = payload.exp - currentTime - 30;
+  
+        const nextResponse = NextResponse.next();
+  
+        nextResponse.cookies.set('accessToken', newAccessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          path: "/",
+          maxAge: maxAge > 0 ? maxAge : 0,
+        });
+  
+        accessToken = newAccessToken;
+
+        return nextResponse;
+      } else {
+        const errorData = await response.json();
+        authResponse = NextResponse.json({ success: false, redirectTo: "/login", error: errorData.error})
+      }
+    }
+  }
+
+  if (authResponse !== null) {
+    return authResponse
+  }
+
 
   try {
 
@@ -15,16 +58,18 @@ export async function GET() {
       method: "GET",
       headers: { 
         'Accept': 'Application/json',
-        "Content-Type": "application/json",
         'Authorization': `Bearer ${accessToken}`
-        }
+      }
     });
 
     if (response.ok) {
       const responseData = await response.json();
-    //   const { message, data } = responseData;
       return NextResponse.json({ success: true, data: responseData });
+    } else {
+      const errorData = await response.json();
+      return NextResponse.json({ success: false, redirectTo: "/login", error: errorData.error || "Failed to fetch products" });
     }
+    
     
   } catch (error) {
     return NextResponse.json({ success: false, redirectTo: "/login", error: error });

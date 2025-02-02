@@ -191,7 +191,7 @@ export default function UpdateAndDetailPage() {
               </div>
 
               <div className="w-[8%] h-full flex items-center justify-center pl-1">
-                <h4>Qauntity</h4>
+                <h4>Shelf No.</h4>
               </div>
 
               <div className="w-[11%] h-full flex items-center justify-center pl-1">
@@ -203,7 +203,7 @@ export default function UpdateAndDetailPage() {
               </div>
 
               <div className="w-[8%] h-full flex items-center pl-1">
-                <h4>Qauntity</h4>
+                <h4>Quantity</h4>
               </div>
 
               <div className="w-[12%] h-full flex items-center justify-center pl-1">

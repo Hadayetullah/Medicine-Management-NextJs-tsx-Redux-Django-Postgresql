@@ -16,13 +16,7 @@ export async function FetchMedicinesHandleSockets({
     connections,
     connectionDetails,
   }: FetchMedicinesHandleSocketsProps): Promise<boolean> {
-    const authResponse = await fetch("/api/auth/check-refresh-token/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-    });
-
-    const authResponseResult = await authResponse.json();
-    if (authResponseResult.success) {
+    
         if (medicineListLength < 1) {
             const res = await fetch("/api/product/", {
             method: "GET",
@@ -49,36 +43,33 @@ export async function FetchMedicinesHandleSockets({
             connectionKeys.length === connectionDetails.length
         ) {
             connectionDetails.forEach((connection:any) => {
-            const connectionName = connection.connectionKey;
-            if (connectionKeys.includes(connectionName)) {
-                const connectionInfo = connections[connectionName];
-                if (connectionInfo && connectionInfo.connected === false) {
+                const connectionName = connection.connectionKey;
+                if (connectionKeys.includes(connectionName)) {
+                    const connectionInfo = connections[connectionName];
+                    if (connectionInfo && connectionInfo.connected === false) {
+                        dispatch(
+                            connectWebSockets({
+                            connectionKey: `${connectionName}`,
+                            url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
+                            })
+                        );
+                    }
+                }
+            });
+        }
+
+        else if (connectionKeys && connectionKeys.length < 1) {
+            connectionDetails.forEach((connection:any) => {
+                const connectionName = connection.connectionKey;
                 dispatch(
                     connectWebSockets({
                     connectionKey: `${connectionName}`,
                     url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
                     })
                 );
-                }
-            }
             });
         }
 
-        if (connectionKeys && connectionKeys.length < 1) {
-            connectionDetails.forEach((connection:any) => {
-            const connectionName = connection.connectionKey;
-            dispatch(
-                connectWebSockets({
-                connectionKey: `${connectionName}`,
-                url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
-                })
-            );
-            });
-        }
-
-    } else {
-    console.error("authResponseResult error:", authResponseResult.error);
-    }
 
     return false;
 };

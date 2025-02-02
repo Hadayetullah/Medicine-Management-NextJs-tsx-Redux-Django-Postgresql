@@ -40,7 +40,7 @@ export default function AddMedicinePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form data : ", formData);
+    // console.log("Form data : ", formData);
 
     dispatch(
       sendWebSocketMessages({
