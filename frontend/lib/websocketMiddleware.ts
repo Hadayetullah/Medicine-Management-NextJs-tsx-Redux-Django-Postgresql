@@ -107,9 +107,11 @@ export const createWebSocketMiddleware = (): Middleware => {
             //   }
             // } 
             
-            else {
-              console.log("Else data : ", event.data)
-            }
+            // else {
+            //   console.log("Else data : ", event.data)
+            // }
+            console.log("onmessage data : ", event.data)
+
           } catch (error) {
             console.log(`Failed to parse WebSocket message for ${connectionKey}`, error);
             storeAPI.dispatch(setError({apiError: `Failed to parse WebSocket message for ${connectionKey}`}))

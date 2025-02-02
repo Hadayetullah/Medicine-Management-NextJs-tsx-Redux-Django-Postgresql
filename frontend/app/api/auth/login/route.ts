@@ -1,3 +1,4 @@
+import { decodeToken } from "@/app/actions/serverActions";
 import { NextResponse } from "next/server";
 
 // export const dynamic = "force-dynamic";
@@ -52,19 +53,27 @@ export async function POST(request: Request) {
     if (response.ok) {
       const responseData = await response.json();
       const { accessToken, refreshToken } = responseData.token;
+
+      const decodedAccessToken = await decodeToken(accessToken);
+      const decodedRefreshToken = await decodeToken(refreshToken);
+
+      const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+
+      const accessTokenExpiry = decodedAccessToken.exp - currentTime - 30;
+      const refreshTokenExpiry = decodedRefreshToken.exp - currentTime - 30;
     
       const redirectResponse = NextResponse.json({ success: true, redirectTo: "/" });
       redirectResponse.cookies.set("accessToken", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/",
-        // maxAge: Number(process.env.ACCESS_TOKEN_EXPIRY || 3600),
+        maxAge: accessTokenExpiry > 0 ? accessTokenExpiry : 0, // Ensure expiry is non-negative
       });
       redirectResponse.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/",
-        // maxAge: Number(process.env.REFRESH_TOKEN_EXPIRY || 604800),
+        maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
       });
     
       return redirectResponse;
