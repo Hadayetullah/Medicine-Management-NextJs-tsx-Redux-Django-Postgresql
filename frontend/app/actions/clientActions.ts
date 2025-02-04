@@ -2,6 +2,7 @@ import { setMedicineList } from "@/lib/features/productSlice";
 import { connectWebSockets } from "./apiActions";
 
 import { connectionDetailsType, MedicineType, WebSocketState } from "@/lib/features/productSlice";
+import { getWSurl } from "./serverActions";
 
 interface FetchMedicinesHandleSocketsProps {
     dispatch: any;
@@ -16,6 +17,9 @@ export async function FetchMedicinesHandleSockets({
     connections,
     connectionDetails,
   }: FetchMedicinesHandleSocketsProps): Promise<boolean> {
+
+    const wsurl = await getWSurl();
+    // console.log("wsurl : ", wsurl)
     
         if (medicineListLength < 1) {
             const res = await fetch("/api/product/", {
@@ -50,7 +54,7 @@ export async function FetchMedicinesHandleSockets({
                         dispatch(
                             connectWebSockets({
                             connectionKey: `${connectionName}`,
-                            url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
+                            url: `${wsurl}/${connection.connectionUrl}/`,
                             })
                         );
                     }
@@ -64,7 +68,7 @@ export async function FetchMedicinesHandleSockets({
                 dispatch(
                     connectWebSockets({
                     connectionKey: `${connectionName}`,
-                    url: `ws://localhost:8000/ws/${connection.connectionUrl}/`,
+                    url: `${wsurl}/${connection.connectionUrl}/`,
                     })
                 );
             });
