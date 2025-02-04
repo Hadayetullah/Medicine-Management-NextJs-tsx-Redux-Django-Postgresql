@@ -113,3 +113,8 @@ export async function decodeToken(token:any) {
     const payload = JSON.parse(decodedString);
     return payload
 }
+
+export async function getWSurl() {
+    const apiSocketUrl = process.env.BACKEND_SOCKET_BASE_URL;
+    return apiSocketUrl;
+}
