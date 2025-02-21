@@ -32,7 +32,7 @@ export async function GET() {
   
         nextResponse.cookies.set('accessToken', newAccessToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
+          secure: process.env.NEXT_PUBLIC_NODE_ENV === 'production',
           path: "/",
           maxAge: maxAge > 0 ? maxAge : 0,
         });

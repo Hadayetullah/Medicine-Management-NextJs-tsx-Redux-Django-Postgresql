@@ -9,7 +9,7 @@
 node_modules
 dist
 dist-ssr
-*.local
+# *.local
 
 # testing
 /coverage
@@ -41,7 +41,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # local env files
-.env*.local
+# .env*.local
 
 # Editor directories and files
 .vscode/*
