@@ -58,18 +58,19 @@ const LoginPage = () => {
       router.push(result.redirectTo); // Redirect to the root URL
     } else {
       dispatch(setLoading(false));
-      if (result.error.non_field_errors[0].code === "user_inactive") {
-        console.log(
-          "Inactive error login: ",
-          result.error.non_field_errors[0].code
-        );
-      } else if (result.error) {
-        setError(result.error);
-      } else {
-        setError("Error registering user");
-      }
-      console.log(result.error);
-      console.error("Error logging in");
+      // if (result.error.non_field_errors[0].code === "user_inactive") {
+      //   console.log(
+      //     "Inactive error login: ",
+      //     result.error.non_field_errors[0].code
+      //   );
+      // } else if (result.error) {
+      //   setError(result.error);
+      // } else {
+      //   setError("Error registering user");
+      // }
+      console.log("Login Error-1 : ", result);
+      console.log("Login Error-2 : ", result.error);
+      // console.error("Error logging in");
     }
   };
 
