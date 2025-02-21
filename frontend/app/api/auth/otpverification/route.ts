@@ -57,13 +57,13 @@ export async function POST(request: Request) {
       const redirectResponse = NextResponse.json({ success: true, message: msg, redirectTo: "/" });
       redirectResponse.cookies.set("accessToken", accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
         path: "/",
         // maxAge: Number(process.env.ACCESS_TOKEN_EXPIRY || 3600),
       });
       redirectResponse.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
         path: "/",
         // maxAge: Number(process.env.REFRESH_TOKEN_EXPIRY || 604800),
       });
