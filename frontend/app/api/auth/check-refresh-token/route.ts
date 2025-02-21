@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Invalid refresh token"})
     }
 
-  const apiBaseUrl = process.env.BACKEND_API_BASE_URL;
+  const apiBaseUrl = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
   try {
 
