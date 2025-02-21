@@ -115,6 +115,6 @@ export async function decodeToken(token:any) {
 }
 
 export async function getWSurl() {
-    const apiSocketUrl = process.env.BACKEND_SOCKET_BASE_URL;
+    const apiSocketUrl = process.env.NEXT_PUBLIC_BACKEND_SOCKET_BASE_URL;
     return apiSocketUrl;
 }

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { decodeToken, getAccessToken, getRefreshToken } from "@/app/actions/serverActions";
 
 export async function GET() {
-  const apiBaseUrl = process.env.BACKEND_API_BASE_URL;
+  const apiBaseUrl = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
   let authResponse = null;
   let accessToken = await getAccessToken();

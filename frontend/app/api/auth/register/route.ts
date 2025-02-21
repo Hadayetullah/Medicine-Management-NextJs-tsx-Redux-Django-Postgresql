@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const apiBaseUrl = process.env.BACKEND_API_BASE_URL;
+  const apiBaseUrl = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
   try {
     const formData = await request.json();
