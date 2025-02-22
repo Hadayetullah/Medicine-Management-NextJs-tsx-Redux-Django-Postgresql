@@ -13,7 +13,6 @@ export async function POST(request: Request) {
         const response = await fetch(`${apiBaseUrl}/api/auth/refresh-token/`, {
             method: "POST",
             headers: { Accept: "application/json", "Content-Type": "application/json" },
-            credentials: "include",
             body: JSON.stringify({ refresh_token: refreshToken }),
         });
 

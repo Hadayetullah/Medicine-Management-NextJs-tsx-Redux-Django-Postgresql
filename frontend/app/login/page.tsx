@@ -49,6 +49,7 @@ const LoginPage = () => {
     const res = await fetch("/api/auth/login/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ email, password }),
     });
 
@@ -68,8 +69,7 @@ const LoginPage = () => {
       // } else {
       //   setError("Error registering user");
       // }
-      console.log("Login Error-1 : ", result);
-      console.log("Login Error-2 : ", result.error);
+      console.log("Login Error : ", result);
       // console.error("Error logging in");
     }
   };
