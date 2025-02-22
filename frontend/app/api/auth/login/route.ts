@@ -12,7 +12,6 @@ export async function POST(request: Request) {
     const response = await fetch(`${apiBaseUrl}/api/auth/login/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
       body: JSON.stringify({ email, password }),
     });
 

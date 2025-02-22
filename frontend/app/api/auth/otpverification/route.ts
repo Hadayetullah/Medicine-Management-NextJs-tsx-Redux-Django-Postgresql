@@ -11,7 +11,6 @@ export async function POST(request: Request) {
     const response = await fetch(`${apiBaseUrl}/api/auth/verify-otp/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
       body: JSON.stringify({ email, otp }),
     });
 

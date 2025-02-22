@@ -16,7 +16,6 @@ export async function GET() {
       const response: any = await fetch(`${apiBaseUrl}/api/auth/refresh-token/`, {
         method: "POST",
         headers: { 'Accept': 'application/json', "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ "refresh_token": refreshToken }),
       });
 
