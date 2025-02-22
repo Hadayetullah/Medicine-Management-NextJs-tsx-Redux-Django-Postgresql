@@ -67,12 +67,14 @@ export async function POST(request: Request) {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
         path: "/",
+        domain: undefined,
         maxAge: accessTokenExpiry > 0 ? accessTokenExpiry : 0, // Ensure expiry is non-negative
       });
       redirectResponse.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
         path: "/",
+        domain: undefined,
         maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
       });
     

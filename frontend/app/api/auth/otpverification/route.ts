@@ -59,12 +59,14 @@ export async function POST(request: Request) {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
         path: "/",
+        domain: undefined,
         // maxAge: Number(process.env.ACCESS_TOKEN_EXPIRY || 3600),
       });
       redirectResponse.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
         path: "/",
+        domain: undefined,
         // maxAge: Number(process.env.REFRESH_TOKEN_EXPIRY || 604800),
       });
     

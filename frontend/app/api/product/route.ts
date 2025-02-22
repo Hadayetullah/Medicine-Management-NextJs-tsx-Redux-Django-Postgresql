@@ -34,6 +34,7 @@ export async function GET() {
           httpOnly: true,
           secure: process.env.NEXT_PUBLIC_NODE_ENV === 'production',
           path: "/",
+          domain: undefined,
           maxAge: maxAge > 0 ? maxAge : 0,
         });
   
