@@ -11,6 +11,7 @@ export async function POST(request: Request) {
     const response = await fetch(`${apiBaseUrl}/api/auth/verify-otp/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ email, otp }),
     });
 
@@ -59,6 +60,7 @@ export async function POST(request: Request) {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
         path: "/",
+        sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax", 
         domain: undefined,
         // maxAge: Number(process.env.ACCESS_TOKEN_EXPIRY || 3600),
       });
@@ -66,6 +68,7 @@ export async function POST(request: Request) {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
         path: "/",
+        sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax", 
         domain: undefined,
         // maxAge: Number(process.env.REFRESH_TOKEN_EXPIRY || 604800),
       });

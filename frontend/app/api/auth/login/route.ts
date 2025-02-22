@@ -12,6 +12,7 @@ export async function POST(request: Request) {
     const response = await fetch(`${apiBaseUrl}/api/auth/login/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ email, password }),
     });
 
@@ -67,6 +68,7 @@ export async function POST(request: Request) {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
         path: "/",
+        sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax", 
         domain: undefined,
         maxAge: accessTokenExpiry > 0 ? accessTokenExpiry : 0, // Ensure expiry is non-negative
       });
@@ -74,6 +76,7 @@ export async function POST(request: Request) {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
         path: "/",
+        sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax", 
         domain: undefined,
         maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
       });
