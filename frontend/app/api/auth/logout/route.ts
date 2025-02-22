@@ -23,7 +23,8 @@ export async function POST() {
         'Accept': 'Application/json',
         "Content-Type": "application/json",
         },
-        body: JSON.stringify({ "refresh_token": token })
+      credentials: "include",
+      body: JSON.stringify({ "refresh_token": token })
     });
 
     if (response.ok) {
