@@ -57,18 +57,18 @@ export async function POST(request: Request) {
       const redirectResponse = NextResponse.json({ success: true, message: msg, redirectTo: "/" });
       redirectResponse.cookies.set("accessToken", accessToken, {
         httpOnly: true,
-        secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
+        secure: false,
         path: "/",
-        sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax", 
-        domain: undefined,
+        // sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax", 
+        // domain: undefined,
         // maxAge: Number(process.env.ACCESS_TOKEN_EXPIRY || 3600),
       });
       redirectResponse.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
+        secure: false,
         path: "/",
-        sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax", 
-        domain: undefined,
+        // sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax", 
+        // domain: undefined,
         // maxAge: Number(process.env.REFRESH_TOKEN_EXPIRY || 604800),
       });
     

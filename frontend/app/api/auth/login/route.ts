@@ -68,17 +68,17 @@ export async function POST(request: Request) {
         httpOnly: true,
         secure: false,
         path: "/",
-        sameSite: "lax", 
+        // sameSite: "lax", 
         // domain: undefined,
-        // maxAge: accessTokenExpiry > 0 ? accessTokenExpiry : 0, // Ensure expiry is non-negative
+        maxAge: accessTokenExpiry > 0 ? accessTokenExpiry : 0, // Ensure expiry is non-negative
       });
       redirectResponse.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
         secure: false,
         path: "/",
-        sameSite: "lax", 
+        // sameSite: "lax", 
         // domain: undefined,
-        // maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
+        maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
       });
 
       console.log("redirectResponse 2 : ", redirectResponse)
