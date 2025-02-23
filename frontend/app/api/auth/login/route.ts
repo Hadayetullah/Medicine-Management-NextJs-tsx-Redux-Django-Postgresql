@@ -66,18 +66,18 @@ export async function POST(request: Request) {
       console.log("redirectResponse 1 : ", redirectResponse)
       redirectResponse.cookies.set("accessToken", accessToken, {
         httpOnly: true,
-        secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
+        secure: false,
         path: "/",
-        sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax", 
-        domain: undefined,
+        sameSite: "lax", 
+        // domain: undefined,
         maxAge: accessTokenExpiry > 0 ? accessTokenExpiry : 0, // Ensure expiry is non-negative
       });
       redirectResponse.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: process.env.NEXT_PUBLIC_NODE_ENV === "production",
+        secure: false,
         path: "/",
-        sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax", 
-        domain: undefined,
+        sameSite: "lax", 
+        // domain: undefined,
         maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
       });
 
