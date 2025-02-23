@@ -1,5 +1,4 @@
 import { decodeToken } from "@/app/actions/serverActions";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 // export const dynamic = "force-dynamic";
@@ -62,45 +61,29 @@ export async function POST(request: Request) {
 
       const accessTokenExpiry = decodedAccessToken.exp - currentTime - 30;
       const refreshTokenExpiry = decodedRefreshToken.exp - currentTime - 30;
-
-
-      cookies().set("accessToken", accessToken, {
+    
+      const redirectResponse = NextResponse.json({ success: true, redirectTo: "/" });
+      console.log("redirectResponse 1 : ", redirectResponse)
+      redirectResponse.cookies.set("accessToken", accessToken, {
         httpOnly: true,
         secure: false,
         path: "/",
-        maxAge: accessTokenExpiry > 0 ? accessTokenExpiry : 0,
+        sameSite: "lax", 
+        // domain: undefined,
+        // maxAge: accessTokenExpiry > 0 ? accessTokenExpiry : 0, // Ensure expiry is non-negative
       });
-
-      cookies().set("refreshToken", refreshToken, {
+      redirectResponse.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
         secure: false,
         path: "/",
-        maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
+        sameSite: "lax", 
+        // domain: undefined,
+        // maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
       });
-    
-      // const redirectResponse = NextResponse.json({ success: true, redirectTo: "/" });
-      // console.log("redirectResponse 1 : ", redirectResponse)
-      // redirectResponse.cookies.set("accessToken", accessToken, {
-      //   httpOnly: true,
-      //   secure: false,
-      //   path: "/",
-      //   sameSite: "lax", 
-      //   // domain: undefined,
-      //   maxAge: accessTokenExpiry > 0 ? accessTokenExpiry : 0, // Ensure expiry is non-negative
-      // });
-      // redirectResponse.cookies.set("refreshToken", refreshToken, {
-      //   httpOnly: true,
-      //   secure: false,
-      //   path: "/",
-      //   sameSite: "lax", 
-      //   // domain: undefined,
-      //   maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
-      // });
 
-      // console.log("redirectResponse 2 : ", redirectResponse)
+      console.log("redirectResponse 2 : ", redirectResponse)
     
-      // return redirectResponse;
-      return NextResponse.json({ success: true, redirectTo: "/" });
+      return redirectResponse;
     }
     
   } catch (error) {
