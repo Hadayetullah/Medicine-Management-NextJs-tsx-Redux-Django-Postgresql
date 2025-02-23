@@ -38,10 +38,10 @@ export async function POST(request: Request) {
 
       nextResponse.cookies.set('accessToken', newAccessToken, {
         httpOnly: true,
-        secure: process.env.NEXT_PUBLIC_NODE_ENV === 'production',
+        secure: false,
         path: "/",
-        sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax",
-        domain: undefined,
+        // sameSite: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "none" : "lax",
+        // domain: undefined,
         maxAge: maxAge > 0 ? maxAge : 0,
       });
 
