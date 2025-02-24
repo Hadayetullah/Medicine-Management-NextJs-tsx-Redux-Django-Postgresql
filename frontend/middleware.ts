@@ -33,5 +33,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/update-and-detail", "/add-medicine", "/protected/:path*"], // Adjust as needed
+  matcher: ["/update-and-detail", "/add-medicine", "/protected/:path*"], // Adjust as needed
 };

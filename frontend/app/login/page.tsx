@@ -55,8 +55,8 @@ const LoginPage = () => {
 
     const result = await res.json();
     if (result.success) {
-      dispatch(setLoading(false));
       router.push(result.redirectTo); // Redirect to the root URL
+      dispatch(setLoading(false));
     } else {
       dispatch(setLoading(false));
       if (result?.error?.non_field_errors[0]?.code === "user_inactive") {

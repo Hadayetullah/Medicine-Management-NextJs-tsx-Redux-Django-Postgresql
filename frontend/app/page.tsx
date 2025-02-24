@@ -8,6 +8,7 @@ import { setMedicineList } from "@/lib/features/productSlice";
 import { connectWebSockets } from "@/app/actions/apiActions";
 import { FetchMedicinesHandleSockets } from "@/app/actions/clientActions";
 import Loader from "./components/client/Loader";
+import { isRefreshTokenValid } from "./actions/serverActions";
 
 export default function HomePage() {
   const router = useRouter();
@@ -27,16 +28,21 @@ export default function HomePage() {
   useEffect(() => {
     // getMedicineList();
     const handleFetchMedicinesHandleSockets = async () => {
-      if (medicineList === undefined || medicineList.length < 1) {
-        setLoading(true);
-        const medicineListLength = medicineList.length;
-        const isLoading = await FetchMedicinesHandleSockets({
-          dispatch,
-          medicineListLength,
-          connections,
-          connectionDetails,
-        });
-        setLoading(isLoading); // Update the state with the returned value
+      const isRefreshToken = await isRefreshTokenValid();
+      if (isRefreshToken) {
+        if (medicineList === undefined || medicineList.length < 1) {
+          setLoading(true);
+          const medicineListLength = medicineList.length;
+          const isLoading = await FetchMedicinesHandleSockets({
+            dispatch,
+            medicineListLength,
+            connections,
+            connectionDetails,
+          });
+          setLoading(isLoading); // Update the state with the returned value
+        }
+      } else {
+        router.push("/login");
       }
     };
 
