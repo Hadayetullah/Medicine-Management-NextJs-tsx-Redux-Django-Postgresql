@@ -63,7 +63,6 @@ export async function POST(request: Request) {
       const refreshTokenExpiry = decodedRefreshToken.exp - currentTime - 30;
     
       const redirectResponse = NextResponse.json({ success: true, redirectTo: "/" });
-      console.log("redirectResponse 1 : ", redirectResponse)
       redirectResponse.cookies.set("accessToken", accessToken, {
         httpOnly: true,
         secure: false,
@@ -80,8 +79,6 @@ export async function POST(request: Request) {
         // domain: undefined,
         maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
       });
-
-      console.log("redirectResponse 2 : ", redirectResponse)
     
       return redirectResponse;
     }
