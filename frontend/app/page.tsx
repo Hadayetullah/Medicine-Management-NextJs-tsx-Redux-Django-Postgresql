@@ -23,27 +23,27 @@ export default function HomePage() {
     medicineList,
   } = useAppSelector((state) => state.product);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     // getMedicineList();
     const handleFetchMedicinesHandleSockets = async () => {
-      const isRefreshToken = await isRefreshTokenValid();
-      if (isRefreshToken) {
-        if (medicineList === undefined || medicineList.length < 1) {
-          setLoading(true);
-          const medicineListLength = medicineList.length;
-          const isLoading = await FetchMedicinesHandleSockets({
-            dispatch,
-            medicineListLength,
-            connections,
-            connectionDetails,
-          });
-          setLoading(isLoading); // Update the state with the returned value
-        }
-      } else {
-        router.push("/login");
+      // const isRefreshToken = await isRefreshTokenValid();
+      // if (isRefreshToken) {
+      if (medicineList === undefined || medicineList.length < 1) {
+        // setLoading(true);
+        const medicineListLength = medicineList.length;
+        const isLoading = await FetchMedicinesHandleSockets({
+          dispatch,
+          medicineListLength,
+          connections,
+          connectionDetails,
+        });
+        setLoading(isLoading); // Update the state with the returned value
       }
+      // } else {
+      //   router.push("/login");
+      // }
     };
 
     handleFetchMedicinesHandleSockets();
