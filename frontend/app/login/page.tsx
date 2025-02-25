@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { setLoading } from "../../lib/features/authSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import DisplayError from "../components/DisplayError";
+import { isRefreshTokenValid } from "../actions/serverActions";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -55,8 +56,11 @@ const LoginPage = () => {
 
     const result = await res.json();
     if (result.success) {
-      router.push(result.redirectTo); // Redirect to the root URL
-      dispatch(setLoading(false));
+      const isRefreshToken = await isRefreshTokenValid();
+      if (isRefreshToken) {
+        router.push(result.redirectTo); // Redirect to the root URL
+        dispatch(setLoading(false));
+      }
     } else {
       dispatch(setLoading(false));
       if (result?.error?.non_field_errors[0]?.code === "user_inactive") {
