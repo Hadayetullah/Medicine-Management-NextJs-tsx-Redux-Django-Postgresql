@@ -50,7 +50,7 @@ const LoginPage = () => {
     const res = await fetch("/api/auth/login/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      // credentials: "include",
       body: JSON.stringify({ email, password }),
     });
 
@@ -58,8 +58,10 @@ const LoginPage = () => {
     if (result.success) {
       const isRefreshToken = await isRefreshTokenValid();
       if (isRefreshToken) {
-        router.push(result.redirectTo); // Redirect to the root URL
+        router.push(`${result.redirectTo}?pass=true`); // Redirect to the root URL
         dispatch(setLoading(false));
+      } else {
+        setError("Something went wrong! Please reload the page and try again.");
       }
     } else {
       dispatch(setLoading(false));

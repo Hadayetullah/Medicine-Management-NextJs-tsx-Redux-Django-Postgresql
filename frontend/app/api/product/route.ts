@@ -28,7 +28,7 @@ export async function GET() {
         const currentTime = Math.floor(Date.now() / 1000);
         const maxAge = payload.exp - currentTime - 30;
   
-        const nextResponse = NextResponse.next();
+        const nextResponse = NextResponse.json({ success: true, message: "Token refreshed" });
   
         nextResponse.cookies.set('accessToken', newAccessToken, {
           httpOnly: true,
