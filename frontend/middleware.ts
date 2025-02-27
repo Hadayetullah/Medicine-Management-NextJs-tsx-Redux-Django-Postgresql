@@ -1,10 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parse } from "cookie";
-// import { decodeToken } from "./app/actions/serverActions";
-
 
 export async function middleware(req: NextRequest) {
-  console.log("Middleware called");
+  const url = req.nextUrl;
+
+
+  // Ignore API requests
+  // if (url.pathname.startsWith("/api/")) {
+  //   console.log("Start with : ", url.pathname)
+  //   return NextResponse.next();
+  // }
+
+  // if (req.method === "GET" || req.method === "POST") {
+  //   console.log("Skipping non-GET request:", req.method);
+  //   return NextResponse.next();
+  // }
+  
+  const searchParams = url.searchParams;
+  const pass = searchParams.get("pass");
+  if (pass === "true") {
+    console.log("pass")
+    return NextResponse.next();
+  }
+
+  console.log("Middleware called")
   const cookieHeader = req.headers.get("cookie") || "";
   const cookies = parse(cookieHeader);
   // const accessToken = cookies.accessToken;
@@ -33,5 +52,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/update-and-detail", "/add-medicine", "/protected/:path*"], // Adjust as needed
+  // matcher: ["/", "/update-and-detail", "/add-medicine", "/protected/:path*"], // Adjust as needed
+  matcher: ["/protected/:path*"], 
 };

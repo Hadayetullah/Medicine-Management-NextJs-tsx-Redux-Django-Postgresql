@@ -40,6 +40,8 @@ export default function HomePage() {
           connectionDetails,
         });
         setLoading(isLoading); // Update the state with the returned value
+      } else {
+        setLoading(false);
       }
       // } else {
       //   router.push("/login");
