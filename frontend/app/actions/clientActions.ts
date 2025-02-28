@@ -1,8 +1,9 @@
-import { setMedicineList } from "@/lib/features/productSlice";
+import { setMedicineList, setError } from "@/lib/features/productSlice";
 import { connectWebSockets } from "./apiActions";
 
 import { connectionDetailsType, MedicineType, WebSocketState } from "@/lib/features/productSlice";
 import { getWSurl } from "./serverActions";
+import apiService from "./apiService";
 
 interface FetchMedicinesHandleSocketsProps {
     dispatch: any;
@@ -19,23 +20,43 @@ export async function FetchMedicinesHandleSockets({
   }: FetchMedicinesHandleSocketsProps): Promise<boolean> {
 
     const wsurl = await getWSurl();
-    // console.log("wsurl : ", wsurl)
     
-        if (medicineListLength < 1) {
-            const res = await fetch("/api/product/", {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
+    if (medicineListLength < 1) {
+        const response = await apiService.get("/api/product/medicine/");
+    
+        if (response.data) {
+            console.log("Clientaction response : ", response)
+            dispatch(setMedicineList(response.data));
+    
+        } else {
+            const tmpErrors: string[] = Object.values(response).map((error: any) => {
+            return error;
             });
 
-            const result = await res.json();
-            if (result.success) {
-                dispatch(setMedicineList(result.data));
-            
-            } else {
-            
-            console.error("Error getting medicine list:", result.error);
-            }
+            console.error("Error getting medicine list:", tmpErrors);
+    
+            dispatch(setError({apiError: tmpErrors}))
         }
+    }
+
+
+
+    
+        // if (medicineListLength < 1) {
+        //     const res = await fetch("/api/product/", {
+        //     method: "GET",
+        //     headers: { "Content-Type": "application/json" },
+        //     });
+
+        //     const result = await res.json();
+        //     if (result.success) {
+        //         dispatch(setMedicineList(result.data));
+            
+        //     } else {
+            
+        //     console.error("Error getting medicine list:", result.error);
+        //     }
+        // }
 
     
 

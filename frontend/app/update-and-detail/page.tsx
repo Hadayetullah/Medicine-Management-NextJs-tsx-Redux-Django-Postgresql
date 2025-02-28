@@ -126,7 +126,9 @@ export default function UpdateAndDetailPage() {
     const handleFetchMedicinesHandleSockets = async () => {
       if (medicineList === undefined || medicineList.length < 1) {
         setLoading(true);
-        const medicineListLength = medicineList.length;
+        const medicineListLength = medicineList?.length
+          ? medicineList.length
+          : 0;
         const connectionKeys = Object.keys(connections);
         const isLoading = await FetchMedicinesHandleSockets({
           dispatch,
@@ -216,7 +218,7 @@ export default function UpdateAndDetailPage() {
               style={{ scrollbarWidth: "thin", zIndex: "-1" }}
             >
               <div className="w-full min-h-[60vh] max-h-[75vh] pb-5 bg-white">
-                {medicineList.length > 0 ? (
+                {medicineList?.length > 0 ? (
                   <div className="w-full h-full">
                     {filteredMedicines.length > 0 ? (
                       <DisplaySearchedMedicines

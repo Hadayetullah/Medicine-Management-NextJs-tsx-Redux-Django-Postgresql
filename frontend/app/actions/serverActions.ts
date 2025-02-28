@@ -144,3 +144,35 @@ export async function getWSurl() {
     const apiSocketUrl = process.env.NEXT_PUBLIC_BACKEND_SOCKET_BASE_URL;
     return apiSocketUrl;
 }
+
+
+export async function setCredentials(accessToken: string, refreshToken: string) {
+
+    const decodedAccessToken = await decodeToken(accessToken);
+    const decodedRefreshToken = await decodeToken(refreshToken);
+
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+
+    const accessTokenExpiry = decodedAccessToken.exp - currentTime - 30;
+    const refreshTokenExpiry = decodedRefreshToken.exp - currentTime - 30;
+    // cookies().set('session_userid', userId, {
+    //     httpOnly: true,
+    //     secure: process.env.NODE_ENV === 'production',
+    //     maxAge: 60 * 60 * 24 * 7, // One week
+    //     path: '/',
+    // })
+
+    cookies().set('accessToken', accessToken, {
+        httpOnly: true,
+        secure: false,
+        maxAge: accessTokenExpiry > 0 ? accessTokenExpiry : 0, // Ensure expiry is non-negative
+        path: '/',
+    })
+
+    cookies().set('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: false,
+        maxAge: refreshTokenExpiry > 0 ? refreshTokenExpiry : 0,
+        path: '/',
+    })
+}

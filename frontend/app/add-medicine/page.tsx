@@ -59,7 +59,9 @@ export default function AddMedicinePage() {
   useEffect(() => {
     const handleFetchMedicinesHandleSockets = async () => {
       if (medicineList === undefined || medicineList.length < 1) {
-        const medicineListLength = medicineList.length;
+        const medicineListLength = medicineList?.length
+          ? medicineList.length
+          : 0;
         setLoading(true);
         const isLoading = await FetchMedicinesHandleSockets({
           dispatch,
