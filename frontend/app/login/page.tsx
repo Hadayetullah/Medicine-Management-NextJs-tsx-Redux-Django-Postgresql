@@ -8,83 +8,51 @@ import { useRouter } from "next/navigation";
 import { setLoading } from "../../lib/features/authSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import DisplayError from "../components/DisplayError";
-import { isRefreshTokenValid } from "../actions/serverActions";
+import { isRefreshTokenValid, setCredentials } from "../actions/serverActions";
+import apiService from "../actions/apiService";
 
 const LoginPage = () => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<any>(null);
 
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-
   const { loading } = useAppSelector((state) => state.auth);
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   dispatch(setLoading(true));
-
-  //   try {
-  //     const response = await fetch("/api/auth/login/", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ email, password }),
-  //     });
-
-  //     if (!response.redirected) {
-  //       const result = await response.json();
-  //       setError(result.message || "Login failed");
-  //     }
-  //   } catch {
-  //     setError("An unexpected error occurred.");
-  //   }
-  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     dispatch(setLoading(true));
 
-    const res = await fetch("/api/auth/login/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      // credentials: "include",
-      body: JSON.stringify({ email, password }),
-    });
+    const response = await apiService.postWithoutToken(
+      "/api/auth/login/",
+      JSON.stringify({ email, password })
+    );
 
-    const result = await res.json();
-    if (result.success) {
-      const isRefreshToken = await isRefreshTokenValid();
-      if (isRefreshToken) {
-        router.push(`${result.redirectTo}?pass=true`); // Redirect to the root URL
-        dispatch(setLoading(false));
+    if (response.token) {
+      setCredentials(response.token.accessToken, response.token.refreshToken);
+
+      const checkRefreshToken = await isRefreshTokenValid();
+
+      if (checkRefreshToken) {
+        router.push("/?login=true");
       } else {
-        setError("Something went wrong! Please reload the page and try again.");
+        setError([
+          "Something went wrong. Please reload the home page and try again.",
+        ]);
       }
     } else {
-      dispatch(setLoading(false));
-      if (result?.error?.non_field_errors[0]?.code === "user_inactive") {
-        console.log(
-          "Inactive error login: ",
-          result.error.non_field_errors[0].code
-        );
-      } else if (result?.error) {
-        console.log("Login Error : ", result.error);
-        setError(result.error);
-      } else {
-        console.log("Login Error : ", result);
-        setError("Error registering user");
-      }
-      // console.log("Login Error : ", result);
-      // console.error("Error logging in");
-    }
-  };
+      const tmpErrors: string[] = Object.values(response).map((error: any) => {
+        return error;
+      });
 
-  // useEffect(() => {
-  //   dispatch(setLoading(false));
-  // }, []);
+      setError(tmpErrors);
+    }
+
+    dispatch(setLoading(false));
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { parse } from "cookie";
 
 export async function middleware(req: NextRequest) {
-  const url = req.nextUrl;
+  // const url = req.nextUrl;
 
 
   // Ignore API requests
@@ -16,22 +16,22 @@ export async function middleware(req: NextRequest) {
   //   return NextResponse.next();
   // }
   
-  const searchParams = url.searchParams;
-  const pass = searchParams.get("pass");
-  if (pass === "true") {
-    console.log("pass")
-    return NextResponse.next();
-  }
+  // const searchParams = url.searchParams;
+  // const pass = searchParams.get("pass");
+  // if (pass === "true") {
+  //   console.log("pass")
+  //   return NextResponse.next();
+  // }
 
-  console.log("Middleware called")
-  const cookieHeader = req.headers.get("cookie") || "";
-  const cookies = parse(cookieHeader);
-  // const accessToken = cookies.accessToken;
-  const refreshToken = cookies.refreshToken;
+  // console.log("Middleware called")
+  // const cookieHeader = req.headers.get("cookie") || "";
+  // const cookies = parse(cookieHeader);
+  // // const accessToken = cookies.accessToken;
+  // const refreshToken = cookies.refreshToken;
 
-  if (!refreshToken) {
-    return NextResponse.redirect(new URL("/login?expired=true", req.url));
-  }
+  // if (!refreshToken) {
+  //   return NextResponse.redirect(new URL("/login?expired=true", req.url));
+  // }
 
   return NextResponse.next();
 
