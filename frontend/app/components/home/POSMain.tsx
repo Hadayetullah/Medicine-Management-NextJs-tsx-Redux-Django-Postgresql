@@ -7,8 +7,9 @@ import { setMedicineList } from "@/lib/features/productSlice";
 import { connectWebSockets } from "@/app/actions/apiActions";
 import { FetchMedicinesHandleSockets } from "@/app/actions/clientActions";
 import Loader from "../client/Loader";
+import Sidebar from "./Sidebar";
 
-const TestHome = () => {
+const POSMain = () => {
   const dispatch = useAppDispatch();
 
   const {
@@ -54,11 +55,7 @@ const TestHome = () => {
     return <Loader />;
   }
 
-  return (
-    <h1 className="text-2xl">
-      This Home page is under development. Please visit other pages
-    </h1>
-  );
+  return <Sidebar />;
 };
 
-export default TestHome;
+export default POSMain;

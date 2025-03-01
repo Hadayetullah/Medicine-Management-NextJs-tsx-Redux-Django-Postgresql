@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 
 import { getRefreshToken } from "./actions/serverActions";
 
-import TestHome from "./components/home/TestHome";
+import Sidebar from "./components/home/Sidebar";
+import POSMain from "./components/home/POSMain";
 
 export default async function HomePage({
   searchParams,
@@ -27,7 +28,7 @@ export default async function HomePage({
 
   return (
     <div className="max-w-[1400px] mx-auto mt-[70px]">
-      <TestHome />
+      <POSMain />
     </div>
   );
 }

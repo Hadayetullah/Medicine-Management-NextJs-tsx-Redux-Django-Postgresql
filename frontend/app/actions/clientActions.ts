@@ -26,7 +26,7 @@ export async function FetchMedicinesHandleSockets({
     
         if (response.data) {
             console.log("Clientaction response : ", response)
-            dispatch(setMedicineList(response.data));
+            dispatch(setMedicineList({msg: response.message, data: response.data}));
     
         } else {
             const tmpErrors: string[] = Object.values(response).map((error: any) => {

@@ -53,7 +53,7 @@ const Authenticated: React.FC<AuthenticatedProps> = ({
                   path === "/" ? "bg-indigo-700" : ""
                 }`}
               >
-                Dashboard
+                POS
               </Link>
             </li>
 
@@ -88,7 +88,7 @@ const Authenticated: React.FC<AuthenticatedProps> = ({
                   path === "/" ? "bg-indigo-700 text-white" : ""
                 }`}
               >
-                Dashboard
+                POS
               </Link>
 
               <Link

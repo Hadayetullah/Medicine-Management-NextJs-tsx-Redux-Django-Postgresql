@@ -183,9 +183,9 @@ const websocketSlice = createSlice({
       }
     },
 
-    setMedicineList: (state, action: PayloadAction<{message: string, data: MedicineType[]}>) => {
-      const {message, data} = action.payload;
-      // state.message = message;
+    setMedicineList: (state, action: PayloadAction<{msg: string|null, data: MedicineType[]}>) => {
+      const {msg, data} = action.payload;
+      // state.message = msg;
       state.medicineList = data;
       state.loading = false;
     },
