@@ -2,7 +2,7 @@ import React from "react";
 
 const Sidebar = () => {
   return (
-    <div className="absolute left-0 flex flex-col shadow-md w-14 h-full bg-white items-center space-y-4">
+    <div className="pt-[65px] fixed left-0 flex flex-col shadow-lg shadow-black w-14 h-full bg-white items-center space-y-4">
       <button className="relative flex flex-row items-center group">
         <svg
           aria-hidden="true"

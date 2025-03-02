@@ -27,7 +27,7 @@ export default async function HomePage({
   console.log("refreshToken : ", refreshToken);
 
   return (
-    <div className="max-w-[1400px] mx-auto mt-[70px]">
+    <div className="w-full mx-auto relative">
       <POSMain />
     </div>
   );
