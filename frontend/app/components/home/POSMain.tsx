@@ -8,6 +8,9 @@ import { connectWebSockets } from "@/app/actions/apiActions";
 import { FetchMedicinesHandleSockets } from "@/app/actions/clientActions";
 import Loader from "../client/Loader";
 import Sidebar from "./Sidebar";
+import CustomerSection from "./CustomerSection";
+import LeftSection from "./LeftSection";
+import RightSection from "./RightSection";
 
 const POSMain = () => {
   const dispatch = useAppDispatch();
@@ -55,7 +58,20 @@ const POSMain = () => {
     return <Loader />;
   }
 
-  return <Sidebar />;
+  return (
+    <div>
+      <Sidebar />
+      <div className="w-full pl-[58px] pt-[55px] flex flex-row justify-between fixed top-[0] left-[0px] h-full">
+        <div className="w-[45%]">
+          <LeftSection />
+        </div>
+
+        <div className="w-[55%]">
+          <RightSection />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default POSMain;
