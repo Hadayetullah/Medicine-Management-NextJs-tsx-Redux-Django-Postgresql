@@ -1,6 +1,7 @@
 import React from "react";
 import CustomerSection from "./CustomerSection";
 import LeftBottomNav from "./LeftBottomNav";
+import Invoice from "./Invoice";
 
 const LeftSection = () => {
   return (
@@ -9,6 +10,7 @@ const LeftSection = () => {
       style={{ overflow: "hidden" }}
     >
       <CustomerSection />
+      <Invoice />
       <LeftBottomNav />
     </div>
   );
