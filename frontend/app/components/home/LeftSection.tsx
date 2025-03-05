@@ -1,6 +1,6 @@
 import React from "react";
 import CustomerSection from "./CustomerSection";
-import LeftBottomNav from "./LeftBottomNav";
+import LeftBottomSection from "./LeftBottomSection";
 import Invoice from "./Invoice";
 
 const LeftSection = () => {
@@ -11,7 +11,7 @@ const LeftSection = () => {
     >
       <CustomerSection />
       <Invoice />
-      <LeftBottomNav />
+      <LeftBottomSection />
     </div>
   );
 };
