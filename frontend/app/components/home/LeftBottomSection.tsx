@@ -2,11 +2,11 @@ import React from "react";
 import LeftBottomNav from "./LeftBottomNav";
 
 const LeftBottomSection = () => {
-  const svgIcon = (
+  const dolarIcon = (
     <svg
       aria-hidden="true"
       focusable="false"
-      className="w-[20px] h-[20px]"
+      className="w-[18px] h-[18px]"
       role="img"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 320 512"
@@ -20,12 +20,36 @@ const LeftBottomSection = () => {
 
   return (
     <div className="absolute w-full bottom-1">
-      <div className="text-[#5c5c5c] font-semibold text-lg shadow-[0_-1px_2px_#6a6a6a]">
-        <div>
-          <div>
+      <div className="text-[#5c5c5c] text-[17px] font-semibold text-lg shadow-[0_-1px_2px_#6a6a6a] flex justify-end py-4 px-4">
+        <div className="flex flex-col">
+          <div className="flex flex-row border-t border-gray-300 py-2 justify-between items-center gap-x-36">
             <h4>Sub Total</h4>
-            <div>
-              {svgIcon}
+            <div className="flex flex-row items-center">
+              {dolarIcon}
+              <h4>0.00</h4>
+            </div>
+          </div>
+
+          <div className="flex flex-row border-t border-gray-300 py-2 justify-between items-center gap-x-36">
+            <h4>TAX</h4>
+            <div className="flex flex-row items-center">
+              {dolarIcon}
+              <h4>0.00</h4>
+            </div>
+          </div>
+
+          <div className="flex flex-row border-t border-gray-300 py-2 justify-between items-center gap-x-36">
+            <h4>Shipping</h4>
+            <div className="flex flex-row items-center">
+              {dolarIcon}
+              <h4>0.00</h4>
+            </div>
+          </div>
+
+          <div className="flex flex-row border-t border-gray-300 py-2 justify-between items-center gap-x-36">
+            <h4>Discount on Cart</h4>
+            <div className="flex flex-row items-center">
+              {dolarIcon}
               <h4>0.00</h4>
             </div>
           </div>
@@ -33,11 +57,11 @@ const LeftBottomSection = () => {
       </div>
 
       <div className="bg-[#b42a2b] text-white text-[20px] font-semibold flex flex-row justify-between items-center my-2 py-1 rounded">
-        <div className="w-[60%]">
+        <div className="w-[50%]">
           <h4 className="pl-4">Items Count (0)</h4>
         </div>
 
-        <div className="flex flex-row justify-between items-center w-[40%]">
+        <div className="flex flex-row justify-between items-center w-[50%]">
           <h4>Total</h4>
 
           <div className="flex flex-row justify-between items-center">
