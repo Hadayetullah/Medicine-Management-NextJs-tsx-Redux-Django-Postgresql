@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
+import SearchMedicine from "./SearchMedicine";
 
 const RightSection = () => {
-  return <div className="w-full">RightSection</div>;
+  const [searchQuery, setSearchQuery] = useState("");
+  return (
+    <div className="w-full">
+      <SearchMedicine
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
+    </div>
+  );
 };
 
 export default RightSection;
