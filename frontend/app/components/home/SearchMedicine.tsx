@@ -18,7 +18,7 @@ const SearchMedicine: React.FC<SearchMedicinesProps> = ({
 
   return (
     <div className="min-w-[100px] max-w-full h-[60px] flex justify-center mx-auto relative">
-      <div className="w-full pl-14 border border-l-0 border-r-0 border-gray-500 shadow-lg text-2xl h-full">
+      <div className="w-full pl-14 shadow-lg text-2xl h-full">
         <input
           type="text"
           placeholder="Search by Medicine Name"

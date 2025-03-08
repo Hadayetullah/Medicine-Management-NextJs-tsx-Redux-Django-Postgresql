@@ -51,6 +51,7 @@ export type MedicineType = {
     } | null;
     price: number;
     power: number;
+    quantity: number;
     shelf_no: number;
     image_url: string | null;
     created_at: Date;
