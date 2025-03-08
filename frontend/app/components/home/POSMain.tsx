@@ -67,7 +67,7 @@ const POSMain = () => {
         </div>
 
         <div className="w-[50%]">
-          <RightSection />
+          <RightSection medicineList={medicineList} />
         </div>
       </div>
     </div>
