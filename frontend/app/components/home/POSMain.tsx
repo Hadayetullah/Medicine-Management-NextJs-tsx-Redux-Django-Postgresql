@@ -14,6 +14,7 @@ import RightSection from "./RightSection";
 
 const POSMain = () => {
   const dispatch = useAppDispatch();
+  const [selectedMedicine, setSelectedMedicine] = useState<any>(null);
 
   const {
     connectionDetails,
@@ -67,7 +68,10 @@ const POSMain = () => {
         </div>
 
         <div className="w-[50%]">
-          <RightSection medicineList={medicineList} />
+          <RightSection
+            medicineList={medicineList}
+            setSelectedMedicine={setSelectedMedicine}
+          />
         </div>
       </div>
     </div>

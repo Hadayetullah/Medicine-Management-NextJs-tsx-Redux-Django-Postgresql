@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
+import { PrescriptionDetailType } from "@/lib/features/customerSlice";
 
 const Invoice = () => {
+  const [customerData, setCustomerData] = useState<PrescriptionDetailType>({
+    name: "",
+    age: 0,
+    phone: "",
+    address: "",
+    email: "",
+    medicine_data: [],
+  });
+
   const dolarIcon = (
     <svg
       aria-hidden="true"

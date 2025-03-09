@@ -7,11 +7,14 @@ import { MedicineType } from "@/lib/features/productSlice";
 
 interface RightSectionProps {
   medicineList: MedicineType[];
+  setSelectedMedicine: (data: any) => void;
 }
 
-const RightSection: React.FC<RightSectionProps> = ({ medicineList }) => {
+const RightSection: React.FC<RightSectionProps> = ({
+  medicineList,
+  setSelectedMedicine,
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
-  console.log(searchQuery);
 
   const filteredMedicines = useMemo(() => {
     if (medicineList && medicineList.length > 0) {
@@ -34,6 +37,7 @@ const RightSection: React.FC<RightSectionProps> = ({ medicineList }) => {
       <DisplayMedicines
         medicineList={medicineList}
         filteredMedicines={filteredMedicines}
+        setSelectedMedicine={setSelectedMedicine}
       />
     </div>
   );

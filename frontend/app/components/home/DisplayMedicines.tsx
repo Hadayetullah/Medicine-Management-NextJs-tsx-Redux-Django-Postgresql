@@ -4,12 +4,14 @@ import React from "react";
 interface DisplayMedicinesProps {
   filteredMedicines: MedicineType[];
   medicineList: MedicineType[];
+  setSelectedMedicine: (data: any) => void;
   //   handleUpdateDetail: (data: any, modalStatus: boolean) => void;
 }
 
 const DisplayMedicines: React.FC<DisplayMedicinesProps> = ({
   medicineList,
   filteredMedicines,
+  setSelectedMedicine,
 }) => {
   const dolarIcon = (
     <svg

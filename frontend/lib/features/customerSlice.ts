@@ -1,14 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-
-export type CustomerDetailType = {
-    name: string;
-    age: number;
-    phone: string;
-    address: string;
-    email: string;
-}
-
 export type MedicineType = {
     name: string;
     company: string;
@@ -19,11 +10,20 @@ export type MedicineType = {
     quantity: number;
 }
 
+export type PrescriptionDetailType = {
+    name: string;
+    age: number;
+    phone: string;
+    address: string;
+    email: string;
+    medicine_data: MedicineType[]
+}
+
 interface MainStateType {
     message: any;
     loading: boolean;
     error: any;
-    CurrentCustomer: MedicineType[];
+    CurrentCustomer: PrescriptionDetailType | null;
     tmpHoldedCustomers: any[];
 }
 
@@ -31,7 +31,7 @@ const initialState: MainStateType = {
     message: null,
     error: null,
     loading: false,
-    CurrentCustomer: [],
+    CurrentCustomer: null,
     tmpHoldedCustomers: [],
 }
 const customerSlice = createSlice({
