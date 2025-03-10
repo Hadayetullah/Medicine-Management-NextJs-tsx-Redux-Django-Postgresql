@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PrescriptionDetailType } from "@/lib/features/customerSlice";
 
-const Invoice: React.FC<any> = ({ selectedMedicine }) => {
+const Invoice = () => {
   const [customerData, setCustomerData] = useState<PrescriptionDetailType>({
     name: "",
     age: 0,
@@ -11,24 +11,24 @@ const Invoice: React.FC<any> = ({ selectedMedicine }) => {
     medicine_data: [],
   });
 
-  useEffect(() => {
-    if (selectedMedicine) {
-      const newMedicineObj = {
-        name: selectedMedicine.name,
-        company: selectedMedicine.company,
-        category: selectedMedicine.company,
-        dosage_form: selectedMedicine.dosage_form,
-        power: selectedMedicine.power,
-        price: selectedMedicine.price,
-        quantity: 1,
-      };
+  // useEffect(() => {
+  //   if (selectedMedicine) {
+  //     const newMedicineObj = {
+  //       name: selectedMedicine.name,
+  //       company: selectedMedicine.company,
+  //       category: selectedMedicine.company,
+  //       dosage_form: selectedMedicine.dosage_form,
+  //       power: selectedMedicine.power,
+  //       price: selectedMedicine.price,
+  //       quantity: 1,
+  //     };
 
-      setCustomerData((prevData) => ({
-        ...prevData,
-        medicine_data: [...prevData.medicine_data, newMedicineObj],
-      }));
-    }
-  }, [selectedMedicine]);
+  //     setCustomerData((prevData) => ({
+  //       ...prevData,
+  //       medicine_data: [...prevData.medicine_data, newMedicineObj],
+  //     }));
+  //   }
+  // }, [selectedMedicine]);
 
   const dolarIcon = (
     <svg

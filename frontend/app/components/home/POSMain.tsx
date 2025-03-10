@@ -14,9 +14,6 @@ import RightSection from "./RightSection";
 
 const POSMain = () => {
   const dispatch = useAppDispatch();
-  const [selectedMedicine, setSelectedMedicine] = useState<any>(null);
-
-  console.log("selectedMedicine : ", selectedMedicine);
 
   const {
     connectionDetails,
@@ -66,7 +63,7 @@ const POSMain = () => {
       <Sidebar />
       <div className="w-full pl-[58px] pt-[55px] flex flex-row justify-between fixed top-[0] left-[0px] h-full">
         <div className="w-[50%]">
-          <LeftSection selectedMedicine={selectedMedicine} />
+          <LeftSection />
         </div>
 
         <div className="w-[50%]">

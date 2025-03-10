@@ -4,12 +4,12 @@ import LeftBottomSection from "./LeftBottomSection";
 import Invoice from "./Invoice";
 import { MedicineType } from "@/lib/features/productSlice";
 
-const LeftSection: React.FC<any> = ({ selectedMedicine }) => {
+const LeftSection = () => {
   return (
     <div className="relative w-full h-full border-r-[1px] border-gray-500">
       <div className="w-full h-full bg-white">
         <CustomerSection />
-        <Invoice selectedMedicine={selectedMedicine} />
+        <Invoice />
       </div>
       <LeftBottomSection />
     </div>
