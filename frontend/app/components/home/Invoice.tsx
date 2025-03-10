@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PrescriptionDetailType } from "@/lib/features/customerSlice";
 
-const Invoice = () => {
+const Invoice: React.FC<any> = ({ selectedMedicine }) => {
   const [customerData, setCustomerData] = useState<PrescriptionDetailType>({
     name: "",
     age: 0,
@@ -10,6 +10,25 @@ const Invoice = () => {
     email: "",
     medicine_data: [],
   });
+
+  useEffect(() => {
+    if (selectedMedicine) {
+      const newMedicineObj = {
+        name: selectedMedicine.name,
+        company: selectedMedicine.company,
+        category: selectedMedicine.company,
+        dosage_form: selectedMedicine.dosage_form,
+        power: selectedMedicine.power,
+        price: selectedMedicine.price,
+        quantity: 1,
+      };
+
+      setCustomerData((prevData) => ({
+        ...prevData,
+        medicine_data: [...prevData.medicine_data, newMedicineObj],
+      }));
+    }
+  }, [selectedMedicine]);
 
   const dolarIcon = (
     <svg
@@ -94,17 +113,19 @@ const Invoice = () => {
   return (
     <div className="w-full mt-2">
       <div className="bg-[#b42a2b] w-full py-1 flex flex-row items-center text-white uppercase font-semibold text-sm">
-        <span className="w-[30px]"></span>
-
         <div className="w-[33%] text-center">
           <h4>Medicines</h4>
         </div>
 
-        <div className="w-[17%]">
+        <div className="w-[10%]">
+          <h4>Power</h4>
+        </div>
+
+        <div className="w-[17%] text-center">
           <h4>Unit Price</h4>
         </div>
 
-        <div className="w-[25%] text-center">
+        <div className="w-[15%] text-center">
           <h4>Quantity</h4>
         </div>
 
@@ -114,185 +135,60 @@ const Invoice = () => {
       </div>
 
       <div className="bg-white w-full py-2 flex flex-col text-[#5c5c5c] font-semibold text-[17px] h-[calc(100vh-455px)] overflow-y-auto">
-        <div className="w-full flex flex-row items-center justify-between">
-          <div className="px-1">{writeIcon}</div>
+        {customerData.medicine_data?.length > 0 ? (
+          customerData.medicine_data.map((medicine: any, index: number) => {
+            return (
+              <div
+                key={index}
+                className="w-full flex flex-row items-center justify-between"
+              >
+                <div className="px-1">{writeIcon}</div>
 
-          <div className="w-full flex flex-row items-center justify-between border border-b-0 border-gray-400 py-2">
-            <div className="w-[35%] pl-2">
-              <h5>Medicine</h5>
-            </div>
+                <div
+                  className={`w-full flex flex-row items-center justify-between border ${
+                    index + 1 === customerData?.medicine_data?.length
+                      ? "border-b-1"
+                      : "border-b-0"
+                  } border-gray-400 py-2`}
+                >
+                  <div className="w-[35%] pl-2">
+                    <h5>{medicine.name}</h5>
+                  </div>
 
-            <div className="flex flex-row items-center w-[15%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
+                  <div className="flex flex-row items-center w-[15%]">
+                    <h5>{medicine.power}</h5>
+                  </div>
 
-            <div className="flex flex-row items-center justify-evenly w-[30%]">
-              <button>{minusIcon}</button>
-              <h5>1</h5>
-              <button>{plusIcon}</button>
-            </div>
+                  <div className="flex flex-row items-center w-[10%]">
+                    {dolarIcon}
+                    <h5>{medicine.price}</h5>
+                  </div>
 
-            <div className="flex flex-row items-center justify-center w-[20%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
+                  <div className="flex flex-row items-center justify-evenly w-[30%]">
+                    <button>{minusIcon}</button>
+                    <h5>1</h5>
+                    <button>{plusIcon}</button>
+                  </div>
+
+                  <div className="flex flex-row items-center justify-center w-[15%]">
+                    {dolarIcon}
+                    <h5>
+                      {parseInt(medicine.quantity) * parseFloat(medicine.price)}
+                    </h5>
+                  </div>
+                </div>
+
+                <div className="px-1 flex items-center">
+                  <button>{deleteIcon}</button>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="w-full flex flex-row items-center justify-center">
+            <h4>No Medicines Added</h4>
           </div>
-
-          <div className="px-1 flex items-center">
-            <button>{deleteIcon}</button>
-          </div>
-        </div>
-
-        <div className="w-full flex flex-row items-center justify-between">
-          <div className="px-1">{writeIcon}</div>
-
-          <div className="w-full flex flex-row items-center justify-between border border-gray-400 border-b-0 py-2">
-            <div className="w-[35%] pl-2">
-              <h5>Medicine</h5>
-            </div>
-
-            <div className="flex flex-row items-center w-[15%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
-
-            <div className="flex flex-row items-center justify-evenly w-[30%]">
-              <button>{minusIcon}</button>
-              <h5>1</h5>
-              <button>{plusIcon}</button>
-            </div>
-
-            <div className="flex flex-row items-center justify-center w-[20%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
-          </div>
-
-          <div className="px-1 flex items-center">
-            <button>{deleteIcon}</button>
-          </div>
-        </div>
-
-        <div className="w-full flex flex-row items-center justify-between">
-          <div className="px-1">{writeIcon}</div>
-
-          <div className="w-full flex flex-row items-center justify-between border border-gray-400 py-2">
-            <div className="w-[35%] pl-2">
-              <h5>Medicine</h5>
-            </div>
-
-            <div className="flex flex-row items-center w-[15%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
-
-            <div className="flex flex-row items-center justify-evenly w-[30%]">
-              <button>{minusIcon}</button>
-              <h5>1</h5>
-              <button>{plusIcon}</button>
-            </div>
-
-            <div className="flex flex-row items-center justify-center w-[20%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
-          </div>
-
-          <div className="px-1 flex items-center">
-            <button>{deleteIcon}</button>
-          </div>
-        </div>
-
-        <div className="w-full flex flex-row items-center justify-between">
-          <div className="px-1">{writeIcon}</div>
-
-          <div className="w-full flex flex-row items-center justify-between border border-b-0 border-gray-400 py-2">
-            <div className="w-[35%] pl-2">
-              <h5>Medicine</h5>
-            </div>
-
-            <div className="flex flex-row items-center w-[15%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
-
-            <div className="flex flex-row items-center justify-evenly w-[30%]">
-              <button>{minusIcon}</button>
-              <h5>1</h5>
-              <button>{plusIcon}</button>
-            </div>
-
-            <div className="flex flex-row items-center justify-center w-[20%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
-          </div>
-
-          <div className="px-1 flex items-center">
-            <button>{deleteIcon}</button>
-          </div>
-        </div>
-
-        <div className="w-full flex flex-row items-center justify-between">
-          <div className="px-1">{writeIcon}</div>
-
-          <div className="w-full flex flex-row items-center justify-between border border-gray-400 border-b-0 py-2">
-            <div className="w-[35%] pl-2">
-              <h5>Medicine</h5>
-            </div>
-
-            <div className="flex flex-row items-center w-[15%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
-
-            <div className="flex flex-row items-center justify-evenly w-[30%]">
-              <button>{minusIcon}</button>
-              <h5>1</h5>
-              <button>{plusIcon}</button>
-            </div>
-
-            <div className="flex flex-row items-center justify-center w-[20%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
-          </div>
-
-          <div className="px-1 flex items-center">
-            <button>{deleteIcon}</button>
-          </div>
-        </div>
-
-        <div className="w-full flex flex-row items-center justify-between">
-          <div className="px-1">{writeIcon}</div>
-
-          <div className="w-full flex flex-row items-center justify-between border border-gray-400 py-2">
-            <div className="w-[35%] pl-2">
-              <h5>Medicine</h5>
-            </div>
-
-            <div className="flex flex-row items-center w-[15%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
-
-            <div className="flex flex-row items-center justify-evenly w-[30%]">
-              <button>{minusIcon}</button>
-              <h5>1</h5>
-              <button>{plusIcon}</button>
-            </div>
-
-            <div className="flex flex-row items-center justify-center w-[20%]">
-              {dolarIcon}
-              <h5>20.00</h5>
-            </div>
-          </div>
-
-          <div className="px-1 flex items-center">
-            <button>{deleteIcon}</button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

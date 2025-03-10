@@ -4,16 +4,11 @@ import Image from "next/image";
 import DisplayMedicines from "./DisplayMedicines";
 
 import { MedicineType } from "@/lib/features/productSlice";
+import { useAppSelector } from "@/lib/hooks";
 
-interface RightSectionProps {
-  medicineList: MedicineType[];
-  setSelectedMedicine: (data: any) => void;
-}
+const RightSection = () => {
+  const { medicineList } = useAppSelector((state) => state.product);
 
-const RightSection: React.FC<RightSectionProps> = ({
-  medicineList,
-  setSelectedMedicine,
-}) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredMedicines = useMemo(() => {
@@ -37,7 +32,6 @@ const RightSection: React.FC<RightSectionProps> = ({
       <DisplayMedicines
         medicineList={medicineList}
         filteredMedicines={filteredMedicines}
-        setSelectedMedicine={setSelectedMedicine}
       />
     </div>
   );
