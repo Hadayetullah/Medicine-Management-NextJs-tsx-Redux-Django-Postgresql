@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { setMedicineList } from "@/lib/features/productSlice";
+import { MedicineType, setMedicineList } from "@/lib/features/productSlice";
 import { connectWebSockets } from "@/app/actions/apiActions";
 import { FetchMedicinesHandleSockets } from "@/app/actions/clientActions";
 import Loader from "../client/Loader";
@@ -14,7 +14,6 @@ import RightSection from "./RightSection";
 
 const POSMain = () => {
   const dispatch = useAppDispatch();
-  const [selectedMedicine, setSelectedMedicine] = useState<any>(null);
 
   const {
     connectionDetails,
@@ -68,10 +67,7 @@ const POSMain = () => {
         </div>
 
         <div className="w-[50%]">
-          <RightSection
-            medicineList={medicineList}
-            setSelectedMedicine={setSelectedMedicine}
-          />
+          <RightSection />
         </div>
       </div>
     </div>

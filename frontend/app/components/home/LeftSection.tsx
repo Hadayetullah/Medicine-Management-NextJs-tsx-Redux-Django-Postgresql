@@ -2,6 +2,7 @@ import React from "react";
 import CustomerSection from "./CustomerSection";
 import LeftBottomSection from "./LeftBottomSection";
 import Invoice from "./Invoice";
+import { MedicineType } from "@/lib/features/productSlice";
 
 const LeftSection = () => {
   return (
