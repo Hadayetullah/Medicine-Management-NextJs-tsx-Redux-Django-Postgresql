@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { PrescriptionDetailType } from "@/lib/features/customerSlice";
+import { useAppSelector } from "@/lib/hooks";
 
 const Invoice = () => {
+  const { tmpInvoice } = useAppSelector((state) => state.customer);
   const [customerData, setCustomerData] = useState<PrescriptionDetailType>({
     name: "",
     age: 0,
@@ -135,8 +137,8 @@ const Invoice = () => {
       </div>
 
       <div className="bg-white w-full py-2 flex flex-col text-[#5c5c5c] font-semibold text-[17px] h-[calc(100vh-455px)] overflow-y-auto">
-        {customerData.medicine_data?.length > 0 ? (
-          customerData.medicine_data.map((medicine: any, index: number) => {
+        {tmpInvoice?.length > 0 ? (
+          tmpInvoice.map((medicine: any, index: number) => {
             return (
               <div
                 key={index}
@@ -146,7 +148,7 @@ const Invoice = () => {
 
                 <div
                   className={`w-full flex flex-row items-center justify-between border ${
-                    index + 1 === customerData?.medicine_data?.length
+                    index + 1 === tmpInvoice?.length
                       ? "border-b-1"
                       : "border-b-0"
                   } border-gray-400 py-2`}
@@ -156,7 +158,7 @@ const Invoice = () => {
                   </div>
 
                   <div className="flex flex-row items-center w-[15%]">
-                    <h5>{medicine.power}</h5>
+                    <h5>{medicine.power}mg</h5>
                   </div>
 
                   <div className="flex flex-row items-center w-[10%]">
@@ -166,7 +168,7 @@ const Invoice = () => {
 
                   <div className="flex flex-row items-center justify-evenly w-[30%]">
                     <button>{minusIcon}</button>
-                    <h5>1</h5>
+                    <h5>{medicine.quantity}</h5>
                     <button>{plusIcon}</button>
                   </div>
 
