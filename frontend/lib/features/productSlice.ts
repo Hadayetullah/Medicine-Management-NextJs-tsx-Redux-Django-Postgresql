@@ -220,6 +220,14 @@ const websocketSlice = createSlice({
         state.message = action.payload.message
       }
     },
+
+    decreaseQuantity: (state, action: PayloadAction<any>) => {
+      state.medicineList[action.payload].quantity -= 1;
+    },
+
+    IncreaseQuantity: (state, action: PayloadAction<any>) => {
+        state.medicineList[action.payload].quantity += 1;
+    },
     
   },
 
@@ -238,6 +246,19 @@ const websocketSlice = createSlice({
 // },
 });
 
-export const { connectSocket, disconnectSocket, addProduct, setSocketError, setMedicineList, setMessage, resetProductSliceState, setError, setSubAction, updateMedicine } = websocketSlice.actions;
+export const { 
+  connectSocket, 
+  disconnectSocket, 
+  addProduct, 
+  setSocketError, 
+  setMedicineList, 
+  setMessage, 
+  resetProductSliceState, 
+  setError, 
+  setSubAction, 
+  updateMedicine, 
+  decreaseQuantity, 
+  IncreaseQuantity 
+} = websocketSlice.actions;
 
 export default websocketSlice.reducer;

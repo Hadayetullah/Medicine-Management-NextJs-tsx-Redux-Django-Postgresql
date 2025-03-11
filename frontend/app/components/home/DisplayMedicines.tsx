@@ -4,12 +4,18 @@ import React from "react";
 interface DisplayMedicinesProps {
   filteredMedicines: MedicineType[];
   medicineList: MedicineType[];
+  handleInvoiceList: (
+    medicine: MedicineType,
+    index: number,
+    id: string
+  ) => void;
   //   handleUpdateDetail: (data: any, modalStatus: boolean) => void;
 }
 
 const DisplayMedicines: React.FC<DisplayMedicinesProps> = ({
   medicineList,
   filteredMedicines,
+  handleInvoiceList,
 }) => {
   const dolarIcon = (
     <svg
@@ -36,6 +42,9 @@ const DisplayMedicines: React.FC<DisplayMedicinesProps> = ({
               return (
                 <button
                   key={index}
+                  onClick={() =>
+                    handleInvoiceList(medicine, index, medicine.id)
+                  }
                   className="flex flex-col items-center md:w-[calc(49%-1px)] lg:w-[calc(33%-1px)] xl:w-[calc(24%-1px)] 2xl:w-[calc(19%-1px)] h-[300px] text-nowrap text-gray-600 font-semibold border border-gray-400 rounded-[3px]"
                 >
                   <img
@@ -52,7 +61,7 @@ const DisplayMedicines: React.FC<DisplayMedicinesProps> = ({
                   <h4 title="Stock">QTY - ({medicine.quantity})</h4>
 
                   <h4 title="Medicine name with power">
-                    {medicine.name} - {medicine.power}
+                    {medicine.name} - {medicine.power}mg
                   </h4>
                   <h4 title="Category Name">{medicine.category?.name}</h4>
                   <h4 title="Company Name">{medicine.company?.name}</h4>
@@ -69,6 +78,9 @@ const DisplayMedicines: React.FC<DisplayMedicinesProps> = ({
                     return (
                       <button
                         key={index}
+                        onClick={() =>
+                          handleInvoiceList(medicine, index, medicine.id)
+                        }
                         className="flex flex-col items-center md:w-[calc(49%-1px)] lg:w-[calc(33%-1px)] xl:w-[calc(24%-1px)] 2xl:w-[calc(19%-1px)] h-[300px] text-nowrap text-gray-600 font-semibold border border-gray-400 rounded-[3px]"
                       >
                         <img
@@ -88,7 +100,7 @@ const DisplayMedicines: React.FC<DisplayMedicinesProps> = ({
                         <h4 title="Stock">QTY - ({medicine.quantity})</h4>
 
                         <h4 title="Medicine name with power">
-                          {medicine.name} - {medicine.power}
+                          {medicine.name} - {medicine.power}mg
                         </h4>
                         <h4 title="Category Name">{medicine.category?.name}</h4>
                         <h4 title="Company Name">{medicine.company?.name}</h4>
