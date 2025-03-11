@@ -6,7 +6,6 @@ import DisplayMedicines from "./DisplayMedicines";
 
 import { decreaseQuantity, MedicineType } from "@/lib/features/productSlice";
 import {
-  addOrUpdateMedicine,
   addTmpMedicine,
   updateTmpMedicine,
 } from "@/lib/features/customerSlice";
@@ -40,15 +39,10 @@ const RightSection = () => {
     if (existingMedicineIndex !== -1) {
       dispatch(decreaseQuantity(index));
       dispatch(updateTmpMedicine(existingMedicineIndex));
-      // tmpInvoice[existingMedicineIndex].quantity += 1;
     } else {
       dispatch(decreaseQuantity(index));
       dispatch(addTmpMedicine(medicine));
-      // tmpInvoice.push({ ...action.payload, quantity: 1 });
     }
-
-    // dispatch(addOrUpdateMedicine(medicine));
-    // console.log("medicine : ", medicine);
   };
 
   return (

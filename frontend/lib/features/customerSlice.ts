@@ -61,22 +61,6 @@ const customerSlice = createSlice({
     name: "customer",
     initialState,
     reducers: {
-        addOrUpdateMedicine: (state, action: PayloadAction<any>) => {
-            console.log("action : ", action)
-            const existingMedicineIndex = state.tmpInvoice.findIndex(
-              (medicine) => medicine?.name === action.payload?.name
-            );
-            console.log("existingMedicineIndex : ", existingMedicineIndex)
-      
-            if (existingMedicineIndex !== -1) {
-              // If the medicine exists, update quantity
-              state.tmpInvoice[existingMedicineIndex].quantity += 1;
-            } else {
-              // If the medicine doesn't exist, add a new entry
-              state.tmpInvoice.push({ ...action.payload, quantity: 1 });
-            }
-        },
-
         addTmpMedicine: (state, action: PayloadAction<any>) => {
             console.log("addTmpMedicine action : ", action)
             state.tmpInvoice.push({ ...action.payload, quantity: 1 });
@@ -90,5 +74,5 @@ const customerSlice = createSlice({
     },
 });
 
-export const { addOrUpdateMedicine, addTmpMedicine, updateTmpMedicine } = customerSlice.actions;
+export const { addTmpMedicine, updateTmpMedicine } = customerSlice.actions;
 export default customerSlice.reducer;

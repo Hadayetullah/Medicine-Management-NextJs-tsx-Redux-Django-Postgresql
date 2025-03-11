@@ -222,12 +222,10 @@ const websocketSlice = createSlice({
     },
 
     decreaseQuantity: (state, action: PayloadAction<any>) => {
-      console.log("addTmpMedicine action : ", action)
       state.medicineList[action.payload].quantity -= 1;
     },
 
     IncreaseQuantity: (state, action: PayloadAction<any>) => {
-        console.log("updateTmpMedicine action : ", action)
         state.medicineList[action.payload].quantity += 1;
     },
     
