@@ -7,7 +7,8 @@ interface DisplayMedicinesProps {
   handleInvoiceList: (
     medicine: MedicineType,
     index: number,
-    id: string
+    id: string,
+    quantity: number
   ) => void;
   //   handleUpdateDetail: (data: any, modalStatus: boolean) => void;
 }
@@ -43,7 +44,12 @@ const DisplayMedicines: React.FC<DisplayMedicinesProps> = ({
                 <button
                   key={index}
                   onClick={() =>
-                    handleInvoiceList(medicine, index, medicine.id)
+                    handleInvoiceList(
+                      medicine,
+                      index,
+                      medicine.id,
+                      medicine.quantity
+                    )
                   }
                   className="flex flex-col items-center md:w-[calc(49%-1px)] lg:w-[calc(33%-1px)] xl:w-[calc(24%-1px)] 2xl:w-[calc(19%-1px)] h-[300px] text-nowrap text-gray-600 font-semibold border border-gray-400 rounded-[3px]"
                 >
@@ -79,7 +85,12 @@ const DisplayMedicines: React.FC<DisplayMedicinesProps> = ({
                       <button
                         key={index}
                         onClick={() =>
-                          handleInvoiceList(medicine, index, medicine.id)
+                          handleInvoiceList(
+                            medicine,
+                            index,
+                            medicine.id,
+                            medicine.quantity
+                          )
                         }
                         className="flex flex-col items-center md:w-[calc(49%-1px)] lg:w-[calc(33%-1px)] xl:w-[calc(24%-1px)] 2xl:w-[calc(19%-1px)] h-[300px] text-nowrap text-gray-600 font-semibold border border-gray-400 rounded-[3px]"
                       >
