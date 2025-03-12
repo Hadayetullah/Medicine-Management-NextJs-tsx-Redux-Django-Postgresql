@@ -4,10 +4,15 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import SearchMedicine from "./SearchMedicine";
 import DisplayMedicines from "./DisplayMedicines";
 
-import { decreaseQuantity, MedicineType } from "@/lib/features/productSlice";
+import {
+  IncreaseMedicineListQuantity,
+  decreaseMedicineListQuantity,
+  MedicineType,
+} from "@/lib/features/productSlice";
 import {
   addTmpMedicine,
-  updateTmpMedicine,
+  IncreaseTmpMedicineQuantity,
+  decreaseTmpMedicineQuantity,
 } from "@/lib/features/customerSlice";
 
 const RightSection = () => {
@@ -30,18 +35,21 @@ const RightSection = () => {
   const handleInvoiceList = (
     medicine: MedicineType,
     index: number,
-    id: string
+    id: string,
+    quantity: number
   ) => {
     const existingMedicineIndex = tmpInvoice.findIndex(
       (item) => item?.id === id
     );
 
     if (existingMedicineIndex !== -1) {
-      dispatch(decreaseQuantity(index));
-      dispatch(updateTmpMedicine(existingMedicineIndex));
+      if (quantity > 0) {
+        dispatch(decreaseMedicineListQuantity(index));
+        dispatch(IncreaseTmpMedicineQuantity(existingMedicineIndex));
+      }
     } else {
-      dispatch(decreaseQuantity(index));
-      dispatch(addTmpMedicine(medicine));
+      dispatch(decreaseMedicineListQuantity(index));
+      dispatch(addTmpMedicine({ medicine, index }));
     }
   };
 

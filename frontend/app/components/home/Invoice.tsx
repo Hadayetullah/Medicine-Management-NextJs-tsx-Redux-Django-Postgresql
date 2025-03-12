@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { PrescriptionDetailType } from "@/lib/features/customerSlice";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+
+import {
+  decreaseTmpMedicineQuantity,
+  IncreaseTmpMedicineQuantity,
+  PrescriptionDetailType,
+  removeTmpMedicine,
+} from "@/lib/features/customerSlice";
+
+import {
+  decreaseMedicineListQuantity,
+  IncreaseMedicineListQuantity,
+  restoreMedicineListQuantity,
+} from "@/lib/features/productSlice";
 
 const Invoice = () => {
+  const dispatch = useAppDispatch();
+
   const { tmpInvoice } = useAppSelector((state) => state.customer);
   const [customerData, setCustomerData] = useState<PrescriptionDetailType>({
     name: "",
@@ -12,6 +26,37 @@ const Invoice = () => {
     email: "",
     medicine_data: [],
   });
+
+  const handleSubtractQty = (
+    tmpQuantity: number,
+    index: number,
+    medicineListIndex: number
+  ) => {
+    if (tmpQuantity > 1) {
+      dispatch(decreaseTmpMedicineQuantity(index));
+      dispatch(IncreaseMedicineListQuantity(medicineListIndex));
+    }
+  };
+
+  const handleIncreaseQty = (
+    index: number,
+    medicineListIndex: number,
+    quantity: number
+  ) => {
+    if (quantity > 0) {
+      dispatch(IncreaseTmpMedicineQuantity(index));
+      dispatch(decreaseMedicineListQuantity(medicineListIndex));
+    }
+  };
+
+  const handleDelete = (
+    index: number,
+    medicineListIndex: number,
+    tmpQuantity: number
+  ) => {
+    dispatch(removeTmpMedicine(index));
+    dispatch(restoreMedicineListQuantity({ medicineListIndex, tmpQuantity }));
+  };
 
   // useEffect(() => {
   //   if (selectedMedicine) {
@@ -167,21 +212,52 @@ const Invoice = () => {
                   </div>
 
                   <div className="flex flex-row items-center justify-evenly w-[30%]">
-                    <button>{minusIcon}</button>
-                    <h5>{medicine.quantity}</h5>
-                    <button>{plusIcon}</button>
+                    <button
+                      onClick={() =>
+                        handleSubtractQty(
+                          medicine.tmpQuantity,
+                          index,
+                          medicine.medicineListIndex
+                        )
+                      }
+                    >
+                      {minusIcon}
+                    </button>
+                    <h5>{medicine.tmpQuantity}</h5>
+                    <button
+                      onClick={() =>
+                        handleIncreaseQty(
+                          index,
+                          medicine.medicineListIndex,
+                          medicine.quantity
+                        )
+                      }
+                    >
+                      {plusIcon}
+                    </button>
                   </div>
 
                   <div className="flex flex-row items-center justify-center w-[15%]">
                     {dolarIcon}
                     <h5>
-                      {parseInt(medicine.quantity) * parseFloat(medicine.price)}
+                      {parseInt(medicine.tmpQuantity) *
+                        parseFloat(medicine.price)}
                     </h5>
                   </div>
                 </div>
 
                 <div className="px-1 flex items-center">
-                  <button>{deleteIcon}</button>
+                  <button
+                    onClick={() =>
+                      handleDelete(
+                        index,
+                        medicine.medicineListIndex,
+                        medicine.tmpQuantity
+                      )
+                    }
+                  >
+                    {deleteIcon}
+                  </button>
                 </div>
               </div>
             );

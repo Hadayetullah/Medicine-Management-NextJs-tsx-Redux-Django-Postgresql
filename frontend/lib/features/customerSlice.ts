@@ -20,6 +20,8 @@ export type PrescriptionDetailType = {
 }
 
 export type InvoiceType = {
+    medicineListIndex: number;
+    tmpQuantity: number;
     id: string;
     name: string;
     company: string;
@@ -62,17 +64,26 @@ const customerSlice = createSlice({
     initialState,
     reducers: {
         addTmpMedicine: (state, action: PayloadAction<any>) => {
-            console.log("addTmpMedicine action : ", action)
-            state.tmpInvoice.push({ ...action.payload, quantity: 1 });
+            state.tmpInvoice.push({ ...action.payload.medicine, medicineListIndex: action.payload.index, quantity: action.payload.medicine.quantity - 1, tmpQuantity: 1 });
         },
 
-        updateTmpMedicine: (state, action: PayloadAction<any>) => {
-            console.log("state.tmpInvoice : ",  state.tmpInvoice)
-            console.log("updateTmpMedicine action : ", action)
-            state.tmpInvoice[action.payload].quantity += 1;
+        IncreaseTmpMedicineQuantity: (state, action: PayloadAction<any>) => {
+            const obj = state.tmpInvoice[action.payload];
+            state.tmpInvoice[action.payload] = {...obj, quantity: obj.quantity - 1, tmpQuantity: obj.tmpQuantity + 1 }
         },
+
+        decreaseTmpMedicineQuantity: (state, action: PayloadAction<any>) => {
+            const obj = state.tmpInvoice[action.payload];
+            state.tmpInvoice[action.payload] = {...obj, quantity: obj.quantity + 1, tmpQuantity: obj.tmpQuantity - 1 }
+            // state.tmpInvoice[action.payload].tmpQuantity -= 1;
+        },
+
+        removeTmpMedicine: (state, action: PayloadAction<number>) => {
+            state.tmpInvoice = state.tmpInvoice.filter((_, index) => index !== action.payload);
+        },
+        
     },
 });
 
-export const { addTmpMedicine, updateTmpMedicine } = customerSlice.actions;
+export const { addTmpMedicine, IncreaseTmpMedicineQuantity, decreaseTmpMedicineQuantity, removeTmpMedicine } = customerSlice.actions;
 export default customerSlice.reducer;

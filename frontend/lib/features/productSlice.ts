@@ -221,12 +221,17 @@ const websocketSlice = createSlice({
       }
     },
 
-    decreaseQuantity: (state, action: PayloadAction<any>) => {
+    decreaseMedicineListQuantity: (state, action: PayloadAction<any>) => {
       state.medicineList[action.payload].quantity -= 1;
     },
 
-    IncreaseQuantity: (state, action: PayloadAction<any>) => {
+    IncreaseMedicineListQuantity: (state, action: PayloadAction<any>) => {
         state.medicineList[action.payload].quantity += 1;
+    },
+
+    restoreMedicineListQuantity: (state, action: PayloadAction<any>) => {
+      const obj = state.medicineList[action.payload.medicineListIndex];
+      state.medicineList[action.payload.medicineListIndex] = {...obj, quantity: obj.quantity + action.payload.tmpQuantity }
     },
     
   },
@@ -257,8 +262,9 @@ export const {
   setError, 
   setSubAction, 
   updateMedicine, 
-  decreaseQuantity, 
-  IncreaseQuantity 
+  decreaseMedicineListQuantity, 
+  IncreaseMedicineListQuantity, 
+  restoreMedicineListQuantity
 } = websocketSlice.actions;
 
 export default websocketSlice.reducer;
