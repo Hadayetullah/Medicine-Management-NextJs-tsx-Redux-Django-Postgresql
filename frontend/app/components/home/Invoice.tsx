@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   decreaseTmpMedicineQuantity,
   IncreaseTmpMedicineQuantity,
-  PrescriptionDetailType,
   removeTmpMedicine,
 } from "@/lib/features/customerSlice";
 
@@ -18,14 +17,6 @@ const Invoice = () => {
   const dispatch = useAppDispatch();
 
   const { tmpInvoice } = useAppSelector((state) => state.customer);
-  const [customerData, setCustomerData] = useState<PrescriptionDetailType>({
-    name: "",
-    age: 0,
-    phone: "",
-    address: "",
-    email: "",
-    medicine_data: [],
-  });
 
   const handleSubtractQty = (
     tmpQuantity: number,
