@@ -24,12 +24,30 @@ export type InvoiceType = {
     tmpQuantity: number;
     id: string;
     name: string;
-    company: string;
-    category: string;
-    dosage_form: string;
-    power: string;
+    company: {
+        id: string;
+        name: string;
+        created_at: string;
+        modified_at: string;
+    };
+    category: {
+        id: string | null;
+        name: string | null;
+        created_at: string | null;
+        modified_at: string | null;
+    } | null;
+    dosage_form: {
+        id: string | null;
+        name: string | null;
+        created_at: string | null;
+        modified_at: string | null;
+    } | null;
     price: number;
+    power: number;
     quantity: number;
+    shelf_no: number;
+    image_url: string | null;
+    created_at: Date;
 }
 
 export type CustomerType = {

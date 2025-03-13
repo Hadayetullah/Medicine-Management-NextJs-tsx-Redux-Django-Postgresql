@@ -1,6 +1,12 @@
 import React from "react";
 
-const CustomerSection = () => {
+interface CustomerSectionProps {
+  setAddCustomerModal: (e: boolean) => void;
+}
+
+const CustomerSection: React.FC<CustomerSectionProps> = ({
+  setAddCustomerModal,
+}) => {
   return (
     <div className="bg-[#E6E8EA] w-full flex flex-row justify-between items-center py-2 px-4 rounded-[3px]">
       <div className="flex flex-row items-center">
@@ -23,7 +29,7 @@ const CustomerSection = () => {
         </h4>
       </div>
 
-      <button>
+      <button onClick={() => setAddCustomerModal(true)}>
         <svg
           aria-hidden="true"
           focusable="false"
