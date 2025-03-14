@@ -1,7 +1,9 @@
-import { useAppSelector } from "@/lib/hooks";
+import { resetTmpCustomerAndInvoice } from "@/lib/features/customerSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import React from "react";
 
 const LeftBottomNav = () => {
+  const dispatch = useAppDispatch();
   const { tmpInvoice, CurrentCustomer } = useAppSelector(
     (state) => state.customer
   );
@@ -10,6 +12,8 @@ const LeftBottomNav = () => {
       ...CurrentCustomer,
       medicine_data: tmpInvoice,
     };
+
+    dispatch(resetTmpCustomerAndInvoice());
 
     console.log("invoiceObj : ", invoiceObj);
   };

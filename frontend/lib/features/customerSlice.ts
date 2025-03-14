@@ -102,6 +102,11 @@ const customerSlice = createSlice({
         addCurrentCustomer: (state, action: PayloadAction<any>) => {
             state.CurrentCustomer = action.payload;
         },
+
+        resetTmpCustomerAndInvoice: (state) => {
+            state.CurrentCustomer = null;
+            state.tmpInvoice = [];
+        }
         
     },
 });
@@ -111,7 +116,8 @@ export const {
     IncreaseTmpMedicineQuantity, 
     decreaseTmpMedicineQuantity, 
     removeTmpMedicine, 
-    addCurrentCustomer 
+    addCurrentCustomer, 
+    resetTmpCustomerAndInvoice
 } = customerSlice.actions;
 
 export default customerSlice.reducer;
