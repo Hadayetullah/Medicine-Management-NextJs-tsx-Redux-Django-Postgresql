@@ -1,6 +1,18 @@
+import { useAppSelector } from "@/lib/hooks";
 import React from "react";
 
 const LeftBottomNav = () => {
+  const { tmpInvoice, CurrentCustomer } = useAppSelector(
+    (state) => state.customer
+  );
+  const handlePayment = () => {
+    const invoiceObj = {
+      ...CurrentCustomer,
+      medicine_data: tmpInvoice,
+    };
+
+    console.log("invoiceObj : ", invoiceObj);
+  };
   return (
     <div className="w-full flex flex-row items-center justify-between gap-x-2">
       <button className="border border-gray-400 flex flex-row py-1 px-2 w-full justify-center font-semibold text-[#676767] gap-x-1 text-lg rounded">
@@ -57,7 +69,10 @@ const LeftBottomNav = () => {
         <h4>Discount</h4>
       </button>
 
-      <button className="border border-gray-400 flex flex-row py-1 px-2 w-full justify-center font-semibold text-[#676767] gap-x-1 text-lg rounded">
+      <button
+        onClick={() => handlePayment()}
+        className="border border-gray-400 flex flex-row py-1 px-2 w-full justify-center font-semibold text-[#676767] gap-x-1 text-lg rounded"
+      >
         <svg
           aria-hidden="true"
           focusable="false"

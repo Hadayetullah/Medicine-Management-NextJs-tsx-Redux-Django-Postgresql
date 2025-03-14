@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import AddCustomer from "./AddCustomer";
+import { useAppSelector } from "@/lib/hooks";
 
-interface CustomerSectionProps {
-  setAddCustomerModal: (e: boolean) => void;
-}
+const CustomerSection = () => {
+  const { CurrentCustomer } = useAppSelector((state) => state.customer);
 
-const CustomerSection: React.FC<CustomerSectionProps> = ({
-  setAddCustomerModal,
-}) => {
+  const [addCustomerModal, setAddCustomerModal] = useState<boolean>(false);
   return (
     <div className="bg-[#E6E8EA] w-full flex flex-row justify-between items-center py-2 px-4 rounded-[3px]">
       <div className="flex flex-row items-center">
@@ -25,7 +24,9 @@ const CustomerSection: React.FC<CustomerSectionProps> = ({
         </svg>
 
         <h4 className="ml-2 text-gray-700 font-semibold text-lg">
-          No active customer!
+          {CurrentCustomer != null
+            ? `${CurrentCustomer.name} (${CurrentCustomer.age})`
+            : "No active customer!"}
         </h4>
       </div>
 
@@ -44,6 +45,10 @@ const CustomerSection: React.FC<CustomerSectionProps> = ({
           ></path>
         </svg>
       </button>
+
+      {addCustomerModal && (
+        <AddCustomer setAddCustomerModal={setAddCustomerModal} />
+      )}
     </div>
   );
 };

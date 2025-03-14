@@ -19,7 +19,7 @@ export type PrescriptionDetailType = {
     medicine_data: MedicineType[]
 }
 
-export type InvoiceType = {
+export type TmpInvoiceType = {
     medicineListIndex: number;
     tmpQuantity: number;
     id: string;
@@ -50,22 +50,21 @@ export type InvoiceType = {
     created_at: Date;
 }
 
-export type CustomerType = {
+export type CustomerDetailType = {
     name: string;
     age: number;
     phone: string;
     address: string;
     email: string;
-    medicine_data: InvoiceType[]
 }
 
 interface MainStateType {
     message: any;
     loading: boolean;
     error: any;
-    CurrentCustomer: PrescriptionDetailType | null;
-    tmpHoldedCustomers: any[];
-    tmpInvoice: InvoiceType[];
+    CurrentCustomer: CustomerDetailType | null;
+    tmpInvoice: TmpInvoiceType[];
+    tmpHoldedCustomers: PrescriptionDetailType[];
 }
 
 const initialState: MainStateType = {
@@ -73,8 +72,8 @@ const initialState: MainStateType = {
     error: null,
     loading: false,
     CurrentCustomer: null,
-    tmpHoldedCustomers: [],
     tmpInvoice: [],
+    tmpHoldedCustomers: [],
 }
 
 const customerSlice = createSlice({
@@ -99,9 +98,20 @@ const customerSlice = createSlice({
         removeTmpMedicine: (state, action: PayloadAction<number>) => {
             state.tmpInvoice = state.tmpInvoice.filter((_, index) => index !== action.payload);
         },
+
+        addCurrentCustomer: (state, action: PayloadAction<any>) => {
+            state.CurrentCustomer = action.payload;
+        },
         
     },
 });
 
-export const { addTmpMedicine, IncreaseTmpMedicineQuantity, decreaseTmpMedicineQuantity, removeTmpMedicine } = customerSlice.actions;
+export const { 
+    addTmpMedicine, 
+    IncreaseTmpMedicineQuantity, 
+    decreaseTmpMedicineQuantity, 
+    removeTmpMedicine, 
+    addCurrentCustomer 
+} = customerSlice.actions;
+
 export default customerSlice.reducer;
