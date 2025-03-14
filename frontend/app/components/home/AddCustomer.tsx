@@ -1,18 +1,13 @@
-import React from "react";
+import { addCurrentCustomer } from "@/lib/features/customerSlice";
+import { useAppDispatch } from "@/lib/hooks";
+import React, { useState } from "react";
 
 interface AddCustomerProps {
-  customerData: any;
-  handleChange: (e: any) => void;
   setAddCustomerModal: (e: boolean) => void;
-  handleSubmit: (e: any) => void;
 }
 
-const AddCustomer: React.FC<AddCustomerProps> = ({
-  customerData,
-  handleChange,
-  setAddCustomerModal,
-  handleSubmit,
-}) => {
+const AddCustomer: React.FC<AddCustomerProps> = ({ setAddCustomerModal }) => {
+  const dispatch = useAppDispatch();
   const cancelIconSvg = (
     <svg
       aria-hidden="true"
@@ -28,6 +23,31 @@ const AddCustomer: React.FC<AddCustomerProps> = ({
       ></path>
     </svg>
   );
+
+  const [customerData, setCustomerData] = useState<any>({
+    name: "",
+    age: "",
+    phone: "",
+    address: "",
+    email: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomerData({
+      ...customerData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (customerData.name && customerData.age) {
+      dispatch(addCurrentCustomer(customerData));
+      setAddCustomerModal(false);
+    }
+    // console.log(customerData);
+  };
 
   return (
     <div className="fixed w-full h-full top-0 left-0 right-0 bottom-0 flex justify-center bg-black bg-opacity-50 z-[100]">

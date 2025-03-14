@@ -14,11 +14,16 @@ import {
   IncreaseTmpMedicineQuantity,
   decreaseTmpMedicineQuantity,
 } from "@/lib/features/customerSlice";
+import AddCustomer from "./AddCustomer";
 
 const RightSection = () => {
   const dispatch = useAppDispatch();
   const { medicineList } = useAppSelector((state) => state.product);
-  const { tmpInvoice } = useAppSelector((state) => state.customer);
+  const { tmpInvoice, CurrentCustomer } = useAppSelector(
+    (state) => state.customer
+  );
+
+  const [addCustomerModal, setAddCustomerModal] = useState<boolean>(false);
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -38,23 +43,27 @@ const RightSection = () => {
     id: string,
     quantity: number
   ) => {
-    const existingMedicineIndex = tmpInvoice.findIndex(
-      (item) => item?.id === id
-    );
-
-    if (existingMedicineIndex !== -1) {
-      if (quantity > 0) {
-        dispatch(decreaseMedicineListQuantity(index));
-        dispatch(IncreaseTmpMedicineQuantity(existingMedicineIndex));
-      }
+    if (CurrentCustomer === null) {
+      setAddCustomerModal(true);
     } else {
-      dispatch(decreaseMedicineListQuantity(index));
-      dispatch(addTmpMedicine({ medicine, index }));
+      const existingMedicineIndex = tmpInvoice.findIndex(
+        (item) => item?.id === id
+      );
+
+      if (existingMedicineIndex !== -1) {
+        if (quantity > 0) {
+          dispatch(decreaseMedicineListQuantity(index));
+          dispatch(IncreaseTmpMedicineQuantity(existingMedicineIndex));
+        }
+      } else {
+        dispatch(decreaseMedicineListQuantity(index));
+        dispatch(addTmpMedicine({ medicine, index }));
+      }
     }
   };
 
   return (
-    <div className="w-full">
+    <div className="relative w-full">
       <SearchMedicine
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -67,6 +76,10 @@ const RightSection = () => {
         filteredMedicines={filteredMedicines}
         handleInvoiceList={handleInvoiceList}
       />
+
+      {addCustomerModal && (
+        <AddCustomer setAddCustomerModal={setAddCustomerModal} />
+      )}
     </div>
   );
 };
