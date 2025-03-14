@@ -1,7 +1,30 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import LeftBottomNav from "./LeftBottomNav";
+import { useAppSelector } from "@/lib/hooks";
 
 const LeftBottomSection = () => {
+  const { tmpInvoice } = useAppSelector((state) => state.customer);
+
+  const summaryObj = useMemo(() => {
+    let summary = {
+      items: 0,
+      totalPrice: 0,
+    };
+
+    if (tmpInvoice?.length > 0) {
+      let items = 0;
+      let totalPrice = 0;
+      tmpInvoice.forEach((item) => {
+        items += 1;
+        totalPrice += item.tmpQuantity * item.price;
+
+        summary = { items: items, totalPrice: totalPrice };
+      });
+    }
+
+    return summary;
+  }, [tmpInvoice]);
+
   const dolarIcon = (
     <svg
       aria-hidden="true"
@@ -26,7 +49,7 @@ const LeftBottomSection = () => {
             <h4>Sub Total</h4>
             <div className="flex flex-row items-center">
               {dolarIcon}
-              <h4>0.00</h4>
+              <h4>{summaryObj.totalPrice}</h4>
             </div>
           </div>
 
@@ -58,7 +81,7 @@ const LeftBottomSection = () => {
 
       <div className="bg-[#b42a2b] text-white text-[20px] font-semibold flex flex-row justify-between items-center my-2 py-1 rounded">
         <div className="w-[50%]">
-          <h4 className="pl-4">Items Count (0)</h4>
+          <h4 className="pl-4">Items Count ({summaryObj.items})</h4>
         </div>
 
         <div className="flex flex-row justify-between items-center w-[50%]">
@@ -79,7 +102,7 @@ const LeftBottomSection = () => {
               ></path>
             </svg>
 
-            <h4 className="pr-4">0.00</h4>
+            <h4 className="pr-4">{summaryObj.totalPrice}</h4>
           </div>
         </div>
       </div>
