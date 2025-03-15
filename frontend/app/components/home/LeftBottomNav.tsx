@@ -7,16 +7,44 @@ const LeftBottomNav = () => {
   const { tmpInvoice, CurrentCustomer } = useAppSelector(
     (state) => state.customer
   );
+
+  type Customer = {
+    name?: string;
+    age?: number;
+    phone?: string;
+    address?: string;
+    email?: string;
+    [key: string]: any; // Allows additional properties
+  };
+
   const handlePayment = () => {
-    const invoiceObj = {
+    let invoiceObj: Customer = {
       ...CurrentCustomer,
-      medicine_data: tmpInvoice,
     };
 
-    dispatch(resetTmpCustomerAndInvoice());
+    const prescribed_data: any = [];
+
+    tmpInvoice.forEach((medicine) => {
+      const medicineObj = {
+        name: medicine.name,
+        company: medicine?.company?.name,
+        category: medicine?.category?.name,
+        dosage_form: medicine.dosage_form?.name,
+        price: medicine.price,
+        power: medicine.power,
+        quantity: medicine.tmpQuantity,
+      };
+
+      prescribed_data.push(medicineObj);
+    });
+
+    invoiceObj = { ...invoiceObj, prescribed_data: prescribed_data };
+
+    // dispatch(resetTmpCustomerAndInvoice());
 
     console.log("invoiceObj : ", invoiceObj);
   };
+
   return (
     <div className="w-full flex flex-row items-center justify-between gap-x-2">
       <button className="border border-gray-400 flex flex-row py-1 px-2 w-full justify-center font-semibold text-[#676767] gap-x-1 text-lg rounded">
