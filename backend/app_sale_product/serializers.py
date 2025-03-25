@@ -1,21 +1,31 @@
 from rest_framework import serializers
 from .models import PrescriptionDetail, PrescribedMedicine
+from  app_product.serializers import MedicineSerializer
 
 class PrescribedMedicineSerializer(serializers.ModelSerializer):
+    medicine = MedicineSerializer()  # Nested serializer for medicine details
+
     class Meta:
         model = PrescribedMedicine
-        fields = '__all__'
+        fields = ["id", "medicine", "sold_quantity"]
+
 
 class PrescriptionDetailSerializer(serializers.ModelSerializer):
-    prescribed_data = PrescribedMedicineSerializer(many=True)
+    customer_prescription = PrescribedMedicineSerializer(many=True)  # Fetch related medicines
 
     class Meta:
         model = PrescriptionDetail
-        fields = '__all__'
+        fields = ["id", "name", "age", "phone", "address", "email", "customer_prescription"]
 
     def create(self, validated_data):
-        medicines = validated_data.pop('prescribed_data')
+        medicines_data = validated_data.pop("customer_prescription")  # Extract prescribed medicines
         prescription = PrescriptionDetail.objects.create(**validated_data)
-        for medicine in medicines:
-            PrescribedMedicine.objects.create(prescription=prescription, **medicine)
+
+        for medicine_data in medicines_data:
+            medicine = medicine_data["medicine"]
+            PrescribedMedicine.objects.create(
+                prescription=prescription, 
+                medicine=medicine, 
+                sold_quantity=medicine_data["sold_quantity"]
+            )
         return prescription
