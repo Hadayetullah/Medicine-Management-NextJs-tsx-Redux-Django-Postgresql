@@ -1,13 +1,17 @@
 from rest_framework import serializers
 from .models import PrescriptionDetail, PrescribedMedicine
 from  app_product.serializers import MedicineSerializer
+from  app_product.models import Medicine
 
 class PrescribedMedicineSerializer(serializers.ModelSerializer):
-    medicine = MedicineSerializer()  # Nested serializer for medicine details
+    # medicine = MedicineSerializer()  # Nested serializer for medicine details
+    # medicine = serializers.UUIDField()
+    medicine = serializers.PrimaryKeyRelatedField(queryset=Medicine.objects.all())  # Converts UUID to Medicine instance
 
     class Meta:
         model = PrescribedMedicine
         fields = ["id", "medicine", "sold_quantity"]
+
 
 
 class PrescriptionDetailSerializer(serializers.ModelSerializer):
