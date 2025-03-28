@@ -15,7 +15,7 @@ class Customer(models.Model):
 
 
 class PrescribedMedicines(models.Model):
-    customer = models.ForeignKey(Customer, related_name="customer_prescriptions", on_delete=models.CASCADE)  # FK to Customer
+    customer = models.ForeignKey(Customer, related_name="customer_prescriptions", on_delete=models.CASCADE, null=True, blank=True)  # FK to Customer
     medicine = models.ForeignKey(Medicine, related_name="medicine_data", on_delete=models.CASCADE)
     sold_quantity = models.IntegerField(default=0)
 
