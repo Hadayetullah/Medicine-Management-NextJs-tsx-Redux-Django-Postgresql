@@ -1,35 +1,40 @@
 from rest_framework import serializers
-from .models import PrescriptionDetail, PrescribedMedicine
-from  app_product.serializers import MedicineSerializer
+from .models import Customer, PrescribedMedicines
 from  app_product.models import Medicine
 
-class PrescribedMedicineSerializer(serializers.ModelSerializer):
-    # medicine = MedicineSerializer()  # Nested serializer for medicine details
-    # medicine = serializers.UUIDField()
-    medicine = serializers.PrimaryKeyRelatedField(queryset=Medicine.objects.all())  # Converts UUID to Medicine instance
+
+
+class PrescribedMedicinesSerializer(serializers.ModelSerializer):
+    medicine = serializers.UUIDField()  # Accepts UUID instead of an ID
 
     class Meta:
-        model = PrescribedMedicine
-        fields = ["id", "medicine", "sold_quantity"]
-
-
-
-class PrescriptionDetailSerializer(serializers.ModelSerializer):
-    customer_prescription = PrescribedMedicineSerializer(many=True)  # Fetch related medicines
-
-    class Meta:
-        model = PrescriptionDetail
-        fields = ["id", "name", "age", "phone", "address", "email", "customer_prescription"]
+        model = PrescribedMedicines
+        fields = ['id', 'medicine', 'sold_quantity']
 
     def create(self, validated_data):
-        medicines_data = validated_data.pop("customer_prescription")  # Extract prescribed medicines
-        prescription = PrescriptionDetail.objects.create(**validated_data)
+        medicine_uuid = validated_data.pop('medicine')
+        try:
+            medicine = Medicine.objects.get(id=medicine_uuid)
+        except Medicine.DoesNotExist:
+            raise serializers.ValidationError({"medicine": "Invalid medicine UUID."})
 
-        for medicine_data in medicines_data:
-            medicine = medicine_data["medicine"]
-            PrescribedMedicine.objects.create(
-                prescription=prescription, 
-                medicine=medicine, 
-                sold_quantity=medicine_data["sold_quantity"]
-            )
-        return prescription
+        return PrescribedMedicines.objects.create(medicine=medicine, **validated_data)
+
+class CustomerSerializer(serializers.ModelSerializer):
+    customer_prescription = PrescribedMedicinesSerializer(many=True)
+
+    class Meta:
+        model = Customer
+        fields = ['id', 'name', 'age', 'phone', 'address', 'email', 'customer_prescription']
+
+    def create(self, validated_data):
+        prescriptions_data = validated_data.pop('customer_prescription', [])
+        customer = Customer.objects.create(**validated_data)
+
+        for prescription in prescriptions_data:
+            prescription_instance = PrescribedMedicinesSerializer(data=prescription)
+            if prescription_instance.is_valid(raise_exception=True):
+                prescribed_medicine = prescription_instance.save()
+                customer.prescription.append(prescribed_medicine)
+
+        return customer
