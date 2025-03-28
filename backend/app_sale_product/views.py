@@ -6,12 +6,8 @@ from .models import Customer
 from .serializers import CustomerSerializer
 
 class CustomerListCreateAPIView(APIView):
-    """
-    Handles listing all customers and creating new customers.
-    """
-
     def get(self, request):
-        customers = Customer.objects.select_related("prescription").all()
+        customers = Customer.objects.prefetch_related("customer_prescriptions__medicine").all()
         serializer = CustomerSerializer(customers, many=True)
         return Response(
             {"message": "Customers retrieved successfully", "data": serializer.data},
