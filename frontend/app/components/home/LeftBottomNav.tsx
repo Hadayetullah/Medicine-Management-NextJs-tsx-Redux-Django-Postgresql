@@ -46,18 +46,27 @@ const LeftBottomNav = () => {
 
     invoiceObj = {
       ...invoiceObj,
-      customer_prescription: customer_prescription,
+      customer_prescriptions: customer_prescription,
     };
 
     // dispatch(resetTmpCustomerAndInvoice());
 
     console.log("invoiceObj : ", invoiceObj);
-    const response = await apiService.post(
-      "/api/customer/prescriptions/",
-      JSON.stringify(invoiceObj)
+    // const response = await apiService.post(
+    //   "/api/customer/prescriptions/",
+    //   JSON.stringify(invoiceObj)
+    // );
+
+    // age: 10,
+
+    const getresponse = await apiService.get("/api/customer/prescriptions/6/");
+    console.log("getresponse : ", getresponse);
+    const postresponse = await apiService.patch(
+      "/api/customer/prescriptions/6/",
+      JSON.stringify({ age: 40 })
     );
 
-    console.log("response : ", response);
+    console.log("postresponse : ", postresponse);
   };
 
   return (
