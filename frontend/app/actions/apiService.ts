@@ -140,8 +140,7 @@ const apiService = {
     },
 
 
-    delete: async function (url:string, data:any) : Promise<any> {
-        console.log('post: ', url, data)
+    delete: async function (url:string) : Promise<any> {
 
         const token = await getAccessToken();
 
