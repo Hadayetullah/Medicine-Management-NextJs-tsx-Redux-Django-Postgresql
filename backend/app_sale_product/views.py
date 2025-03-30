@@ -1,3 +1,5 @@
+from django.db import transaction
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -71,8 +73,19 @@ class CustomerDetailAPIView(APIView):
 
     def delete(self, request, id):
         customer = get_object_or_404(Customer, id=id)
-        customer.delete()
+
+        with transaction.atomic():
+            # Restore medicine stock for all prescriptions before deleting
+            for prescription in customer.customer_prescriptions.all():
+                medicine = prescription.medicine
+                medicine.quantity += prescription.sold_quantity
+                medicine.save()
+                
+                prescription.delete()  # Delete each prescription
+
+            customer.delete()  # Delete the customer
+
         return Response(
-            {"message": "Customer deleted successfully"},
-            status=status.HTTP_204_NO_CONTENT
+            {"message": "Customer and all prescriptions deleted successfully, stock restored"},
+            status=status.HTTP_200_OK
         )
