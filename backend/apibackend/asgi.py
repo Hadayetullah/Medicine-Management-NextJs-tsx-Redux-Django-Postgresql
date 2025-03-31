@@ -21,8 +21,9 @@ medicine_management_app = get_asgi_application()
 from app_product.token_auth import TokenAuthMiddleware
 
 from app_product.routing import websocket_urlpatterns as medicine_websocket_urlpatterns
+from app_sale_product.routing import websocket_urlpatterns as prescription_websocket_urlpatterns
 
-websocket_urlpatterns = medicine_websocket_urlpatterns
+websocket_urlpatterns = medicine_websocket_urlpatterns + prescription_websocket_urlpatterns
 
 application = ProtocolTypeRouter(
     {
