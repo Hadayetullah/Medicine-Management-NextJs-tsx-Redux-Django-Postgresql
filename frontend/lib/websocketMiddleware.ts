@@ -168,6 +168,7 @@ export const createWebSocketMiddleware = (): Middleware => {
       }
 
       case "websocket/sendMessage": {
+        console.log("Sent Data : ", JSON.stringify(action.payload.message))
         const { connectionKey, message } = action.payload;
         
         // if (socket && socket.readyState === WebSocket.OPEN) {

@@ -86,6 +86,10 @@ const initialState: MainStateType = {
       connectionKey: "medicineConnection",
       connectionUrl: "product/medicine",
     },
+    {
+      connectionKey: "prescriptionConnection",
+      connectionUrl: "customer/prescriptions",
+    },
   ],
   subAction: "",
   message: null,

@@ -49,6 +49,11 @@ const LeftBottomNav = () => {
       customer_prescriptions: customer_prescription,
     };
 
+    const customerData = {
+      action: "add_customer",
+      data: invoiceObj,
+    };
+
     // dispatch(resetTmpCustomerAndInvoice());
 
     console.log("invoiceObj : ", invoiceObj);
@@ -58,15 +63,22 @@ const LeftBottomNav = () => {
     // );
 
     // age: 10,
+    const connectionKey = "prescriptionConnection";
+    const message = customerData;
 
-    const getresponse = await apiService.get("/api/customer/prescriptions/6/");
-    console.log("getresponse : ", getresponse);
-    const postresponse = await apiService.patch(
-      "/api/customer/prescriptions/6/",
-      JSON.stringify({ age: 40 })
-    );
+    dispatch({
+      type: "websocket/sendMessage",
+      payload: { connectionKey, message },
+    });
 
-    console.log("postresponse : ", postresponse);
+    // const getresponse = await apiService.get("/api/customer/prescriptions/6/");
+    // console.log("getresponse : ", getresponse);
+    // const postresponse = await apiService.patch(
+    //   "/api/customer/prescriptions/6/",
+    //   JSON.stringify({ age: 40 })
+    // );
+
+    // console.log("postresponse : ", postresponse);
   };
 
   return (
