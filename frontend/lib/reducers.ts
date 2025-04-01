@@ -4,6 +4,7 @@ import authReducer from "./features/authSlice";
 import employeeReducer from "./features/employeeSlice";
 import productReducer from "./features/productSlice";
 import customerReducer from "./features/customerSlice";
+import prescriptionsReducer from "./features/prescriptionsSlice";
 
 // Combine reducers
 export const rootReducer = combineReducers({
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers({
     product: productReducer,
     employee: employeeReducer,
     customer: customerReducer,
+    prescriptions: prescriptionsReducer,
 });
