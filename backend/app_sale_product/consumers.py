@@ -63,10 +63,19 @@ class CustomerConsumer(AsyncWebsocketConsumer):
 
 
     async def add_customer(self, data):
-        """Handles adding a new customer."""
-        serializer = CustomerSerializer(data=data.get('data'))
-        if serializer.is_valid():
-            customer = serializer.save()
+        """Handles adding a new customer asynchronously."""
+        
+        def create_customer():
+            """Runs serializer validation and saving in sync context."""
+            serializer = CustomerSerializer(data=data.get('data'))
+            if serializer.is_valid():
+                customer = serializer.save()
+                return customer, serializer.data
+            else:
+                raise ValueError(serializer.errors)  # Raise error for consistency
+
+        try:
+            customer, serialized_data = await database_sync_to_async(create_customer)()
 
             # Broadcast the new customer to the group
             await self.channel_layer.group_send(
@@ -75,12 +84,15 @@ class CustomerConsumer(AsyncWebsocketConsumer):
                     'type': 'handle_add_customer',
                     'action': 'add_customer',
                     'message': f"New customer added: {customer.name} ({customer.age})",
-                    'customer': serializer.data  # Include the serialized customer object
+                    'customer': serialized_data  # Use serialized customer data
                 }
             )
 
-            return {"message": "Customer added successfully", "data": serializer.data}
-        return {"error": serializer.errors}
+            return {"message": "Customer added successfully", "data": serialized_data}
+        
+        except ValueError as e:
+            return {"error": str(e)}
+
     
     
     async def handle_add_customer(self, event):
@@ -104,23 +116,35 @@ class CustomerConsumer(AsyncWebsocketConsumer):
         if not customer_id:
             return {"error": "Customer ID is required for update."}
 
-        customer = await database_sync_to_async(get_object_or_404)(Customer, id=customer_id)
-        serializer = CustomerSerializer(customer, data=data.get('data'), partial=True)
-        if serializer.is_valid():
-            customer = serializer.save()
-            # Broadcast the updated customer to the group
+        def update_customer_instance():
+            """Runs serializer validation and saving in sync context."""
+            customer = get_object_or_404(Customer, id=customer_id)
+            serializer = CustomerSerializer(customer, data=data.get('data'), partial=True)
+            if serializer.is_valid():
+                customer = serializer.save()
+                return customer, serializer.data
+            else:
+                raise ValueError(serializer.errors)
+
+        try:
+            customer, serialized_data = await database_sync_to_async(update_customer_instance)()
+
+            # Broadcast update
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'handle_update_customer',
                     'action': 'update_customer',
                     'message': f"Updated customer: {customer.name} ({customer.age})",
-                    'customer': serializer.data  # Include the serialized customer object
+                    'customer': serialized_data
                 }
             )
 
-            return {"message": "Customer updated successfully", "data": serializer.data}
-        return {"error": serializer.errors}
+            return {"message": "Customer updated successfully", "data": serialized_data}
+        
+        except ValueError as e:
+            return {"error": str(e)}
+
     
 
     async def handle_update_customer(self, event):
@@ -165,7 +189,7 @@ class CustomerConsumer(AsyncWebsocketConsumer):
         """Handles broadcasting updates to all WebSocket connections."""
         action = event['action']
         message = event['message']
-        customer = event['customer']  # Get the serialized customer object
+        customer = event['customer']  # Get the customer id
         
         await self.send(payload_data=json.dumps({
             'action': action,
