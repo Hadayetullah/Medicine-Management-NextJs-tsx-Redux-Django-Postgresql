@@ -1,6 +1,10 @@
 import React from "react";
 
-const Sidebar = () => {
+interface SidebarProps {
+  setCustomerListModal: (e: boolean) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ setCustomerListModal }) => {
   return (
     <div className="pt-[65px] fixed left-0 flex flex-col shadow-lg shadow-black w-14 h-full bg-white items-center space-y-4 z-10">
       <button className="relative flex flex-row items-center group">
@@ -22,6 +26,37 @@ const Sidebar = () => {
           <span className="w-0 h-0 border-t-[10px] border-t-transparent border-r-[20px] border-r-gray-900 border-b-[10px] border-b-transparent"></span>
           <span className="border border-gray-900 bg-gray-900 text-white text-nowrap px-2 rounded-[5px]">
             Holded List
+          </span>
+        </div>
+      </button>
+
+      <button
+        onClick={() => setCustomerListModal(true)}
+        className="relative flex flex-row items-center group"
+      >
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          className="w-9 h-9 text-gray-600 hover:text-gray-900"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 18 24"
+          id="prescription"
+        >
+          <path
+            fill="currentColor"
+            d="m15.76 2.852h-2.577v1.221h2.577.007c.655 0 1.186.531 1.186 1.186v.008 16.326.007c0 .656-.532 1.187-1.187 1.187-.002 0-.005 0-.007 0h-13.351c-.002 0-.005 0-.007 0-.656 0-1.187-.532-1.187-1.187 0-.003 0-.005 0-.008v-16.326c0-.002 0-.005 0-.007 0-.656.532-1.187 1.187-1.187h.007 2.577v-1.22h-2.577c-1.331 0-2.411 1.08-2.411 2.411v16.326c.001 1.331 1.08 2.41 2.411 2.41h13.351c1.331 0 2.411-1.08 2.411-2.411v-16.326c0-1.331-1.08-2.411-2.411-2.411z"
+          ></path>
+          <path
+            fill="currentColor"
+            d="M12.605 2.225h-1.319c0-1.229-.996-2.225-2.225-2.225s-2.225.996-2.225 2.225h-1.31v3.057h7.073v-3.057zm-2.258 0h-2.57c0-.01 0-.021 0-.032 0-.71.576-1.286 1.286-1.286s1.286.576 1.286 1.286v.034-.002zM5.947 8.512h9.458v1.17h-9.458zM5.947 13.41h9.458v1.17h-9.458zM5.947 18.25h9.458v1.176h-9.458zM2.628 7.757h2.68v2.68h-2.68zM2.628 12.655h2.68v2.68h-2.68zM2.628 17.497h2.68v2.68h-2.68z"
+          ></path>
+        </svg>
+
+        <div className="absolute left-12 flex flex-row items-center invisible group-hover:visible z-50">
+          <span className="w-0 h-0 border-t-[10px] border-t-transparent border-r-[20px] border-r-gray-900 border-b-[10px] border-b-transparent"></span>
+          <span className="border border-gray-900 bg-gray-900 text-white text-nowrap px-2 rounded-[5px]">
+            Prescriptions List
           </span>
         </div>
       </button>

@@ -22,28 +22,33 @@ interface MainStateType {
     message: any;
     loading: boolean;
     error: any;
-    customer: PrescriptionsType[];
+    customersPrescriptionList: PrescriptionsType[];
 }
 
 const initialState: MainStateType = {
     message: null,
     error: null,
     loading: false,
-    customer: [],
+    customersPrescriptionList: [],
 }
 
 const prescriptionsSlice = createSlice({
     name: "prescriptions",
     initialState,
     reducers: {
-        addPrescription: (state, action: PayloadAction<any>) => {
-            state.customer.push({ ...action.payload.medicine, medicineListIndex: action.payload.index, quantity: action.payload.medicine.quantity - 1, tmpQuantity: 1 });
+        setCustomersPrescriptionList: (state, action: PayloadAction<any>) => {
+            state.customersPrescriptionList = action.payload.data;
+        },
+
+        setPrescriptionSliceError: (state, action: PayloadAction<{ apiError: any }>) => {
+            state.error = action.payload.apiError;
         },
     },
 });
 
 export const { 
-    addPrescription
+    setCustomersPrescriptionList,
+    setPrescriptionSliceError,
 } = prescriptionsSlice.actions;
 
 export default prescriptionsSlice.reducer;

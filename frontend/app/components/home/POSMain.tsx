@@ -3,14 +3,23 @@
 import React, { useEffect, useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { MedicineType, setMedicineList } from "@/lib/features/productSlice";
-import { connectWebSockets } from "@/app/actions/apiActions";
+import {
+  MedicineType,
+  setError,
+  setMedicineList,
+} from "@/lib/features/productSlice";
+
 import { FetchMedicinesHandleSockets } from "@/app/actions/clientActions";
 import Loader from "../client/Loader";
 import Sidebar from "./Sidebar";
-import CustomerSection from "./CustomerSection";
 import LeftSection from "./LeftSection";
 import RightSection from "./RightSection";
+import apiService from "@/app/actions/apiService";
+import PrescriptionList from "./customerList/PrescriptionList";
+import {
+  setCustomersPrescriptionList,
+  setPrescriptionSliceError,
+} from "@/lib/features/prescriptionsSlice";
 
 const POSMain = () => {
   const dispatch = useAppDispatch();
@@ -24,7 +33,15 @@ const POSMain = () => {
     medicineList,
   } = useAppSelector((state) => state.product);
 
+  const { customersPrescriptionList } = useAppSelector(
+    (state) => state.prescriptions
+  );
+
+  console.log("customersPrescriptionList : ", customersPrescriptionList);
+
   const [loading, setLoading] = useState<boolean>(true);
+  const [prescriptionListModal, setCustomerListModal] =
+    useState<boolean>(false);
 
   useEffect(() => {
     // getMedicineList();
@@ -46,6 +63,30 @@ const POSMain = () => {
       } else {
         setLoading(false);
       }
+
+      const response = await apiService.get("/api/customer/prescriptions/");
+
+      if (response.message) {
+        // console.log("Customer prescriptions response : ", response);
+        dispatch(
+          setCustomersPrescriptionList({
+            msg: response.message,
+            data: response.data,
+          })
+        );
+      } else {
+        const tmpErrors: string[] = Object.values(response).map(
+          (error: any) => {
+            return error;
+          }
+        );
+
+        // console.error("Error getting medicine list:", tmpErrors);
+
+        dispatch(setPrescriptionSliceError({ apiError: tmpErrors }));
+        console.log("Customer prescriptions error : ", tmpErrors);
+      }
+
       // } else {
       //   router.push("/login");
       // }
@@ -60,7 +101,7 @@ const POSMain = () => {
 
   return (
     <div>
-      <Sidebar />
+      <Sidebar setCustomerListModal={setCustomerListModal} />
       <div className="w-full pl-[58px] pt-[55px] flex flex-row justify-between fixed top-[0] left-[0px] h-full">
         <div className="w-[50%]">
           <LeftSection />
@@ -70,6 +111,13 @@ const POSMain = () => {
           <RightSection />
         </div>
       </div>
+
+      {prescriptionListModal && (
+        <PrescriptionList
+          setPrescriptionListModal={setCustomerListModal}
+          customersPrescriptionList={customersPrescriptionList}
+        />
+      )}
     </div>
   );
 };
