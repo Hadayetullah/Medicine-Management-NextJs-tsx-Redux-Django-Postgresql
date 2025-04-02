@@ -1,11 +1,11 @@
 "use client";
 
-interface SearchMedicinesProps {
+interface PrescriptionListSearchBarProps {
   searchQuery: string;
   setSearchQuery: (e: string) => void;
 }
 
-const SearchMedicine: React.FC<SearchMedicinesProps> = ({
+const PrescriptionListSearchBar: React.FC<PrescriptionListSearchBarProps> = ({
   searchQuery,
   setSearchQuery,
 }) => {
@@ -17,14 +17,14 @@ const SearchMedicine: React.FC<SearchMedicinesProps> = ({
   };
 
   return (
-    <div className="min-w-[100px] max-w-[500px] h-[50px] flex justify-center mt-[70px] mx-auto relative">
+    <div className="min-w-[100px] max-w-[500px] h-[50px] flex justify-center mt-[10px] mx-auto relative">
       <input
-        type="text"
-        placeholder="Search by Medicine Name"
+        type="number"
+        placeholder="Customer ID"
         value={searchQuery}
-        className="w-full max-w-lg p-2 border border-gray-300 rounded-md absolute h-full outline-none z-[10]"
+        className="w-full max-w-lg p-2 border border-gray-300 rounded-md absolute h-full z-[10] outline-none"
         id="search-input"
-        onChange={(e) => setSearchQuery(e.target.value)}
+        onChange={(e) => setSearchQuery(String(e.target.value))}
       />
 
       <div
@@ -43,4 +43,4 @@ const SearchMedicine: React.FC<SearchMedicinesProps> = ({
   );
 };
 
-export default SearchMedicine;
+export default PrescriptionListSearchBar;

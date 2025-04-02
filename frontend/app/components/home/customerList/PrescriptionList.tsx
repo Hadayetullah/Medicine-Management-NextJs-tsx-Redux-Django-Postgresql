@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from "react";
 
 import { PrescriptionsType } from "@/lib/features/prescriptionsSlice";
+import PrescriptionListSearchBar from "../../searchFields/PrescriptionListSearchBar";
+import GeneratePrescriptionList from "./GeneratePrescriptionList";
 
 interface PrescriptionListProps {
   setPrescriptionListModal: (e: boolean) => void;
@@ -11,37 +13,37 @@ const PrescriptionList: React.FC<PrescriptionListProps> = ({
   setPrescriptionListModal,
   customersPrescriptionList,
 }) => {
-  const [searchQueryWithId, setSearchQueryWithId] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const filteredPrescriptions = useMemo(() => {
-    let prescriptions = [];
-
-    if (!searchQueryWithId.trim()) {
-      return; // Clear search results if searchQueryWithId is empty
-    }
+    // if (!searchQuery.trim()) {
+    //   return; // Clear search results if searchQuery is empty
+    // }
 
     if (
       customersPrescriptionList !== undefined &&
       customersPrescriptionList.length > 0
     ) {
-      return customersPrescriptionList.filter((customer: PrescriptionsType) =>
-        customer.name?.toLowerCase().includes(searchQueryWithId.toLowerCase())
+      const matchedPrescription = customersPrescriptionList.find(
+        (customer: PrescriptionsType) => customer.id === Number(searchQuery)
       );
-    } else {
-      return [];
+
+      return matchedPrescription ? [matchedPrescription] : [];
     }
-  }, [customersPrescriptionList, searchQueryWithId]);
+
+    return [];
+  }, [customersPrescriptionList, searchQuery]);
 
   return (
     <div className="fixed w-full h-full top-0 left-0 right-0 bottom-0 flex justify-center bg-black bg-opacity-50 z-[101]">
       <div className="relative w-[calc(100%-5px)] sm:w-[calc(100%-100px)] 2xl:w-[1450px] h-[calc(100vh-20px)] mt-[10px] bg-white flex flex-col text-gray-600">
-        <div className="w-full h-[40px] flex items-center my-4 px-1 sm:px-4 text-xl font-semibold border-b border-gray-500">
+        <div className="w-full h-[40px] flex items-center my-4 px-1 sm:px-4 text-md sm:text-xl font-semibold border-b border-gray-500">
           <h3>List of prescriptions</h3>
         </div>
 
         <button
           onClick={() => setPrescriptionListModal(false)}
-          className="absolute top-[5px] right-[15px] w-[30px] h-[30px]"
+          className="absolute top-[5px] right-[5px] sm:right-[15px] w-[25px] sm:w-[30px] h-[25px] sm:h-[30px]"
         >
           <svg
             aria-hidden="true"
@@ -61,10 +63,10 @@ const PrescriptionList: React.FC<PrescriptionListProps> = ({
         </button>
 
         <div className="w-full px-0 sm:px-2">
-          {/* <SearchMedicine
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-              /> */}
+          <PrescriptionListSearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
           <div className="w-full mt-10 mb-5">
             <div
               className="overflow-x-auto overflow-y-hidden w-full h-full"
@@ -99,6 +101,31 @@ const PrescriptionList: React.FC<PrescriptionListProps> = ({
                   <div className="w-[15%] h-full flex items-center justify-center pl-1">
                     <h4>Update/Detail</h4>
                   </div>
+                </div>
+
+                <div
+                  className="overflow-y-auto overflow-x-hidden text-sm md:text-base w-full h-[calc(100vh-250px)] bg-gray-100 pl-1 sm:pl-2.5"
+                  style={{ scrollbarWidth: "thin", zIndex: "-1" }}
+                >
+                  {filteredPrescriptions !== undefined && searchQuery !== "" ? (
+                    filteredPrescriptions.length > 0 ? (
+                      <GeneratePrescriptionList
+                        prescriptionList={filteredPrescriptions}
+                      />
+                    ) : (
+                      <h4 className="text-center text-lg xl:text-xl text-gray-500 mt-4">
+                        No Prescription Found
+                      </h4>
+                    )
+                  ) : customersPrescriptionList.length > 0 ? (
+                    <GeneratePrescriptionList
+                      prescriptionList={customersPrescriptionList}
+                    />
+                  ) : (
+                    <h4 className="text-center text-lg xl:text-xl text-gray-500 mt-4">
+                      No Prescription Available
+                    </h4>
+                  )}
                 </div>
 
                 {/* <div
