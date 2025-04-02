@@ -27,13 +27,13 @@ class CustomerConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-    async def receive(self, payload_data):
+    async def receive(self, text_data):
         """
         Handles messages from the WebSocket.
         Expected actions: `add_customer`, `update_customer`, `delete_customer`.
         """
         try:
-            data = json.loads(payload_data)
+            data = json.loads(text_data)
             action = data.get('action')
 
             # Ensure the user is authenticated
@@ -59,7 +59,7 @@ class CustomerConsumer(AsyncWebsocketConsumer):
             response = {'error': f"An unexpected error occurred: {str(e)}"}
 
         # Send response to WebSocket
-        await self.send(payload_data=json.dumps(response))
+        await self.send(text_data=json.dumps(response))
 
 
     async def add_customer(self, data):
@@ -101,7 +101,7 @@ class CustomerConsumer(AsyncWebsocketConsumer):
         message = event['message']
         customer = event['customer']  # Get the serialized customer object
         
-        await self.send(payload_data=json.dumps({
+        await self.send(text_data=json.dumps({
             'action': action,
             'message': message,
             'customer': customer
@@ -153,7 +153,7 @@ class CustomerConsumer(AsyncWebsocketConsumer):
         message = event['message']
         customer = event['customer']  # Get the serialized customer object
         
-        await self.send(payload_data=json.dumps({
+        await self.send(text_data=json.dumps({
             'action': action,
             'message': message,
             'customer': customer
@@ -191,7 +191,7 @@ class CustomerConsumer(AsyncWebsocketConsumer):
         message = event['message']
         customer = event['customer']  # Get the customer id
         
-        await self.send(payload_data=json.dumps({
+        await self.send(text_data=json.dumps({
             'action': action,
             'message': message,
             'customer': customer
