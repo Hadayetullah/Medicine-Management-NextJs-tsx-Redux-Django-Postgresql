@@ -255,7 +255,7 @@ const Invoice = () => {
           })
         ) : (
           <div className="w-full flex flex-row items-center justify-center">
-            <h4>No Medicines Added</h4>
+            <h4>Select Medicines</h4>
           </div>
         )}
       </div>

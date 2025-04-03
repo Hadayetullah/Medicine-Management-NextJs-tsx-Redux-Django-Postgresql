@@ -25,7 +25,7 @@ export async function FetchMedicinesHandleSockets({
         const response = await apiService.get("/api/product/medicine/");
     
         if (response.data) {
-            console.log("Clientaction response : ", response)
+            // console.log("Clientaction response : ", response)
             dispatch(setMedicineList({msg: response.message, data: response.data}));
     
         } else {

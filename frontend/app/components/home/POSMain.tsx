@@ -19,7 +19,9 @@ import PrescriptionList from "./customerList/PrescriptionList";
 import {
   setCustomersPrescriptionList,
   setPrescriptionSliceError,
+  setPrescriptionsSliceMsg,
 } from "@/lib/features/prescriptionsSlice";
+import PrescriptionSuccessMsg from "../modals/PrescriptionSuccessMsg";
 
 const POSMain = () => {
   const dispatch = useAppDispatch();
@@ -33,15 +35,35 @@ const POSMain = () => {
     medicineList,
   } = useAppSelector((state) => state.product);
 
-  const { customersPrescriptionList } = useAppSelector(
+  const { customersPrescriptionList, prescriptionsSliceMsg } = useAppSelector(
     (state) => state.prescriptions
   );
 
-  console.log("customersPrescriptionList : ", customersPrescriptionList);
+  // console.log("customersPrescriptionList : ", customersPrescriptionList);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [prescriptionListModal, setCustomerListModal] =
     useState<boolean>(false);
+  const [msgModal, setMsgModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    if (prescriptionsSliceMsg && prescriptionsSliceMsg != undefined) {
+      setMsgModal(true);
+      timeoutId = setTimeout(() => {
+        setMsgModal(false);
+        dispatch(setPrescriptionsSliceMsg({ message: "" }));
+      }, 1000);
+    }
+
+    // Cleanup function to clear the timeout
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [prescriptionsSliceMsg]);
 
   useEffect(() => {
     // getMedicineList();
@@ -103,7 +125,13 @@ const POSMain = () => {
     <div>
       <Sidebar setCustomerListModal={setCustomerListModal} />
       <div className="w-full pl-[58px] pt-[55px] flex flex-row justify-between fixed top-[0] left-[0px] h-full">
-        <div className="w-[50%]">
+        <div className="relative w-[50%]">
+          <PrescriptionSuccessMsg
+            prescriptionsSliceMsg={prescriptionsSliceMsg}
+            setMsgModal={setMsgModal}
+            msgModal={msgModal}
+          />
+
           <LeftSection />
         </div>
 
