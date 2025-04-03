@@ -19,14 +19,14 @@ export type PrescriptionsType = {
 }
 
 interface MainStateType {
-    message: any;
+    prescriptionsSliceMsg: string;
     loading: boolean;
     error: any;
     customersPrescriptionList: PrescriptionsType[];
 }
 
 const initialState: MainStateType = {
-    message: null,
+    prescriptionsSliceMsg: '',
     error: null,
     loading: false,
     customersPrescriptionList: [],
@@ -43,12 +43,23 @@ const prescriptionsSlice = createSlice({
         setPrescriptionSliceError: (state, action: PayloadAction<{ apiError: any }>) => {
             state.error = action.payload.apiError;
         },
+
+        addNewCustomer: (state, action: PayloadAction<any>) => {
+            state.prescriptionsSliceMsg = action.payload.data.message;
+            state.customersPrescriptionList.push(action.payload.data.customer);
+        },
+
+        setPrescriptionsSliceMsg: (state, action: PayloadAction<any>) => {
+            state.prescriptionsSliceMsg = action.payload.message;
+        },
     },
 });
 
 export const { 
     setCustomersPrescriptionList,
     setPrescriptionSliceError,
+    addNewCustomer,
+    setPrescriptionsSliceMsg,
 } = prescriptionsSlice.actions;
 
 export default prescriptionsSlice.reducer;
