@@ -115,7 +115,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
             )
 
             # Return the medicine data to the client that triggered the creation
-            return {'success': "Medicine added successfully!", 'medicine': medicine_data}
+            return {'action': 'new_medicine', 'user': 'operator', "msg": "Medicine created successfully"}
         
         except IntegrityError as e:
             return {'error': f"Integrity error occurred: {str(e)}"}
@@ -186,7 +186,7 @@ class MedicineConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-            return {'success': "Medicine updated successfully!", 'action': 'update_medicine', 'sub_action': action, 'medicine': medicine_data}
+            return {'action': 'update_medicine', 'sub_action': action, 'user': 'operator', "msg": "Medicine updated successfully"}
 
         except Medicine.DoesNotExist:
             return {'error': f"Medicine with ID {id} does not exist."}

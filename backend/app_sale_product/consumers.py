@@ -88,7 +88,7 @@ class CustomerConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-            return {"message": "Customer added successfully", "data": serialized_data}
+            return {'action': 'add_customer', 'user': 'operator', "msg": "Payment successful"}
         
         except ValueError as e:
             return {"error": str(e)}
@@ -140,7 +140,7 @@ class CustomerConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-            return {"message": "Customer updated successfully", "data": serialized_data}
+            return {'action': 'update_customer', 'user': 'operator', "msg": "Customer updated successfully"}
         
         except ValueError as e:
             return {"error": str(e)}
@@ -182,7 +182,7 @@ class CustomerConsumer(AsyncWebsocketConsumer):
             }
         )
         
-        return {"message": "Customer deleted successfully"}
+        return {'action': 'update_customer', 'user': 'operator', "msg": "Customer deleted successfully"}
     
 
     async def handle_delete_customer(self, event):
