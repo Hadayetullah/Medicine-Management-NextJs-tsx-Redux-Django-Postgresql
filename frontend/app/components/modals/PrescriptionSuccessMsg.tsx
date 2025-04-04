@@ -12,9 +12,9 @@ const PrescriptionSuccessMsg: React.FC<PrescriptionSuccessMsgProps> = ({
 }) => {
   return (
     <div
-      className={`absolute left-0 right-0 w-full top-[90px] z-[${
-        msgModal ? "102" : "-1"
-      }] flex items-center justify-center`}
+      className={`absolute left-0 right-0 w-full top-[90px] ${
+        msgModal ? "z-[102]" : "z-[-1]"
+      } flex items-center justify-center`}
     >
       <div className="w-[160px] sm:w-[350px]">
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4 flex justify-between items-center">
