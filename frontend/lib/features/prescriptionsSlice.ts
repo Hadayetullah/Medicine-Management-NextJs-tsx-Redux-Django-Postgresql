@@ -45,8 +45,7 @@ const prescriptionsSlice = createSlice({
         },
 
         addNewCustomer: (state, action: PayloadAction<any>) => {
-            state.prescriptionsSliceMsg = action.payload.data.message;
-            state.customersPrescriptionList.push(action.payload.data.customer);
+            state.customersPrescriptionList.push(action.payload.data);
         },
 
         setPrescriptionsSliceMsg: (state, action: PayloadAction<any>) => {

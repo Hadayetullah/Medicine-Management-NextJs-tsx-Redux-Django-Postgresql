@@ -83,12 +83,11 @@ export const createWebSocketMiddleware = (): Middleware => {
             }
 
             if (data && data.action === "add_customer") {
-              console.log("data message : ", data.message)
-              // if(data.message) {
-              //   storeAPI.dispatch(setPrescriptionsSliceMsg({message: data.message}))
-              // }
+              if(data.user === "operator") {
+                storeAPI.dispatch(setPrescriptionsSliceMsg({message: data.msg}))
+              }
 
-              storeAPI.dispatch(addNewCustomer({data: data}))
+              storeAPI.dispatch(addNewCustomer({data: data.customer}))
             }
             // if (data && data.action && data.action === "renew_token") { 
             //   try {

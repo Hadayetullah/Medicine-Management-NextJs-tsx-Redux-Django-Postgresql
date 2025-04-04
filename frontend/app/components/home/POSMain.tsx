@@ -39,7 +39,7 @@ const POSMain = () => {
     (state) => state.prescriptions
   );
 
-  // console.log("customersPrescriptionList : ", customersPrescriptionList);
+  console.log("prescriptionsSliceMsg : ", prescriptionsSliceMsg);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [prescriptionListModal, setCustomerListModal] =
