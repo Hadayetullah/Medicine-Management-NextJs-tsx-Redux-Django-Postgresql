@@ -1,4 +1,4 @@
-import { addCurrentCustomer } from "@/lib/features/customerSlice";
+import { updateOrAddTmpCustomerInfo } from "@/lib/features/customerSlice";
 import { useAppDispatch } from "@/lib/hooks";
 import React, { useState } from "react";
 
@@ -28,8 +28,8 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ setAddCustomerModal }) => {
     name: "",
     age: "",
     phone: "",
-    address: "",
     email: "",
+    address: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +43,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ setAddCustomerModal }) => {
     e.preventDefault();
 
     if (customerData.name && customerData.age) {
-      dispatch(addCurrentCustomer(customerData));
+      dispatch(
+        updateOrAddTmpCustomerInfo({
+          customerData: customerData,
+          currentCustomer: true,
+        })
+      );
       setAddCustomerModal(false);
     }
     // console.log(customerData);

@@ -16,7 +16,7 @@ import {
 const Invoice = () => {
   const dispatch = useAppDispatch();
 
-  const { tmpInvoice } = useAppSelector((state) => state.customer);
+  const { tmpCustomerPrescription } = useAppSelector((state) => state.customer);
 
   const handleSubtractQty = (
     tmpQuantity: number,
@@ -173,86 +173,88 @@ const Invoice = () => {
       </div>
 
       <div className="bg-white w-full py-2 flex flex-col text-[#5c5c5c] font-semibold text-[17px] h-[calc(100vh-455px)] overflow-y-auto">
-        {tmpInvoice?.length > 0 ? (
-          tmpInvoice.map((medicine: any, index: number) => {
-            return (
-              <div
-                key={index}
-                className="w-full flex flex-row items-center justify-between"
-              >
-                <div className="px-1">{writeIcon}</div>
-
+        {tmpCustomerPrescription.tmpInvoice?.length > 0 ? (
+          tmpCustomerPrescription.tmpInvoice.map(
+            (medicine: any, index: number) => {
+              return (
                 <div
-                  className={`w-full flex flex-row items-center justify-between border ${
-                    index + 1 === tmpInvoice?.length
-                      ? "border-b-1"
-                      : "border-b-0"
-                  } border-gray-400 py-2`}
+                  key={index}
+                  className="w-full flex flex-row items-center justify-between"
                 >
-                  <div className="w-[35%] pl-2">
-                    <h5>{medicine.name}</h5>
+                  <div className="px-1">{writeIcon}</div>
+
+                  <div
+                    className={`w-full flex flex-row items-center justify-between border ${
+                      index + 1 === tmpCustomerPrescription.tmpInvoice?.length
+                        ? "border-b-1"
+                        : "border-b-0"
+                    } border-gray-400 py-2`}
+                  >
+                    <div className="w-[35%] pl-2">
+                      <h5>{medicine.name}</h5>
+                    </div>
+
+                    <div className="flex flex-row items-center w-[15%]">
+                      <h5>{medicine.power}mg</h5>
+                    </div>
+
+                    <div className="flex flex-row items-center w-[10%]">
+                      {dolarIcon}
+                      <h5>{medicine.price}</h5>
+                    </div>
+
+                    <div className="flex flex-row items-center justify-evenly w-[30%]">
+                      <button
+                        onClick={() =>
+                          handleSubtractQty(
+                            medicine.tmpQuantity,
+                            index,
+                            medicine.medicineListIndex
+                          )
+                        }
+                      >
+                        {minusIcon}
+                      </button>
+                      <h5>{medicine.tmpQuantity}</h5>
+                      <button
+                        onClick={() =>
+                          handleIncreaseQty(
+                            index,
+                            medicine.medicineListIndex,
+                            medicine.quantity
+                          )
+                        }
+                      >
+                        {plusIcon}
+                      </button>
+                    </div>
+
+                    <div className="flex flex-row items-center justify-center w-[15%]">
+                      {dolarIcon}
+                      <h5>
+                        {parseInt(medicine.tmpQuantity) *
+                          parseFloat(medicine.price)}
+                      </h5>
+                    </div>
                   </div>
 
-                  <div className="flex flex-row items-center w-[15%]">
-                    <h5>{medicine.power}mg</h5>
-                  </div>
-
-                  <div className="flex flex-row items-center w-[10%]">
-                    {dolarIcon}
-                    <h5>{medicine.price}</h5>
-                  </div>
-
-                  <div className="flex flex-row items-center justify-evenly w-[30%]">
+                  <div className="px-1 flex items-center">
                     <button
                       onClick={() =>
-                        handleSubtractQty(
-                          medicine.tmpQuantity,
-                          index,
-                          medicine.medicineListIndex
-                        )
-                      }
-                    >
-                      {minusIcon}
-                    </button>
-                    <h5>{medicine.tmpQuantity}</h5>
-                    <button
-                      onClick={() =>
-                        handleIncreaseQty(
+                        handleDelete(
                           index,
                           medicine.medicineListIndex,
-                          medicine.quantity
+                          medicine.tmpQuantity
                         )
                       }
                     >
-                      {plusIcon}
+                      {deleteIcon}
                     </button>
                   </div>
-
-                  <div className="flex flex-row items-center justify-center w-[15%]">
-                    {dolarIcon}
-                    <h5>
-                      {parseInt(medicine.tmpQuantity) *
-                        parseFloat(medicine.price)}
-                    </h5>
-                  </div>
                 </div>
-
-                <div className="px-1 flex items-center">
-                  <button
-                    onClick={() =>
-                      handleDelete(
-                        index,
-                        medicine.medicineListIndex,
-                        medicine.tmpQuantity
-                      )
-                    }
-                  >
-                    {deleteIcon}
-                  </button>
-                </div>
-              </div>
-            );
-          })
+              );
+            }
+          )
         ) : (
           <div className="w-full flex flex-row items-center justify-center">
             <h4>Select Medicines</h4>

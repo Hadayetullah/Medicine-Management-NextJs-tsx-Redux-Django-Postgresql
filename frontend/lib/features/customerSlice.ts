@@ -1,5 +1,22 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+
+// const initialState: MainStateType = {
+//     message: null,
+//     error: null,
+//     loading: false,
+//     CurrentCustomer: null,
+//     tmpCustomerPrescription: {
+//         name: '',
+//         age: 0,
+//         phone: '',
+//         address: '',
+//         email: '',
+//         tmpInvoice: [],
+//     },
+//     tmpHoldedCustomers: [],
+// }
+
 export type MedicineType = {
     name: string;
     company: string;
@@ -10,13 +27,12 @@ export type MedicineType = {
     quantity: number;
 }
 
-export type PrescriptionDetailType = {
+export type CustomerDetailType = {
     name: string;
     age: number;
     phone: string;
-    address: string;
     email: string;
-    medicine_data: MedicineType[]
+    address: string;
 }
 
 export type TmpInvoiceType = {
@@ -50,29 +66,37 @@ export type TmpInvoiceType = {
     created_at: Date;
 }
 
-export type CustomerDetailType = {
+export type TmpCustomerPrescriptionType = {
     name: string;
-    age: number;
+    age: string;
     phone: string;
     address: string;
     email: string;
+    tmpInvoice: TmpInvoiceType[];
 }
 
 interface MainStateType {
     message: any;
     loading: boolean;
     error: any;
-    CurrentCustomer: CustomerDetailType | null;
-    tmpInvoice: TmpInvoiceType[];
-    tmpHoldedCustomers: PrescriptionDetailType[];
+    currentCustomer: boolean;
+    tmpCustomerPrescription: TmpCustomerPrescriptionType;
+    tmpHoldedCustomers: TmpCustomerPrescriptionType[];
 }
 
 const initialState: MainStateType = {
     message: null,
     error: null,
     loading: false,
-    CurrentCustomer: null,
-    tmpInvoice: [],
+    currentCustomer: false,
+    tmpCustomerPrescription: {
+        name: '',
+        age: '',
+        phone: '',
+        email: '',
+        address: '',
+        tmpInvoice: [],
+    },
     tmpHoldedCustomers: [],
 }
 
@@ -81,31 +105,35 @@ const customerSlice = createSlice({
     initialState,
     reducers: {
         addTmpMedicine: (state, action: PayloadAction<any>) => {
-            state.tmpInvoice.push({ ...action.payload.medicine, medicineListIndex: action.payload.index, quantity: action.payload.medicine.quantity - 1, tmpQuantity: 1 });
+            state.tmpCustomerPrescription.tmpInvoice.push({ ...action.payload.medicine, medicineListIndex: action.payload.index, quantity: action.payload.medicine.quantity - 1, tmpQuantity: 1 });
         },
 
         IncreaseTmpMedicineQuantity: (state, action: PayloadAction<any>) => {
-            const obj = state.tmpInvoice[action.payload];
-            state.tmpInvoice[action.payload] = {...obj, quantity: obj.quantity - 1, tmpQuantity: obj.tmpQuantity + 1 }
+            const obj = state.tmpCustomerPrescription.tmpInvoice[action.payload];
+            state.tmpCustomerPrescription.tmpInvoice[action.payload] = {...obj, quantity: obj.quantity - 1, tmpQuantity: obj.tmpQuantity + 1 }
         },
 
         decreaseTmpMedicineQuantity: (state, action: PayloadAction<any>) => {
-            const obj = state.tmpInvoice[action.payload];
-            state.tmpInvoice[action.payload] = {...obj, quantity: obj.quantity + 1, tmpQuantity: obj.tmpQuantity - 1 }
-            // state.tmpInvoice[action.payload].tmpQuantity -= 1;
+            const obj = state.tmpCustomerPrescription.tmpInvoice[action.payload];
+            state.tmpCustomerPrescription.tmpInvoice[action.payload] = {...obj, quantity: obj.quantity + 1, tmpQuantity: obj.tmpQuantity - 1 }
+            // state.tmpCustomerPrescription?.tmpInvoice[action.payload].tmpQuantity -= 1;
         },
 
         removeTmpMedicine: (state, action: PayloadAction<number>) => {
-            state.tmpInvoice = state.tmpInvoice.filter((_, index) => index !== action.payload);
+            state.tmpCustomerPrescription.tmpInvoice = state.tmpCustomerPrescription.tmpInvoice.filter((_, index) => index !== action.payload);
         },
 
-        addCurrentCustomer: (state, action: PayloadAction<any>) => {
-            state.CurrentCustomer = action.payload;
+        updateOrAddTmpCustomerInfo: (state, action: PayloadAction<{
+            customerData: Omit<TmpCustomerPrescriptionType, 'tmpInvoice'>;
+            currentCustomer: boolean;
+        }>) => {
+            state.tmpCustomerPrescription = {...state.tmpCustomerPrescription, ...action.payload.customerData};
+            state.currentCustomer = action.payload.currentCustomer;
         },
 
         resetTmpCustomerAndInvoice: (state) => {
-            state.CurrentCustomer = null;
-            state.tmpInvoice = [];
+            state.currentCustomer = false;
+            state.tmpCustomerPrescription.tmpInvoice = [];
         }
         
     },
@@ -116,7 +144,7 @@ export const {
     IncreaseTmpMedicineQuantity, 
     decreaseTmpMedicineQuantity, 
     removeTmpMedicine, 
-    addCurrentCustomer, 
+    updateOrAddTmpCustomerInfo, 
     resetTmpCustomerAndInvoice
 } = customerSlice.actions;
 
