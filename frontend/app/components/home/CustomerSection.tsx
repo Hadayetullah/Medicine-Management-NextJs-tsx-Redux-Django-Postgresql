@@ -3,7 +3,7 @@ import AddCustomer from "./AddCustomer";
 import { useAppSelector } from "@/lib/hooks";
 
 const CustomerSection = () => {
-  const { CurrentCustomer } = useAppSelector((state) => state.customer);
+  const { tmpCustomerPrescription } = useAppSelector((state) => state.customer);
 
   const [addCustomerModal, setAddCustomerModal] = useState<boolean>(false);
   return (
@@ -24,8 +24,8 @@ const CustomerSection = () => {
         </svg>
 
         <h4 className="ml-2 text-gray-700 font-semibold text-lg">
-          {CurrentCustomer != null
-            ? `${CurrentCustomer.name} (${CurrentCustomer.age})`
+          {tmpCustomerPrescription != null
+            ? `${tmpCustomerPrescription.name} (${tmpCustomerPrescription.age})`
             : "No active customer!"}
         </h4>
       </div>

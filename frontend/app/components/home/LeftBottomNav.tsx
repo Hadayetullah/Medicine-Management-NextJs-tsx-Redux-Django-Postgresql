@@ -1,31 +1,25 @@
 import apiService from "@/app/actions/apiService";
-import { resetTmpCustomerAndInvoice } from "@/lib/features/customerSlice";
+import {
+  resetTmpCustomerAndInvoice,
+  TmpCustomerPrescriptionType,
+} from "@/lib/features/customerSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import React from "react";
 
 const LeftBottomNav = () => {
   const dispatch = useAppDispatch();
-  const { tmpInvoice, CurrentCustomer } = useAppSelector(
-    (state) => state.customer
-  );
+  const { tmpCustomerPrescription } = useAppSelector((state) => state.customer);
 
-  type Customer = {
-    name?: string;
-    age?: number;
-    phone?: string;
-    address?: string;
-    email?: string;
-    [key: string]: any; // Allows additional properties
-  };
+  type CustomerInfoOnly = Omit<TmpCustomerPrescriptionType, "tmpInvoice">;
 
   const handlePayment = async () => {
-    let invoiceObj: Customer = {
-      ...CurrentCustomer,
-    };
+    let obj;
+    let { tmpInvoice, ...rest } = tmpCustomerPrescription;
+    let invoiceObj: CustomerInfoOnly = rest;
 
     const customer_prescription: any = [];
 
-    tmpInvoice.forEach((medicine) => {
+    tmpCustomerPrescription.tmpInvoice.forEach((medicine) => {
       // const medicineObj = {
       //   name: medicine.name,
       //   company: medicine?.company?.name,
@@ -44,22 +38,22 @@ const LeftBottomNav = () => {
       customer_prescription.push(medicineObj);
     });
 
-    invoiceObj = {
+    obj = {
       ...invoiceObj,
       customer_prescriptions: customer_prescription,
     };
 
     const customerData = {
       action: "add_customer",
-      data: invoiceObj,
+      data: obj,
     };
 
     // dispatch(resetTmpCustomerAndInvoice());
 
-    console.log("invoiceObj : ", invoiceObj);
+    console.log("obj : ", obj);
     // const response = await apiService.post(
     //   "/api/customer/prescriptions/",
-    //   JSON.stringify(invoiceObj)
+    //   JSON.stringify(obj)
     // );
 
     // age: 10,

@@ -19,7 +19,7 @@ import AddCustomer from "./AddCustomer";
 const RightSection = () => {
   const dispatch = useAppDispatch();
   const { medicineList } = useAppSelector((state) => state.product);
-  const { tmpInvoice, CurrentCustomer } = useAppSelector(
+  const { tmpCustomerPrescription, currentCustomer } = useAppSelector(
     (state) => state.customer
   );
 
@@ -43,12 +43,11 @@ const RightSection = () => {
     id: string,
     quantity: number
   ) => {
-    if (CurrentCustomer === null) {
+    if (currentCustomer === false) {
       setAddCustomerModal(true);
     } else {
-      const existingMedicineIndex = tmpInvoice.findIndex(
-        (item) => item?.id === id
-      );
+      const existingMedicineIndex =
+        tmpCustomerPrescription.tmpInvoice.findIndex((item) => item?.id === id);
 
       if (existingMedicineIndex !== -1) {
         if (quantity > 0) {
