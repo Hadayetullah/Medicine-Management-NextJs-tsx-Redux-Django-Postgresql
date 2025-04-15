@@ -2,7 +2,7 @@ from uuid import UUID
 from rest_framework import serializers
 
 from app_useraccount.models import User
-from .models import Company, Category, DosageForm, Medicine, UpdatedBy, Customer, EditedBy, SellRecord
+from .models import Company, Category, DosageForm, Medicine, UpdatedBy
 
 
 # Medicine Serializer 
@@ -66,17 +66,5 @@ class MedicineListSerializer(serializers.ModelSerializer):
                 representation[key] = str(value)
         return representation
 
-
-
-class CustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = '__all__'
-
-
-class EditedBySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EditedBy
-        fields = '__all__'
 
 
