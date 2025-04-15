@@ -61,7 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setCustomerListModal }) => {
         </div>
       </button>
 
-      <button className="relative flex flex-row items-center group">
+      <button className="cursor-not-allowed relative flex flex-row items-center group">
         <svg
           aria-hidden="true"
           focusable="false"
@@ -84,7 +84,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setCustomerListModal }) => {
         </div>
       </button>
 
-      <button className="relative flex flex-row items-center group">
+      <button className="cursor-not-allowed relative flex flex-row items-center group">
         <svg
           aria-hidden="true"
           focusable="false"
@@ -107,7 +107,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setCustomerListModal }) => {
         </div>
       </button>
 
-      <button className="relative flex flex-row items-center group">
+      <button className="cursor-not-allowed relative flex flex-row items-center group">
         <svg
           aria-hidden="true"
           focusable="false"
