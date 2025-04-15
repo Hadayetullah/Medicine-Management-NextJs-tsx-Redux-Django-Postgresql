@@ -1,9 +1,13 @@
 import React, { useEffect, useMemo } from "react";
 import LeftBottomNav from "./LeftBottomNav";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { holdTmpCustomer } from "@/lib/features/customerSlice";
 
 const LeftBottomSection = () => {
-  const { tmpInvoice } = useAppSelector((state) => state.customer);
+  const dispatch = useAppDispatch();
+  const { tmpCustomerPrescription } = useAppSelector((state) => state.customer);
+
+  console.log("tmpCustomerPrescription : ", tmpCustomerPrescription);
 
   const summaryObj = useMemo(() => {
     let summary = {
@@ -11,10 +15,10 @@ const LeftBottomSection = () => {
       totalPrice: 0,
     };
 
-    if (tmpInvoice?.length > 0) {
+    if (tmpCustomerPrescription.tmpInvoice?.length > 0) {
       let items = 0;
       let totalPrice = 0;
-      tmpInvoice.forEach((item) => {
+      tmpCustomerPrescription.tmpInvoice.forEach((item) => {
         items += 1;
         totalPrice += item.tmpQuantity * item.price;
 
@@ -23,7 +27,11 @@ const LeftBottomSection = () => {
     }
 
     return summary;
-  }, [tmpInvoice]);
+  }, [tmpCustomerPrescription.tmpInvoice]);
+
+  const holdCustomer = () => {
+    dispatch(holdTmpCustomer());
+  };
 
   const dolarIcon = (
     <svg
@@ -107,7 +115,7 @@ const LeftBottomSection = () => {
         </div>
       </div>
 
-      <LeftBottomNav />
+      <LeftBottomNav holdCustomer={holdCustomer} />
     </div>
   );
 };

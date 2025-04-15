@@ -1,12 +1,16 @@
+import React from "react";
+
 import apiService from "@/app/actions/apiService";
 import {
   resetTmpCustomerAndInvoice,
   TmpCustomerPrescriptionType,
 } from "@/lib/features/customerSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import React from "react";
 
-const LeftBottomNav = () => {
+interface LeftBottomNavProps {
+  holdCustomer: () => void;
+}
+const LeftBottomNav: React.FC<LeftBottomNavProps> = ({ holdCustomer }) => {
   const dispatch = useAppDispatch();
   const { tmpCustomerPrescription } = useAppSelector((state) => state.customer);
 
@@ -95,25 +99,7 @@ const LeftBottomNav = () => {
         <h4>Cancel</h4>
       </button>
 
-      <button className="border border-gray-400 flex flex-row py-1 px-2 w-full justify-center font-semibold text-[#676767] gap-x-1 text-lg rounded">
-        <svg
-          aria-hidden="true"
-          focusable="false"
-          className="w-[25px] h-[25px]"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512"
-        >
-          <path
-            fill="currentColor"
-            d="M144 0C117.5 0 96 21.5 96 48V96v28.5V176c0 8.8-7.2 16-16 16s-16-7.2-16-16V149.3l-9 7.5C40.4 169 32 187 32 206V244c0 38 16.9 74 46.1 98.3L128 384v96c0 17.7 14.3 32 32 32H320c17.7 0 32-14.3 32-32V374.7c46.9-19 80-65 80-118.7V176 160 144c0-26.5-21.5-48-48-48c-12.4 0-23.6 4.7-32.1 12.3C350 83.5 329.3 64 304 64c-12.4 0-23.6 4.7-32.1 12.3C270 51.5 249.3 32 224 32c-12.4 0-23.6 4.7-32.1 12.3C190 19.5 169.3 0 144 0z"
-          ></path>
-        </svg>
-
-        <h4>Hold</h4>
-      </button>
-
-      <button className="border border-gray-400 flex flex-row py-1 px-2 w-full justify-center font-semibold text-[#676767] gap-x-1 text-lg rounded">
+      <button className="cursor-not-allowed border border-gray-400 flex flex-row py-1 px-2 w-full justify-center font-semibold text-[#676767] gap-x-1 text-lg rounded">
         <svg
           aria-hidden="true"
           focusable="false"
@@ -129,6 +115,27 @@ const LeftBottomNav = () => {
         </svg>
 
         <h4>Discount</h4>
+      </button>
+
+      <button
+        onClick={() => holdCustomer()}
+        className="border border-gray-400 flex flex-row py-1 px-2 w-full justify-center font-semibold text-[#676767] gap-x-1 text-lg rounded"
+      >
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          className="w-[25px] h-[25px]"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512"
+        >
+          <path
+            fill="currentColor"
+            d="M144 0C117.5 0 96 21.5 96 48V96v28.5V176c0 8.8-7.2 16-16 16s-16-7.2-16-16V149.3l-9 7.5C40.4 169 32 187 32 206V244c0 38 16.9 74 46.1 98.3L128 384v96c0 17.7 14.3 32 32 32H320c17.7 0 32-14.3 32-32V374.7c46.9-19 80-65 80-118.7V176 160 144c0-26.5-21.5-48-48-48c-12.4 0-23.6 4.7-32.1 12.3C350 83.5 329.3 64 304 64c-12.4 0-23.6 4.7-32.1 12.3C270 51.5 249.3 32 224 32c-12.4 0-23.6 4.7-32.1 12.3C190 19.5 169.3 0 144 0z"
+          ></path>
+        </svg>
+
+        <h4>Hold</h4>
       </button>
 
       <button

@@ -24,8 +24,8 @@ const CustomerSection = () => {
         </svg>
 
         <h4 className="ml-2 text-gray-700 font-semibold text-lg">
-          {tmpCustomerPrescription != null
-            ? `${tmpCustomerPrescription.name} (${tmpCustomerPrescription.age})`
+          {tmpCustomerPrescription.name
+            ? `${tmpCustomerPrescription.name} ${tmpCustomerPrescription.age}`
             : "No active customer!"}
         </h4>
       </div>

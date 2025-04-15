@@ -16,7 +16,11 @@ import {
 const Invoice = () => {
   const dispatch = useAppDispatch();
 
-  const { tmpCustomerPrescription } = useAppSelector((state) => state.customer);
+  const { tmpCustomerPrescription, tmpHoldedCustomers } = useAppSelector(
+    (state) => state.customer
+  );
+
+  console.log("tmpHoldedCustomers : ", tmpHoldedCustomers);
 
   const handleSubtractQty = (
     tmpQuantity: number,
