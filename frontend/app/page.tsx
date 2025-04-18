@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 
 import { getRefreshToken } from "./actions/serverActions";
 
-import Sidebar from "./components/home/Sidebar";
 import POSMain from "./components/home/POSMain";
 
 export default async function HomePage({
