@@ -22,6 +22,7 @@ import {
   setPrescriptionsSliceMsg,
 } from "@/lib/features/prescriptionsSlice";
 import PrescriptionSuccessMsg from "../modals/PrescriptionSuccessMsg";
+import HoldedList from "./holdedList/HoldedList";
 
 const POSMain = () => {
   const dispatch = useAppDispatch();
@@ -39,11 +40,16 @@ const POSMain = () => {
     (state) => state.prescriptions
   );
 
-  console.log("prescriptionsSliceMsg : ", prescriptionsSliceMsg);
+  const { tmpHoldedCustomers } = useAppSelector((state) => state.customer);
+
+  // console.log("prescriptionsSliceMsg : ", prescriptionsSliceMsg);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [prescriptionListModal, setCustomerListModal] =
     useState<boolean>(false);
+
+  const [holdedListModal, setHoldedListModal] = useState<boolean>(false);
+
   const [msgModal, setMsgModal] = useState<boolean>(false);
 
   useEffect(() => {
@@ -123,7 +129,10 @@ const POSMain = () => {
 
   return (
     <div>
-      <Sidebar setCustomerListModal={setCustomerListModal} />
+      <Sidebar
+        setHoldedListModal={setHoldedListModal}
+        setCustomerListModal={setCustomerListModal}
+      />
       <div className="w-full pl-[58px] pt-[55px] flex flex-row justify-between fixed top-[0] left-[0px] h-full">
         <div className="relative w-[50%]">
           <PrescriptionSuccessMsg
@@ -144,6 +153,13 @@ const POSMain = () => {
         <PrescriptionList
           setPrescriptionListModal={setCustomerListModal}
           customersPrescriptionList={customersPrescriptionList}
+        />
+      )}
+
+      {holdedListModal && (
+        <HoldedList
+          setHoldedListModal={setHoldedListModal}
+          tmpHoldedCustomers={tmpHoldedCustomers}
         />
       )}
     </div>
