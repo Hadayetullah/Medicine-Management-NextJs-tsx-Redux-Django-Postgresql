@@ -74,7 +74,7 @@ const HoldedList: React.FC<PrescriptionListProps> = ({
                     <h4>No.</h4>
                   </div>
 
-                  <div className="w-[15%] h-full flex items-center pl-2">
+                  <div className="w-[14%] h-full flex items-center pl-2">
                     <h4>Name</h4>
                   </div>
 
@@ -82,25 +82,25 @@ const HoldedList: React.FC<PrescriptionListProps> = ({
                     <h4>Age</h4>
                   </div>
 
-                  <div className="w-[20%] h-full flex items-center pl-1">
+                  <div className="w-[16%] h-full flex items-center pl-1">
                     <h4>Email</h4>
                   </div>
 
-                  <div className="w-[15%] h-full flex items-center pl-1">
+                  <div className="w-[18%] h-full flex items-center pl-1">
                     <h4>Phone</h4>
                   </div>
 
-                  <div className="w-[25%] h-full flex items-center justify-start pl-1">
+                  <div className="w-[27%] h-full flex items-center justify-start pl-1">
                     <h4>Address</h4>
                   </div>
 
                   <div className="w-[15%] h-full flex items-center justify-center pl-1">
-                    <h4>Update/Detail</h4>
+                    <h4>Remove</h4>
                   </div>
                 </div>
 
                 <div
-                  className="overflow-y-auto overflow-x-hidden text-sm md:text-base w-full h-[calc(100vh-250px)] pl-1 sm:pl-2.5"
+                  className="overflow-y-auto overflow-x-hidden text-sm md:text-base w-full h-[calc(100vh-250px)] pt-3 pl-1 sm:pl-2.5"
                   style={{ scrollbarWidth: "thin", zIndex: "-1" }}
                 >
                   {filteredHoldedCustomers !== undefined &&
