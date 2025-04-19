@@ -148,6 +148,10 @@ const customerSlice = createSlice({
                 tmpInvoice: [],
             };
         },
+
+        replaceTmpCustomerPrescription: (state, action: PayloadAction<TmpCustomerPrescriptionType>) => {
+            state.tmpCustomerPrescription = action.payload;
+        },
         
     },
 });
@@ -159,7 +163,8 @@ export const {
     removeTmpMedicine, 
     updateOrAddTmpCustomerInfo, 
     resetTmpCustomerAndInvoice,
-    holdTmpCustomer
+    holdTmpCustomer,
+    replaceTmpCustomerPrescription
 } = customerSlice.actions;
 
 export default customerSlice.reducer;

@@ -108,6 +108,7 @@ const HoldedList: React.FC<PrescriptionListProps> = ({
                     filteredHoldedCustomers.length > 0 ? (
                       <GenerateHoldedList
                         tmpHoldedCustomers={filteredHoldedCustomers}
+                        setHoldedListModal={setHoldedListModal}
                       />
                     ) : (
                       <h4 className="text-center text-lg xl:text-xl text-gray-500 mt-4">
@@ -117,6 +118,7 @@ const HoldedList: React.FC<PrescriptionListProps> = ({
                   ) : tmpHoldedCustomers.length > 0 ? (
                     <GenerateHoldedList
                       tmpHoldedCustomers={tmpHoldedCustomers}
+                      setHoldedListModal={setHoldedListModal}
                     />
                   ) : (
                     <h4 className="text-center text-lg xl:text-xl text-gray-500 mt-4">

@@ -1,11 +1,23 @@
-import { TmpCustomerPrescriptionType } from "@/lib/features/customerSlice";
 import React from "react";
+
+import {
+  replaceTmpCustomerPrescription,
+  TmpCustomerPrescriptionType,
+} from "@/lib/features/customerSlice";
+import { useAppDispatch } from "@/lib/hooks";
 
 type Props = {
   tmpHoldedCustomers: TmpCustomerPrescriptionType[];
+  setHoldedListModal: (e: boolean) => void;
 };
 
 const GenerateHoldedList = (props: Props) => {
+  const dispatch = useAppDispatch();
+
+  const handleClick = (customer: TmpCustomerPrescriptionType) => {
+    dispatch(replaceTmpCustomerPrescription(customer));
+    props.setHoldedListModal(false);
+  };
   return (
     <>
       {props.tmpHoldedCustomers.map(
@@ -19,7 +31,10 @@ const GenerateHoldedList = (props: Props) => {
                 <h4>{index + 1}</h4>
               </div>
 
-              <button className="w-[81%] h-full flex flex-row border border-gray-300 rounded-md hover:border-gray-500">
+              <button
+                onClick={() => handleClick(customer)}
+                className="w-[81%] h-full flex flex-row border border-gray-300 rounded-md hover:border-gray-500"
+              >
                 <div className="w-[17%] h-full flex items-center pl-2">
                   <h4>{customer.name}</h4>
                 </div>
