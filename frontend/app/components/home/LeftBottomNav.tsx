@@ -2,7 +2,7 @@ import React from "react";
 
 import apiService from "@/app/actions/apiService";
 import {
-  resetTmpCustomerAndInvoice,
+  resetTmpCustomerPrescription,
   TmpCustomerPrescriptionType,
 } from "@/lib/features/customerSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
@@ -54,7 +54,7 @@ const LeftBottomNav: React.FC<LeftBottomNavProps> = ({ holdCustomer }) => {
 
     // dispatch(resetTmpCustomerAndInvoice());
 
-    console.log("obj : ", obj);
+    // console.log("obj : ", obj);
     // const response = await apiService.post(
     //   "/api/customer/prescriptions/",
     //   JSON.stringify(obj)
@@ -69,6 +69,8 @@ const LeftBottomNav: React.FC<LeftBottomNavProps> = ({ holdCustomer }) => {
       payload: { connectionKey, message },
     });
 
+    dispatch(resetTmpCustomerPrescription());
+
     // const getresponse = await apiService.get("/api/customer/prescriptions/6/");
     // console.log("getresponse : ", getresponse);
     // const postresponse = await apiService.patch(
@@ -81,7 +83,10 @@ const LeftBottomNav: React.FC<LeftBottomNavProps> = ({ holdCustomer }) => {
 
   return (
     <div className="w-full flex flex-row items-center justify-between gap-x-2">
-      <button className="border border-gray-400 flex flex-row py-1 px-2 w-full justify-center font-semibold text-[#676767] gap-x-1 text-lg rounded">
+      <button
+        onClick={() => dispatch(resetTmpCustomerPrescription())}
+        className="border border-gray-400 flex flex-row py-1 px-2 w-full justify-center font-semibold text-[#676767] gap-x-1 text-lg rounded"
+      >
         <svg
           aria-hidden="true"
           focusable="false"
