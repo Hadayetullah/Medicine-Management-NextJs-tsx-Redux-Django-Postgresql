@@ -131,11 +131,6 @@ const customerSlice = createSlice({
             state.currentCustomer = action.payload.currentCustomer;
         },
 
-        resetTmpCustomerAndInvoice: (state) => {
-            state.currentCustomer = false;
-            state.tmpCustomerPrescription.tmpInvoice = [];
-        },
-
         holdTmpCustomer: (state) => {
             state.tmpHoldedCustomers.push(state.tmpCustomerPrescription);
             state.currentCustomer = false;
@@ -156,6 +151,18 @@ const customerSlice = createSlice({
         removeTmpCustomerPrescription: (state, action: PayloadAction<number>) => {
             state.tmpHoldedCustomers = state.tmpHoldedCustomers.filter((_, index) => index !== action.payload);
         },
+
+        resetTmpCustomerPrescription: (state) => {
+            state.currentCustomer = false;
+            state.tmpCustomerPrescription = {
+                name: '',
+                age: '',
+                phone: '',
+                email: '',
+                address: '',
+                tmpInvoice: [],
+            };
+        },
         
     },
 });
@@ -166,7 +173,7 @@ export const {
     decreaseTmpMedicineQuantity, 
     removeTmpMedicine, 
     updateOrAddTmpCustomerInfo, 
-    resetTmpCustomerAndInvoice,
+    resetTmpCustomerPrescription,
     holdTmpCustomer,
     replaceTmpCustomerPrescription,
     removeTmpCustomerPrescription
