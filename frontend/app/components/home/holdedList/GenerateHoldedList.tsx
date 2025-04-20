@@ -3,6 +3,7 @@ import React from "react";
 import {
   replaceTmpCustomerPrescription,
   TmpCustomerPrescriptionType,
+  removeTmpCustomerPrescription,
 } from "@/lib/features/customerSlice";
 import { useAppDispatch } from "@/lib/hooks";
 
@@ -14,10 +15,19 @@ type Props = {
 const GenerateHoldedList = (props: Props) => {
   const dispatch = useAppDispatch();
 
-  const handleClick = (customer: TmpCustomerPrescriptionType) => {
+  const handleClick = (
+    customer: TmpCustomerPrescriptionType,
+    index: number
+  ) => {
     dispatch(replaceTmpCustomerPrescription(customer));
     props.setHoldedListModal(false);
+    dispatch(removeTmpCustomerPrescription(index));
   };
+
+  const handleRemove = (index: number) => {
+    dispatch(removeTmpCustomerPrescription(index));
+  };
+
   return (
     <>
       {props.tmpHoldedCustomers.map(
@@ -32,7 +42,7 @@ const GenerateHoldedList = (props: Props) => {
               </div>
 
               <button
-                onClick={() => handleClick(customer)}
+                onClick={() => handleClick(customer, index)}
                 className="w-[81%] h-full flex flex-row border border-gray-300 rounded-md hover:border-gray-500"
               >
                 <div className="w-[17%] h-full flex items-center pl-2">
@@ -58,7 +68,7 @@ const GenerateHoldedList = (props: Props) => {
 
               <button
                 className="w-[13%] h-full font-semibold text-gray-700 border border-[#fcb900] mr-1 ml-3 rounded-md hover:bg-[#c99402]"
-                // onClick={() => handleUpdateDetail(prescription, true)}
+                onClick={() => handleRemove(index)}
               >
                 Remove
               </button>
