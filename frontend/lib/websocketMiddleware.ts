@@ -1,5 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { connectSocket, disconnectSocket, addProduct, setSocketError, setError, setSubAction, updateMedicine } from "./features/productSlice";
+import { connectSocket, disconnectSocket, addProduct, setSocketError, setError, setSubAction, updateMedicine, updateQuantityOnSell } from "./features/productSlice";
 import axios from "axios";
 import { addNewCustomer, setPrescriptionsSliceMsg } from "./features/prescriptionsSlice";
 
@@ -87,7 +87,10 @@ export const createWebSocketMiddleware = (): Middleware => {
                 storeAPI.dispatch(setPrescriptionsSliceMsg({message: data.msg}))
               }
 
-              storeAPI.dispatch(addNewCustomer({data: data.customer}))
+              if(data.customer) {
+                storeAPI.dispatch(updateQuantityOnSell({customer_prescriptions: data?.customer?.customer_prescriptions}))
+                storeAPI.dispatch(addNewCustomer({data: data?.customer}))
+              }
             }
             // if (data && data.action && data.action === "renew_token") { 
             //   try {

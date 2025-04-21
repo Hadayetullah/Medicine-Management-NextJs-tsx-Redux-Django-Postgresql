@@ -1,6 +1,7 @@
 
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { SinglePrescriptionType } from "./prescriptionsSlice";
 
 // interface WebSocketState {
 //   connected: boolean;
@@ -237,6 +238,16 @@ const websocketSlice = createSlice({
       const obj = state.medicineList[action.payload.medicineListIndex];
       state.medicineList[action.payload.medicineListIndex] = {...obj, quantity: obj.quantity + action.payload.tmpQuantity }
     },
+
+    updateQuantityOnSell: (state, action: PayloadAction<{ customer_prescriptions: SinglePrescriptionType[] }>) => {
+      action.payload.customer_prescriptions.forEach((medicine: SinglePrescriptionType) => {
+        const index = state.medicineList.findIndex(med => med.id === medicine.medicine_details.id);
+
+        if (index !== -1) {
+          state.medicineList[index].quantity = medicine.medicine_details.quantity; // Directly mutating inside Immer
+        }
+      })
+    },
     
   },
 
@@ -268,7 +279,8 @@ export const {
   updateMedicine, 
   decreaseMedicineListQuantity, 
   IncreaseMedicineListQuantity, 
-  restoreMedicineListQuantity
+  restoreMedicineListQuantity,
+  updateQuantityOnSell,
 } = websocketSlice.actions;
 
 export default websocketSlice.reducer;
