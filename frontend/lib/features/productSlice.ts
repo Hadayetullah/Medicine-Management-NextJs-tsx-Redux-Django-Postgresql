@@ -101,48 +101,6 @@ const initialState: MainStateType = {
 };
 
 
-
-// Async thunk to fetch all medicines
-// export const fetchMedicines = createAsyncThunk(
-//   "employee/addMedicine",
-//   async(data: AddMedicineRequest, {rejectWithValue}) => {
-//       try {
-//           const response = await axios.post('http://localhost:8000/api/employee/add-medicine/', data.formData, {
-//               headers: {
-//                   'accept': 'application/json',
-//                   "Content-Type": 'application/json',
-//                   'Authorization': `Bearer ${data.token}`
-//               }
-//           })
-
-//           return response
-//       } catch (error: any){
-//           return rejectWithValue(error.response?.data || error.message)
-//       }
-//   }
-// )
-
-
-// export const fetchMedicines = createAsyncThunk(
-//   "employee/addMedicine",
-//   async(token: string, {rejectWithValue}) => {
-//       try {
-//           const response = await axios.get('http://localhost:8000/api/product/medicine/', {
-//               headers: {
-//                   'accept': 'application/json',
-//                   "Content-Type": 'application/json',
-//                   'Authorization': `Bearer ${token}`
-//               }
-//           })
-
-//           return response.data
-//       } catch (error: any){
-//           return rejectWithValue(error.response?.data || error.message)
-//       }
-//   }
-// )
-
-
 const websocketSlice = createSlice({
   name: "websocket",
   initialState,
