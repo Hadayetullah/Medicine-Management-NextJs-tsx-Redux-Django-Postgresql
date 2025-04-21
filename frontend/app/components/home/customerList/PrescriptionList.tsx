@@ -25,7 +25,8 @@ const PrescriptionList: React.FC<PrescriptionListProps> = ({
       customersPrescriptionList.length > 0
     ) {
       const matchedPrescription = customersPrescriptionList.find(
-        (customer: PrescriptionsType) => customer.id === Number(searchQuery)
+        (customer: PrescriptionsType) =>
+          Number(customer.id) === Number(searchQuery)
       );
 
       return matchedPrescription ? [matchedPrescription] : [];
