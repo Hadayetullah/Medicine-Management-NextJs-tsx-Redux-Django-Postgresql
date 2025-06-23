@@ -133,7 +133,10 @@ const POSMain = () => {
         setHoldedListModal={setHoldedListModal}
         setCustomerListModal={setCustomerListModal}
       />
-      <div className="w-full pl-[58px] pt-[55px] flex flex-row justify-between fixed top-[0] left-[0px] h-full">
+      <div 
+        className={`w-full pl-[58px] pt-[55px] flex flex-row justify-between fixed top-[0] 
+          left-[0px] h-full`}
+      >
         <div className="relative w-[50%]">
           <PrescriptionSuccessMsg
             prescriptionsSliceMsg={prescriptionsSliceMsg}

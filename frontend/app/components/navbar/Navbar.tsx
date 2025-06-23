@@ -13,6 +13,8 @@ import Authenticated from "./Authenticated";
 import UnAuthenticated from "./UnAuthenticated";
 
 const Navbar = () => {
+  const { isNavbarHidden } = useAppSelector((state) => state.common);
+
   const { connectionDetails, connections, error } = useAppSelector(
     (state) => state.product
   );
@@ -78,7 +80,10 @@ const Navbar = () => {
   }, [path]);
 
   return (
-    <nav className="bg-indigo-600 py-3 px-2 sm:px-4 fixed top-0 left-0 w-full z-50">
+    <nav 
+      className={`bg-indigo-600 py-3 px-2 sm:px-4 fixed top-0 left-0 w-full z-50 
+        ${isNavbarHidden ? "hidden" : ""}`}
+    >
       {isAccessTokenExpired ? (
         <UnAuthenticated
           setToggleMenu={setToggleMenu}

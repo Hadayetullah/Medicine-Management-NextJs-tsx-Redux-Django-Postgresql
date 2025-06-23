@@ -153,7 +153,7 @@ const Invoice = () => {
   );
 
   return (
-    <div className="w-full mt-2">
+    <div className="w-full">
       <div className="bg-[#b42a2b] w-full py-1 flex flex-row items-center text-white uppercase font-semibold text-sm">
         <div className="w-[33%] text-center">
           <h4>Medicines</h4>
