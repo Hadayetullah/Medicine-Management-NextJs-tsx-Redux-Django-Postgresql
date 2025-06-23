@@ -7,7 +7,7 @@ const CustomerSection = () => {
 
   const [addCustomerModal, setAddCustomerModal] = useState<boolean>(false);
   return (
-    <div className="bg-[#E6E8EA] w-full flex flex-row justify-between items-center py-2 px-4 rounded-[3px]">
+    <div className="bg-[#E6E8EA] w-full flex flex-row justify-between items-center py-2 px-4">
       <div className="flex flex-row items-center">
         <svg
           aria-hidden="true"

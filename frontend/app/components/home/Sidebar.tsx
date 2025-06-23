@@ -1,4 +1,7 @@
+import { handleNavbarVisibility } from "@/lib/features/commonSlice";
+import { useAppDispatch } from "@/lib/hooks";
 import React from "react";
+import { TbLayoutNavbarCollapseFilled } from "react-icons/tb";
 
 interface SidebarProps {
   setHoldedListModal: (e: boolean) => void;
@@ -9,8 +12,24 @@ const Sidebar: React.FC<SidebarProps> = ({
   setHoldedListModal,
   setCustomerListModal,
 }) => {
+  const dispatch = useAppDispatch();
   return (
-    <div className="pt-[65px] fixed left-0 flex flex-col shadow-lg shadow-black w-14 h-full bg-white items-center space-y-4 z-10">
+    <div className="fixed left-0 flex flex-col shadow-[1px_0px_5px_black] w-14 h-full bg-white items-center space-y-4 z-10">
+
+      <button
+        onClick={() => dispatch(handleNavbarVisibility(false))}
+        className="relative flex flex-row items-center group mt-2"
+      >
+        <TbLayoutNavbarCollapseFilled className="w-9 h-9 text-gray-600 hover:text-gray-900" />
+
+        <div className="absolute left-12 flex flex-row items-center invisible group-hover:visible z-50">
+          <span className="w-0 h-0 border-t-[10px] border-t-transparent border-r-[20px] border-r-gray-900 border-b-[10px] border-b-transparent"></span>
+          <span className="border border-gray-900 bg-gray-900 text-white text-nowrap px-2 rounded-[5px]">
+            Expose Navbar
+          </span>
+        </div>
+      </button>
+
       <button
         onClick={() => setHoldedListModal(true)}
         className="relative flex flex-row items-center group"

@@ -1,6 +1,11 @@
 import Link from "next/link";
 import React from "react";
 
+import { TbLayoutNavbarExpand } from "react-icons/tb";
+
+import { handleNavbarVisibility } from "@/lib/features/commonSlice";
+import { useAppDispatch } from "@/lib/hooks";
+
 interface AuthenticatedProps {
   setToggleMenu: (toggleMenu: boolean) => void;
   toggleMenu: boolean;
@@ -20,13 +25,24 @@ const Authenticated: React.FC<AuthenticatedProps> = ({
   handleSettings,
   handleLogout,
 }) => {
+  const dispatch = useAppDispatch();
+  
   return (
     <div className="container mx-auto max-w-[1400px] flex items-center flex-row justify-between">
       <div className="flex items-center justify-evenly w-full flex-row-reverse sm:flex-row sm:justify-between">
-        <div className="w-full flex items-left sm:items-center pl-[6%] sm:pl-0">
-          <Link href={"/"} className="text-white">
+        <div className="w-full flex items-left gap-3 sm:items-center pl-[6%] sm:pl-0 text-white">
+          <Link href={"/"}>
             LOGO
           </Link>
+
+          <button 
+            title="Hide Navbar" 
+            className="text-2xl"
+            onClick={() => dispatch(handleNavbarVisibility(true))}
+            aria-label="Hide Navbar Navbar Navbar"
+          >
+            <TbLayoutNavbarExpand />
+          </button>
         </div>
 
         <div className="flex w-full relative">
