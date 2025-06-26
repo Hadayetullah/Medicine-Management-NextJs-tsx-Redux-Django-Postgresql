@@ -68,7 +68,7 @@ const RightSection = () => {
         setSearchQuery={setSearchQuery}
       />
 
-      <div className="w-full h-[5px] bg-[#898888]"></div>
+      <div className="w-full h-[2px] bg-[#898888]"></div>
 
       <DisplayMedicines
         medicineList={medicineList}

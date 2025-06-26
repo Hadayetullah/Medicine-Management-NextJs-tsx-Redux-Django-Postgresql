@@ -82,7 +82,7 @@ const Navbar = () => {
   return (
     <nav 
       className={`bg-indigo-600 py-3 px-2 sm:px-4 fixed top-0 left-0 w-full z-50 
-        ${isNavbarHidden ? "hidden" : ""}`}
+        transition-all duration-300 ${isNavbarHidden ? "-translate-y-28" : ""}`}
     >
       {isAccessTokenExpired ? (
         <UnAuthenticated
