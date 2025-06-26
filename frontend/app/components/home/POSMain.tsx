@@ -41,6 +41,7 @@ const POSMain = () => {
   );
 
   const { tmpHoldedCustomers } = useAppSelector((state) => state.customer);
+  const { isNavbarHidden } = useAppSelector((state) => state.common);
 
   // console.log("prescriptionsSliceMsg : ", prescriptionsSliceMsg);
 
@@ -134,8 +135,8 @@ const POSMain = () => {
         setCustomerListModal={setCustomerListModal}
       />
       <div 
-        className={`w-full pl-[58px] pt-[55px] flex flex-row justify-between fixed top-[0] 
-          left-[0px] h-full`}
+        className={`w-full pl-[58px] flex flex-row justify-between fixed top-[0] 
+          left-[0px] h-full transition-all duration-300 ${isNavbarHidden ? "" : "pt-[55px]"}`}
       >
         <div className="relative w-[50%]">
           <PrescriptionSuccessMsg
