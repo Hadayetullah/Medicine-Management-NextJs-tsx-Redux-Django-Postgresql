@@ -1,3 +1,9 @@
+***Live preview is unavailable but near similar UI, and one page with less feature live preview is available at ->***
+https://simple-pos-application.vercel.app/
+
+To visit full features of this project on your local machine, please read instructions below.
+
+
 # PostgreSQL setup instruction
 
 Install PostgreSQL in your local machine, if not already installed (version should be 17 or above). Start PostgreSQL service (In case it is not running). To start PostgreSQL service instructions as follows below.
